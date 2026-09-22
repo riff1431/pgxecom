@@ -1,0 +1,52 @@
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/providers/AuthProvider";
+import { QueryProvider } from "@/providers/QueryProvider";
+import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import "./globals.css";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+});
+
+export const metadata: Metadata = {
+  title: "PGX — Lifestyle, Fitness, Gear, Everyday",
+  description:
+    "Premium fitness equipment, apparel and everyday essentials for a healthier, happier you.",
+  keywords: [
+    "fitness equipment",
+    "gym gear",
+    "dumbbells",
+    "treadmill",
+    "exercise bike",
+    "athletic apparel",
+    "PGX",
+    "power rack",
+  ],
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${outfit.variable} font-sans antialiased text-slate-900 bg-white`}
+      >
+        <NuqsAdapter>
+          <QueryProvider>
+            <AuthProvider>
+              {children}
+              {/* <GlobalApiLoader /> */}
+              <Toaster position="top-right" richColors />
+            </AuthProvider>
+          </QueryProvider>
+        </NuqsAdapter>
+      </body>
+    </html>
+  );
+}
