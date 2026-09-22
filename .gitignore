@@ -4,6 +4,6 @@ node_modules/
 dist/
 build/
 .next/
-uploads/
+
 *.log
 .DS_Store
