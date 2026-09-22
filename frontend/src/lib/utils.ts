@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function resolveImageUrl(url?: string | null): string {
-  if (!url) return "/placeholder-product.png";
+  if (!url) return "/placeholder-product.jpg";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
 
   const base = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";

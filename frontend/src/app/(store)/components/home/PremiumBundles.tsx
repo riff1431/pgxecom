@@ -23,7 +23,7 @@ export const PGX_BUNDLES: BundleItem[] = [
     badge: "BEST VALUE",
     price: 2999.0,
     comparePrice: 3499.0,
-    image: "/placeholder-product.jpg",
+    image: "/uploads/placeholder-product.jpg",
     features: [
       "Power Rack",
       "Adjustable Bench",
@@ -38,7 +38,7 @@ export const PGX_BUNDLES: BundleItem[] = [
     name: "PGX CARDIO ESSENTIALS BUNDLE",
     price: 3499.0,
     comparePrice: 3899.0,
-    image: "/placeholder-product.jpg",
+    image: "/uploads/placeholder-product.jpg",
     features: [
       "Treadmill X1",
       "Exercise Bike",
@@ -51,7 +51,7 @@ export const PGX_BUNDLES: BundleItem[] = [
     name: "PGX STRENGTH STARTER BUNDLE",
     price: 1199.0,
     comparePrice: 1399.0,
-    image: "/placeholder-product.jpg",
+    image: "/uploads/placeholder-product.jpg",
     features: [
       "Adjustable Dumbbells",
       "Training Bench",

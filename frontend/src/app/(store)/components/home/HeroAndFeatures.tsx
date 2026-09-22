@@ -187,7 +187,7 @@ export function QuickCategoriesBar() {
             >
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-center p-2 group-hover:border-[#00a3ff] group-hover:shadow-md transition-all duration-300">
                 <Image
-                  src="/placeholder-product.jpg"
+                  src="/uploads/placeholder-product.jpg"
                   alt={cat.name}
                   width={60}
                   height={60}

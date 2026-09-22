@@ -22,7 +22,7 @@ const SCREENSHOT_FEATURED_EQUIPMENT = [
     price: 1899.0,
     rating: 5,
     reviewCount: 124,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-smart-exercise-bike",
@@ -32,7 +32,7 @@ const SCREENSHOT_FEATURED_EQUIPMENT = [
     price: 1299.0,
     rating: 5,
     reviewCount: 98,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-adjustable-dumbbells",
@@ -42,7 +42,7 @@ const SCREENSHOT_FEATURED_EQUIPMENT = [
     price: 599.0,
     rating: 5,
     reviewCount: 87,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-power-rack-package",
@@ -52,7 +52,7 @@ const SCREENSHOT_FEATURED_EQUIPMENT = [
     price: 1599.0,
     rating: 5,
     reviewCount: 72,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-rowing-machine",
@@ -62,7 +62,7 @@ const SCREENSHOT_FEATURED_EQUIPMENT = [
     price: 1099.0,
     rating: 5,
     reviewCount: 64,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-home-gym-system",
@@ -72,7 +72,7 @@ const SCREENSHOT_FEATURED_EQUIPMENT = [
     price: 2499.0,
     rating: 5,
     reviewCount: 90,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
 ];
 
@@ -85,7 +85,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 34.99,
     rating: 5,
     reviewCount: 241,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-leggings",
@@ -95,7 +95,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 49.99,
     rating: 5,
     reviewCount: 198,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-training-shoes",
@@ -105,7 +105,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 89.99,
     rating: 5,
     reviewCount: 167,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-gym-bag",
@@ -115,7 +115,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 59.99,
     rating: 5,
     reviewCount: 143,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-stainless-bottle",
@@ -125,7 +125,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 59.99,
     rating: 5,
     reviewCount: 312,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-yoga-mat",
@@ -135,7 +135,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 29.99,
     rating: 5,
     reviewCount: 121,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-resistance-bands",
@@ -145,7 +145,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 24.99,
     rating: 5,
     reviewCount: 276,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
   {
     id: "pgx-wireless-headphones",
@@ -155,7 +155,7 @@ const SCREENSHOT_POPULAR_ESSENTIALS = [
     price: 79.99,
     rating: 5,
     reviewCount: 184,
-    images: [{ url: "/placeholder-product.jpg" }],
+    images: [{ url: "/uploads/placeholder-product.jpg" }],
   },
 ];
 

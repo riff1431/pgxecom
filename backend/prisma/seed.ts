@@ -62,7 +62,7 @@ async function main() {
   ];
 
   const categoryMap = new Map<string, string>();
-  const placeholderImg = '/placeholder-product.jpg';
+  const placeholderImg = '/uploads/placeholder-product.jpg';
 
   for (const cat of categories) {
     const seededCategory = await prisma.category.upsert({
@@ -332,6 +332,19 @@ async function main() {
           categoryId: categoryId,
           isFeatured: prod.isFeatured,
           sku: prod.sku,
+        },
+      });
+
+      // Update or create product image
+      await prisma.productImage.deleteMany({
+        where: { productId: existing.id },
+      });
+      await prisma.productImage.create({
+        data: {
+          productId: existing.id,
+          url: placeholderImg,
+          alt: prod.name,
+          sortOrder: 1,
         },
       });
     } else {
