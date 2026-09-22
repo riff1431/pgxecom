@@ -250,7 +250,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. Premium Bundles Section */}
-      <PremiumBundlesSection />
+      {/* <PremiumBundlesSection /> */}
 
       {/* 6. Value Proposition Strip */}
       <ValuePropositionStrip />

@@ -3,19 +3,16 @@
 import {
   Activity,
   ArrowRight,
-  Award,
   ChevronRight,
   Dumbbell,
+  DumbbellIcon,
+  GalleryThumbnails,
   Gift,
   Heart,
   Layers,
   Package,
   ShieldCheck,
-  ShoppingBag,
-  Sparkles,
-  TrendingUp,
   Truck,
-  Zap,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -185,15 +182,7 @@ export function QuickCategoriesBar() {
               href={`/shop?category=${cat.slug}`}
               className="group flex flex-col items-center shrink-0 min-w-[100px] text-center"
             >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-center p-2 group-hover:border-[#00a3ff] group-hover:shadow-md transition-all duration-300">
-                <Image
-                  src="/uploads/placeholder-product.jpg"
-                  alt={cat.name}
-                  width={60}
-                  height={60}
-                  className="w-full h-full object-contain filter group-hover:scale-105 transition-transform"
-                />
-              </div>
+              <DumbbellIcon />
               <span className="mt-2 text-xs font-semibold text-slate-800 group-hover:text-[#00a3ff] flex items-center gap-1">
                 {cat.name} <span className="text-[10px] text-slate-400 group-hover:translate-x-0.5 transition-transform">→</span>
               </span>
