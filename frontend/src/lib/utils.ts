@@ -9,7 +9,10 @@ export function resolveImageUrl(url?: string | null): string {
   if (!url) return "/placeholder-product.jpg";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
 
-  const base = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
+  let base = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
+  if (typeof window !== "undefined" && !window.location.hostname.includes("localhost") && base.includes("localhost")) {
+    base = "https://api.nowripple.com";
+  }
   if (!base) return url;
 
   const normalizedBase = base.endsWith("/") ? base.slice(0, -1) : base;

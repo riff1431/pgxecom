@@ -3,11 +3,11 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Build-time environment arguments (configured in Docploy or default to fallbacks)
-ARG NEXT_PUBLIC_API_URL=http://localhost:4000/api
-ARG NEXT_PUBLIC_IMAGE_BASE_URL=http://localhost:4000
+ARG NEXT_PUBLIC_API_URL=https://api.nowripple.com/api
+ARG NEXT_PUBLIC_IMAGE_BASE_URL=https://api.nowripple.com
 ARG NEXT_PUBLIC_STORE_NAME=PGX
 ARG NEXT_PUBLIC_WHATSAPP_NUMBER=+18005550199
-ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ARG NEXT_PUBLIC_SITE_URL=https://nowripple.com
 
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_IMAGE_BASE_URL=$NEXT_PUBLIC_IMAGE_BASE_URL

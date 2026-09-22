@@ -2,8 +2,19 @@ import axios from "axios";
 import { env } from "@/env";
 import { getCookie, removeCookie, COOKIE_KEYS } from "./cookie-client";
 
+// Determine API base URL: prioritize env, but if running in browser on production domain and localhost is detected, use production api
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    // If running in browser on nowripple.com or any non-localhost domain, don't allow localhost:4000
+    if (!window.location.hostname.includes("localhost") && env.NEXT_PUBLIC_API_URL.includes("localhost")) {
+      return "https://api.nowripple.com/api";
+    }
+  }
+  return env.NEXT_PUBLIC_API_URL;
+};
+
 export const api = axios.create({
-  baseURL: env.NEXT_PUBLIC_API_URL,
+  baseURL: getBaseUrl(),
 });
 
 // Attach JWT token from cookies
