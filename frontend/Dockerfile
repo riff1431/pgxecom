@@ -15,14 +15,15 @@ ENV NEXT_PUBLIC_STORE_NAME=$NEXT_PUBLIC_STORE_NAME
 ENV NEXT_PUBLIC_WHATSAPP_NUMBER=$NEXT_PUBLIC_WHATSAPP_NUMBER
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 
-# Install dependencies
+# Install dependencies (ensure devDependencies like typescript, tailwindcss are installed for build)
+ENV NODE_ENV=development
 COPY package*.json ./
 RUN npm ci
 
 # Build the Next.js application
 COPY . .
+ENV NODE_ENV=production
 RUN npm run build
 
 # -----------------
