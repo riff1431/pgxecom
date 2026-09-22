@@ -30,5 +30,11 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 
-# Start server
-CMD ["sh", "-c", "npx prisma migrate deploy || npx prisma db push; node dist/src/main.js"]
+# Ensure uploads directory exists and copy default placeholder asset
+RUN mkdir -p /app/uploads
+COPY --from=builder /app/uploads/placeholder-product.jpg /app/uploads/placeholder-product.jpg
+
+EXPOSE 4000
+
+# Start server with schema check
+CMD ["sh", "-c", "npx prisma db push || true; node dist/src/main.js"]

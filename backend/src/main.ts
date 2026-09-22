@@ -20,9 +20,14 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  // CORS
+  // CORS configuration
+  const frontendUrl = configService.get<string>('FRONTEND_URL') || '*';
+  const origins = frontendUrl.includes(',')
+    ? frontendUrl.split(',').map((url) => url.trim())
+    : frontendUrl;
+
   app.enableCors({
-    origin: configService.get<string>('FRONTEND_URL'),
+    origin: origins === '*' ? true : origins,
     credentials: true,
   });
 
