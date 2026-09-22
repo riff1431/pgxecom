@@ -1,28 +1,25 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useSubmitContactMessage } from "@/lib/api/contact";
 import { useStoreSettings } from "@/providers/StoreSettingsProvider";
 import { contactSchema, type ContactInput } from "@/schemas/contact.schema";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Globe, Mail, MapPin, MessageSquare, Phone } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function ContactUsPage() {
   const submitMutation = useSubmitContactMessage();
-  const { storeAddress, storePhone, storeEmail, whatsappNumber } =
-    useStoreSettings();
+  const { storeAddress, storePhone, storeEmail } = useStoreSettings();
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
@@ -37,7 +34,7 @@ export default function ContactUsPage() {
   const onSubmit = async (values: ContactInput) => {
     try {
       await submitMutation.mutateAsync(values);
-      toast.success("Message sent. We will contact you soon.");
+      toast.success("Message sent! Our support team will get back to you shortly.");
       reset();
     } catch {
       toast.error("Could not send message. Please try again.");
@@ -45,139 +42,141 @@ export default function ContactUsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center max-w-2xl mx-auto mb-16">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h1>
-        <p className="text-gray-600">
-          Have a question about our products, an order, or a wholesale inquiry?
-          We&apos;d love to hear from you.
-        </p>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-12 max-w-6xl mx-auto">
-        <div className="w-full lg:w-1/3 space-y-8">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
-              <MapPin className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 text-lg mb-1">
-                Office Address
-              </h3>
-              <p className="text-gray-600">{storeAddress}</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
-              <Phone className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 text-lg mb-1">
-                Phone
-              </h3>
-              <p className="text-gray-600">{storePhone}</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
-              <Mail className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 text-lg mb-1">
-                Email
-              </h3>
-              <p className="text-gray-600">{storeEmail}</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
-              <MessageCircle className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 text-lg mb-1">
-                WhatsApp
-              </h3>
-              <p className="text-gray-600">{whatsappNumber}</p>
-            </div>
-          </div>
+    <div className="bg-white min-h-screen py-16">
+      <div className="container mx-auto px-4 max-w-6xl">
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#00a3ff]">
+            Support & Global Inquiries
+          </span>
+          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-slate-900 mt-2 font-mono">
+            Get in Touch
+          </h1>
+          <p className="text-slate-500 text-sm mt-2">
+            Have questions regarding gym equipment, commercial gym fitouts, or your order? We’re here to help.
+          </p>
         </div>
 
-        <div className="flex-1 bg-white border shadow-sm rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Send us a Message
-          </h2>
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-900">
-                  Your Name *
-                </label>
-                <Input placeholder="John Doe" {...register("name")} />
-                {errors.name ? (
-                  <p className="text-xs text-red-600">{errors.name.message}</p>
-                ) : null}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Contact Details */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-[#060b13] text-white p-8 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+              <h3 className="text-lg font-black uppercase tracking-wider font-mono text-white">
+                Contact Information
+              </h3>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-[#00a3ff]">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400">Headquarters</h4>
+                  <p className="text-sm font-semibold text-slate-200 mt-0.5">{storeAddress || "Amsterdam / London / Global Hubs"}</p>
+                </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-900">
-                  Email Address *
-                </label>
-                <Input
-                  type="email"
-                  placeholder="john@example.com"
-                  {...register("email")}
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-[#00a3ff]">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400">Phone Support</h4>
+                  <p className="text-sm font-semibold text-slate-200 mt-0.5">{storePhone || "+1 (800) 555-0199"}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-[#00a3ff]">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400">Email Inquiries</h4>
+                  <p className="text-sm font-semibold text-slate-200 mt-0.5">{storeEmail || "support@pgxfitness.com"}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-[#00a3ff]">
+                  <Globe className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400">Global Deliveries</h4>
+                  <p className="text-sm font-semibold text-slate-200 mt-0.5">Express shipping to over 50 countries</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <div className="lg:col-span-7 bg-[#f8fafc] border border-slate-200 p-8 rounded-2xl shadow-sm">
+            <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 font-mono mb-6">
+              Send a Message
+            </h3>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Full Name *</label>
+                  <Input
+                    placeholder="John Doe"
+                    {...register("name")}
+                    className="h-11 rounded-lg bg-white border-slate-300 focus:border-[#00a3ff]"
+                  />
+                  {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Email Address *</label>
+                  <Input
+                    type="email"
+                    placeholder="athlete@domain.com"
+                    {...register("email")}
+                    className="h-11 rounded-lg bg-white border-slate-300 focus:border-[#00a3ff]"
+                  />
+                  {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Phone</label>
+                  <Input
+                    placeholder="+1 (555) 000-0000"
+                    {...register("phone")}
+                    className="h-11 rounded-lg bg-white border-slate-300 focus:border-[#00a3ff]"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Subject</label>
+                  <Input
+                    placeholder="Order Inquiry / Wholesale"
+                    {...register("subject")}
+                    className="h-11 rounded-lg bg-white border-slate-300 focus:border-[#00a3ff]"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Message *</label>
+                <Textarea
+                  rows={5}
+                  placeholder="How can our fitness gear specialists assist you?"
+                  {...register("message")}
+                  className="rounded-lg bg-white border-slate-300 focus:border-[#00a3ff]"
                 />
-                {errors.email ? (
-                  <p className="text-xs text-red-600">{errors.email.message}</p>
-                ) : null}
+                {errors.message && <p className="text-xs text-red-500">{errors.message.message}</p>}
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Phone</label>
-              <Input placeholder="+8801XXXXXXXXX" {...register("phone")} />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">
-                Subject *
-              </label>
-              <Input placeholder="How can we help?" {...register("subject")} />
-              {errors.subject ? (
-                <p className="text-xs text-red-600">{errors.subject.message}</p>
-              ) : null}
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">
-                Message *
-              </label>
-              <Textarea
-                placeholder="Write your message here..."
-                rows={6}
-                {...register("message")}
-              />
-              {errors.message ? (
-                <p className="text-xs text-red-600">{errors.message.message}</p>
-              ) : null}
-            </div>
-
-            <Button
-              type="submit"
-              disabled={submitMutation.isPending}
-              className="w-full md:w-auto px-8 bg-emerald-600 hover:bg-emerald-700 h-12"
-            >
-              {submitMutation.isPending ? (
-                <span className="inline-flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Sending...
-                </span>
-              ) : (
-                "Send Message"
-              )}
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-12 bg-[#060b13] hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider rounded-lg transition-colors"
+              >
+                {isSubmitting ? "Sending..." : "Send Message"}
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
