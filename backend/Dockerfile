@@ -28,11 +28,9 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-
-# Ensure uploads directory exists and copy default placeholder asset
+# Ensure uploads directory exists
 RUN mkdir -p /app/uploads
-COPY --from=builder /app/uploads/placeholder-product.jpg /app/uploads/placeholder-product.jpg
+COPY --from=builder /app/uploads ./uploads
 
 EXPOSE 4000
 

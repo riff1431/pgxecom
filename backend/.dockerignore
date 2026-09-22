@@ -12,7 +12,8 @@ pnpm-debug.log*
 coverage
 dist
 
-uploads
+uploads/*
+!uploads/placeholder-product.jpg
 
 .env.example
 README.md
