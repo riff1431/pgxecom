@@ -48,22 +48,29 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <header className="mb-12 text-left">
-        <h1 className="text-4xl font-black text-gray-900 tracking-tight">Account Settings</h1>
-        <p className="mt-2 text-gray-500 font-medium">Privacy, security, and notification preferences.</p>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <header className="text-left pb-4 border-b border-slate-800">
+        <span className="text-[10px] font-mono uppercase tracking-widest text-[#00a3ff] font-bold block mb-1">
+          Security & Access
+        </span>
+        <h1 className="text-2xl sm:text-3xl font-mono font-black text-white uppercase tracking-tight">Account Settings</h1>
+        <p className="mt-1 text-slate-400 font-mono text-xs">Manage credential authentication and password security preferences.</p>
       </header>
 
       <div className="space-y-6">
         {/* Security Section */}
-        <section className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-200/30 overflow-hidden">
-            <div className="px-8 py-6 border-b border-gray-50 flex items-center gap-3">
-                <ShieldCheck className="w-6 h-6 text-emerald-600" />
-                <h2 className="font-bold text-gray-900 text-xl text-left">Login & Security</h2>
+        <section className="bg-[#080d16] rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-800 flex items-center gap-3">
+                <ShieldCheck className="w-5 h-5 text-[#00a3ff]" />
+                <h2 className="font-mono font-bold text-white text-lg uppercase tracking-wide text-left">Password & Authentication</h2>
             </div>
-            <div className="p-8 space-y-6">
-                <form onSubmit={handlePasswordChange} className="flex flex-col gap-4 text-left">
-                    <label className="text-sm font-bold text-gray-700 ml-1">Change Password</label>
+            <div className="p-6 sm:p-8 space-y-6">
+                <form onSubmit={handlePasswordChange} className="flex flex-col gap-5 text-left">
+                    <div>
+                      <label className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block mb-2">Update Password</label>
+                      <p className="text-xs text-slate-500 font-mono mb-4">Ensure your account uses a strong password with at least 6 characters.</p>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="relative">
                             <Input 
@@ -71,15 +78,15 @@ export default function SettingsPage() {
                                 placeholder="Current Password" 
                                 value={formData.currentPassword}
                                 onChange={e => setFormData({...formData, currentPassword: e.target.value})}
-                                className="h-14 rounded-2xl border-gray-100 focus:ring-emerald-500 bg-gray-50/50"
+                                className="h-12 rounded-xl border-slate-700 bg-slate-900 text-white font-mono text-sm focus:border-[#00a3ff]"
                                 required
                             />
                             <button 
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
                                 type="button"
                             >
-                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
                         <Input 
@@ -87,7 +94,7 @@ export default function SettingsPage() {
                             placeholder="New Password" 
                             value={formData.newPassword}
                             onChange={e => setFormData({...formData, newPassword: e.target.value})}
-                            className="h-14 rounded-2xl border-gray-100 focus:ring-emerald-500 bg-gray-50/50"
+                            className="h-12 rounded-xl border-slate-700 bg-slate-900 text-white font-mono text-sm focus:border-[#00a3ff]"
                             required
                         />
                         <Input 
@@ -95,16 +102,16 @@ export default function SettingsPage() {
                             placeholder="Confirm New Password" 
                             value={formData.confirmPassword}
                             onChange={e => setFormData({...formData, confirmPassword: e.target.value})}
-                            className="h-14 rounded-2xl border-gray-100 focus:ring-emerald-500 bg-gray-50/50"
+                            className="h-12 rounded-xl border-slate-700 bg-slate-900 text-white font-mono text-sm focus:border-[#00a3ff]"
                             required
                         />
                     </div>
                     <Button 
                         type="submit"
                         disabled={changePasswordMutation.isPending}
-                        className="h-14 font-bold bg-emerald-600 hover:bg-emerald-700 rounded-2xl w-fit px-8 mt-2"
+                        className="h-12 font-mono font-bold uppercase tracking-wider text-sm bg-[#00a3ff] hover:bg-cyan-500 text-white rounded-xl w-fit px-8 mt-2 transition-all"
                     >
-                        {changePasswordMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Update Password"}
+                        {changePasswordMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Update Password"}
                     </Button>
                 </form>
             </div>

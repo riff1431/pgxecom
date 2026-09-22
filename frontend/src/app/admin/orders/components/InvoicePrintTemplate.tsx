@@ -111,8 +111,8 @@ export const InvoicePrintTemplate = forwardRef<HTMLDivElement, InvoicePrintTempl
                       {item.variantName && <p className="text-xs text-gray-500 mt-0.5">{item.variantName}</p>}
                     </td>
                     <td className="py-3 px-3 border-x border-gray-300 text-center">{item.quantity}</td>
-                    <td className="py-3 px-3 border-x border-gray-300 text-right">৳{Number(item.unitPrice).toFixed(2)}</td>
-                    <td className="py-3 px-3 border-x border-gray-300 text-right">৳{Number(item.totalPrice).toFixed(2)}</td>
+                    <td className="py-3 px-3 border-x border-gray-300 text-right">€{Number(item.unitPrice).toFixed(2)}</td>
+                    <td className="py-3 px-3 border-x border-gray-300 text-right">€{Number(item.totalPrice).toFixed(2)}</td>
                   </tr>
                 ))}
 
@@ -140,21 +140,21 @@ export const InvoicePrintTemplate = forwardRef<HTMLDivElement, InvoicePrintTempl
               </p>
             </div>
             <div className="w-64">
-              <div className="flex justify-between py-2 px-3 border border-gray-300 border-b-0 bg-[#FD965D]/20">
+              <div className="flex justify-between py-2 px-3 border border-gray-300 border-b-0 bg-[#00a3ff]/10">
                 <span className="font-bold text-gray-800 text-sm">Sub Total</span>
-                <span className="font-semibold text-sm">৳{Number(data.subtotal).toFixed(2)}</span>
+                <span className="font-semibold text-sm">€{Number(data.subtotal).toFixed(2)}</span>
               </div>
-              <div className="flex justify-between py-2 px-3 border border-gray-300 border-b-0 bg-[#FD965D]/25">
+              <div className="flex justify-between py-2 px-3 border border-gray-300 border-b-0 bg-[#00a3ff]/15">
                 <span className="font-bold text-gray-800 text-sm">Shipping</span>
-                <span className="font-semibold text-sm">৳{Number(data.shippingCost).toFixed(2)}</span>
+                <span className="font-semibold text-sm">€{Number(data.shippingCost).toFixed(2)}</span>
               </div>
-              <div className="flex justify-between py-2 px-3 border border-gray-300 border-b-0 bg-[#FD965D]/30">
+              <div className="flex justify-between py-2 px-3 border border-gray-300 border-b-0 bg-[#00a3ff]/20">
                 <span className="font-bold text-gray-800 text-sm">Discount</span>
-                <span className="font-semibold text-sm">৳{Number(data.discount).toFixed(2)}</span>
+                <span className="font-semibold text-sm">€{Number(data.discount).toFixed(2)}</span>
               </div>
-              <div className="flex justify-between py-2 px-3 border border-gray-300 bg-[#FD965D] text-gray-900 border-[#FD965D]">
+              <div className="flex justify-between py-2 px-3 border border-gray-300 bg-[#00a3ff] text-slate-950 border-[#00a3ff]">
                 <span className="font-bold text-sm">TOTAL</span>
-                <span className="font-bold text-sm">৳{Number(data.total).toFixed(2)}</span>
+                <span className="font-bold text-sm">€{Number(data.total).toFixed(2)}</span>
               </div>
             </div>
           </div>

@@ -218,20 +218,20 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="font-bold">Product Name (Bengali)</Label>
+                  <Label className="font-bold">Short Subtitle / Specs</Label>
                   <Input
-                    placeholder="সুন্দরবনের খাঁটি মধু"
-                    {...register("namebn")}
+                    placeholder="e.g. Smart • Foldable • 22km/h"
+                    {...register("shortDesc")}
                     className="h-12 rounded-xl border-gray-200"
                   />
                   <p className="text-xs text-red-500 font-bold">
-                    {errors.namebn?.message}
+                    {errors.shortDesc?.message}
                   </p>
                 </div>
                 <div className="space-y-2">
                   <Label className="font-bold">SKU (Stock Keeping Unit)</Label>
                   <Input
-                    placeholder="HON-001"
+                    placeholder="PGX-TRD-01"
                     {...register("sku")}
                     className="h-12 rounded-xl border-gray-200"
                   />
@@ -495,7 +495,7 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                   <Label className="font-bold">Default Sale Price *</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
-                      ৳
+                      €
                     </span>
                     <Input
                       type="number"
@@ -512,30 +512,36 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="font-bold text-gray-400">
-                    Compare Price
-                  </Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    {...register("comparePrice")}
-                    className="h-12 rounded-xl border-gray-200"
-                  />
+                  <Label className="font-bold">Compare at Price</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
+                      €
+                    </span>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      {...register("comparePrice")}
+                      className="h-12 rounded-xl border-gray-200 pl-8"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="space-y-4 border-b pb-6 border-gray-50">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="font-bold text-gray-500 uppercase text-[10px] tracking-widest">
-                      Cost Price
-                    </Label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      {...register("costPrice")}
-                      className="h-12 rounded-xl border-gray-200"
-                    />
+                    <Label className="font-bold">Cost per Item</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
+                        €
+                      </span>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        {...register("costPrice")}
+                        className="h-12 rounded-xl border-gray-200 pl-8"
+                      />
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label className="font-bold text-gray-500 uppercase text-[10px] tracking-widest">

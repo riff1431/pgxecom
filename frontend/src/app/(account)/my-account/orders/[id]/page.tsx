@@ -25,10 +25,10 @@ export default function OrderDetailsPage() {
   if (isLoading) {
     return (
       <div className="space-y-8 animate-pulse text-left">
-        <div className="h-8 w-64 bg-gray-200 rounded"></div>
+        <div className="h-8 w-64 bg-slate-800 rounded-xl"></div>
         <div className="space-y-4">
-          <div className="h-64 bg-gray-100 "></div>
-          <div className="h-96 bg-gray-100 "></div>
+          <div className="h-64 bg-slate-900/60 rounded-2xl"></div>
+          <div className="h-96 bg-slate-900/60 rounded-2xl"></div>
         </div>
       </div>
     );
@@ -37,14 +37,14 @@ export default function OrderDetailsPage() {
   if (error || !order) {
     return (
       <div className="py-20 text-center">
-        <h2 className="text-2xl font-bold">Order not found</h2>
-        <p className="text-gray-500 mt-2">
+        <h2 className="text-2xl font-mono font-bold text-white uppercase">Order not found</h2>
+        <p className="text-slate-400 mt-2 text-sm">
           The order you&apos;re looking for doesn&apos;t exist or you don&apos;t
           have access.
         </p>
         <Button
           onClick={() => router.push("/my-account/orders")}
-          className="mt-6 bg-emerald-600 rounded-xl"
+          className="mt-6 bg-[#00a3ff] hover:bg-cyan-500 font-bold rounded-xl text-white font-mono"
         >
           Back to Orders
         </Button>
@@ -54,7 +54,7 @@ export default function OrderDetailsPage() {
 
   const statusConfig = ORDER_STATUSES[order.status] || {
     label: order.status,
-    color: "bg-gray-100 text-gray-800",
+    color: "bg-slate-800 text-slate-300",
   };
 
   const resolveImageUrl = (url: string) => {
@@ -68,26 +68,26 @@ export default function OrderDetailsPage() {
 
   return (
     <div className="space-y-8 text-left">
-      <header className="">
+      <header className="pb-4 border-b border-slate-800">
         <div>
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-emerald-600 transition-colors mb-4"
+            className="flex items-center gap-2 text-xs font-mono font-bold text-slate-400 hover:text-[#00a3ff] transition-colors mb-3 uppercase tracking-wider"
           >
             <ChevronLeft className="w-4 h-4" /> Back to Orders
           </button>
-          <div className="flex items-center gap-4">
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+          <div className="flex flex-wrap items-center gap-4">
+            <h1 className="text-2xl sm:text-3xl font-mono font-black text-white tracking-tight uppercase">
               Order #{order.orderNumber}
             </h1>
             <Badge
-              className={`${statusConfig.color} font-bold px-4 py-1 rounded-full border-0`}
+              className={`${statusConfig.color} font-mono text-xs font-bold px-3 py-1 rounded-full border-0 uppercase tracking-wider`}
             >
               {statusConfig.label}
             </Badge>
           </div>
-          <p className="text-gray-500 mt-2 font-medium flex items-center gap-2">
-            <Calendar className="w-4 h-4" /> Placed on{" "}
+          <p className="text-slate-400 mt-2 font-mono text-xs flex items-center gap-2">
+            <Calendar className="w-3.5 h-3.5 text-[#00a3ff]" /> Placed on{" "}
             {new Date(order.createdAt).toLocaleDateString("en-US", {
               dateStyle: "long",
             })}{" "}
@@ -101,47 +101,47 @@ export default function OrderDetailsPage() {
 
       <div className="space-y-8">
         {/* Order Items */}
-        <section className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-200/20 overflow-hidden">
-          <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
+        <section className="bg-[#080d16] rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Package className="w-6 h-6 text-emerald-600" />
-              <h2 className="font-bold text-gray-900 text-xl">Order Items</h2>
+              <Package className="w-5 h-5 text-[#00a3ff]" />
+              <h2 className="font-mono font-bold text-white text-lg uppercase tracking-wide">Order Items</h2>
             </div>
-            <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
               {order.items.length} Items
             </span>
           </div>
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-slate-800/80">
             {order.items.map((item: OrderItem) => (
               <div
                 key={item.id}
-                className="p-8 flex items-center gap-6 group hover:bg-gray-50/50 transition-colors"
+                className="p-6 flex items-center gap-5 group hover:bg-slate-900/40 transition-colors"
               >
-                <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-2xl bg-gray-100 shadow-inner">
+                <div className="relative w-16 h-16 shrink-0 overflow-hidden rounded-xl bg-slate-900 border border-slate-800">
                   {item.product?.images?.[0]?.url ? (
                     <Image
                       src={resolveImageUrl(item.product.images[0].url)}
                       alt={item.productName}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300">
-                      <Box className="w-8 h-8" />
+                    <div className="w-full h-full flex items-center justify-center text-slate-600">
+                      <Box className="w-6 h-6" />
                     </div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-gray-900 truncate group-hover:text-emerald-600 transition-colors uppercase tracking-tight">
+                  <h4 className="font-mono font-bold text-white text-sm truncate group-hover:text-[#00a3ff] transition-colors uppercase tracking-tight">
                     {item.productName}
                   </h4>
-                  <p className="text-sm text-gray-500 font-medium mt-1">
+                  <p className="text-xs text-slate-400 font-medium mt-0.5">
                     {item.variantName
                       ? `Variant: ${item.variantName}`
                       : "Standard Unit"}
                   </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <span className="text-sm font-black text-emerald-600">
+                  <div className="flex items-center gap-4 mt-1.5">
+                    <span className="text-xs font-mono font-bold text-[#00a3ff]">
                       {CURRENCY}
                       {Number(item.unitPrice).toLocaleString()} ×{" "}
                       {item.quantity}
@@ -149,7 +149,7 @@ export default function OrderDetailsPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-black text-gray-900 text-lg">
+                  <p className="font-mono font-black text-white text-base">
                     {CURRENCY}
                     {Number(item.totalPrice).toLocaleString()}
                   </p>
@@ -157,23 +157,23 @@ export default function OrderDetailsPage() {
               </div>
             ))}
           </div>
-          <div className="bg-gray-50/50 p-8 space-y-3">
-            <div className="flex justify-between text-gray-500 font-medium text-sm">
+          <div className="bg-slate-900/50 p-6 space-y-3 border-t border-slate-800">
+            <div className="flex justify-between text-slate-400 font-mono text-xs">
               <span>Subtotal</span>
-              <span>
+              <span className="text-slate-200">
                 {CURRENCY}
                 {Number(order.subtotal).toLocaleString()}
               </span>
             </div>
-            <div className="flex justify-between text-gray-500 font-medium text-sm">
+            <div className="flex justify-between text-slate-400 font-mono text-xs">
               <span>Shipping Fee</span>
-              <span>
+              <span className="text-slate-200">
                 {CURRENCY}
                 {Number(order.shippingCost).toLocaleString()}
               </span>
             </div>
             {Number(order.discount) > 0 && (
-              <div className="flex justify-between text-emerald-600 font-medium text-sm">
+              <div className="flex justify-between text-emerald-400 font-mono text-xs">
                 <span>Discount</span>
                 <span>
                   -{CURRENCY}
@@ -181,11 +181,11 @@ export default function OrderDetailsPage() {
                 </span>
               </div>
             )}
-            <div className="pt-3 border-t border-gray-200 flex justify-between">
-              <span className="text-xl font-black text-gray-900 tracking-tight">
+            <div className="pt-3 border-t border-slate-800 flex justify-between items-center">
+              <span className="text-base font-mono font-black text-white uppercase tracking-wider">
                 Total Payment
               </span>
-              <span className="text-2xl font-black text-emerald-600 tracking-tight">
+              <span className="text-2xl font-mono font-black text-[#00a3ff] tracking-tight">
                 {CURRENCY}
                 {Number(order.total).toLocaleString()}
               </span>
@@ -194,12 +194,12 @@ export default function OrderDetailsPage() {
         </section>
 
         {/* Timeline */}
-        <section className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-200/20 p-8">
-          <h2 className="font-bold text-gray-900 text-xl mb-8 flex items-center gap-3">
-            <Clock className="w-6 h-6 text-emerald-600" /> Order Progress
+        <section className="bg-[#080d16] rounded-2xl border border-slate-800 shadow-xl p-6 sm:p-8">
+          <h2 className="font-mono font-bold text-white text-lg mb-8 flex items-center gap-3 uppercase tracking-wide">
+            <Clock className="w-5 h-5 text-[#00a3ff]" /> Order Progress
           </h2>
           <div className="relative space-y-8">
-            <div className="absolute left-3.25 top-2 bottom-2 w-0.5 bg-gray-100"></div>
+            <div className="absolute left-3.25 top-2 bottom-2 w-0.5 bg-slate-800"></div>
             {statusHistory.map((history: OrderStatusHistory, idx: number) => (
               <div
                 key={history.id}
@@ -208,28 +208,28 @@ export default function OrderDetailsPage() {
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center z-10 ${
                     idx === statusHistory.length - 1
-                      ? "bg-emerald-600 shadow-lg shadow-emerald-100"
-                      : "bg-white border-2 border-gray-100"
+                      ? "bg-[#00a3ff] shadow-lg shadow-[#00a3ff]/20"
+                      : "bg-[#080d16] border-2 border-slate-700"
                   }`}
                 >
                   {idx === statusHistory.length - 1 ? (
                     <CheckCircle2 className="w-4 h-4 text-white" />
                   ) : (
-                    <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+                    <div className="w-2 h-2 rounded-full bg-slate-600"></div>
                   )}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
                     <h4
-                      className={`font-black uppercase tracking-widest text-xs ${
+                      className={`font-mono font-black uppercase tracking-widest text-xs ${
                         idx === statusHistory.length - 1
-                          ? "text-emerald-600"
-                          : "text-gray-400"
+                          ? "text-[#00a3ff]"
+                          : "text-slate-400"
                       }`}
                     >
                       {ORDER_STATUSES[history.status]?.label || history.status}
                     </h4>
-                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
+                    <span className="text-[10px] text-slate-500 font-mono font-bold uppercase tracking-wider">
                       {new Date(history.createdAt).toLocaleDateString()}{" "}
                       {new Date(history.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
@@ -237,7 +237,7 @@ export default function OrderDetailsPage() {
                       })}
                     </span>
                   </div>
-                  <p className="text-gray-600 font-medium">
+                  <p className="text-slate-300 text-sm font-medium">
                     {history.note || "Order status updated"}
                   </p>
                 </div>

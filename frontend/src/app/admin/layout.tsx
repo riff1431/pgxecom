@@ -65,19 +65,19 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         <SidebarHeader className="h-16 flex items-center justify-center border-b px-4">
           <Link
             href="/admin"
-            className="flex items-center gap-2 w-full justify-start"
+            className="flex items-center gap-2.5 w-full justify-start px-2"
           >
-            <Image
-              src={resolveImageUrl(getSetting("store_logo", ""))}
-              alt="Logo"
-              width={32}
-              height={32}
-              unoptimized
-              className="h-8 w-8 rounded-sm object-cover"
-            />
-            <span className="font-bold text-gray-900 line-clamp-1">
-              {getSetting("store_name", "Admin")}
-            </span>
+            <div className="w-8 h-8 rounded-lg bg-[#060b13] flex items-center justify-center text-white font-black font-mono text-sm border border-slate-700">
+              PG<span className="text-[#00a3ff]">X</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-black text-slate-900 leading-tight font-mono tracking-tight text-sm">
+                PGX ADMIN
+              </span>
+              <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold">
+                Store Console
+              </span>
+            </div>
           </Link>
         </SidebarHeader>
         <SidebarContent>

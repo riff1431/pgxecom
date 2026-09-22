@@ -81,11 +81,8 @@ export function CategoriesTable({ categories, onEdit }: CategoriesTableProps) {
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="font-bold text-gray-900 leading-tight group-hover:text-emerald-700 transition-colors">
+                    <span className="font-bold text-gray-900 leading-tight">
                       {cat.name}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400 mt-0.5">
-                      {cat.namebn || "CATEGORY"}
                     </span>
                   </div>
                 </TableCell>

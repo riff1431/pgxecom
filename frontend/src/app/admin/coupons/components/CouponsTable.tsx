@@ -23,7 +23,7 @@ const formatDiscount = (coupon: AdminCoupon) => {
     return `${coupon.discountValue}%`;
   }
 
-  return `৳${coupon.discountValue}`;
+  return `€${coupon.discountValue}`;
 };
 
 export function CouponsTable({

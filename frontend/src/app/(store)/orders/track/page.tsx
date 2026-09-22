@@ -78,10 +78,10 @@ function TrackOrderContent() {
           <div className="flex items-end">
             <Button
               type="submit"
-              className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 rounded-2xl shadow-lg shadow-emerald-200 text-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full h-14 bg-[#060b13] hover:bg-slate-800 text-white rounded-2xl shadow-lg text-sm font-bold uppercase tracking-wider transition-all"
             >
-              <Search className="w-5 h-5 mr-2" />
-              Track Order
+              <Search className="w-4 h-4 mr-2 text-[#00a3ff]" />
+              Track Package
             </Button>
           </div>
         </form>

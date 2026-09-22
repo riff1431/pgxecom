@@ -201,7 +201,7 @@ export default function AdminShippingPage() {
                 <TableRow key={zone.id}>
                   <TableCell className="font-medium">{zone.name}</TableCell>
                   <TableCell className="text-gray-500">{zone.slug}</TableCell>
-                  <TableCell>৳{zone.cost}</TableCell>
+                  <TableCell>€{zone.cost}</TableCell>
                   <TableCell>
                     <AdminStatusToggle
                       checked={zone.isActive}
