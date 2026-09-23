@@ -11,7 +11,7 @@ export function resolveImageUrl(url?: string | null): string {
 
   let base = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
   if (typeof window !== "undefined" && !window.location.hostname.includes("localhost") && base.includes("localhost")) {
-    base = "https://api.nowripple.com";
+    base = "https://api.playgroundfitnex.com";
   }
   if (!base) return url;
 

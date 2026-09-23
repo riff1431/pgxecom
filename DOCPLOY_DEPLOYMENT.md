@@ -41,7 +41,7 @@ In your Docploy Dashboard:
    DIRECT_URL=postgresql://postgres:zmBjwrBiwYgdF30sodkI@72.62.81.204:5432/postgres?schema=public
    JWT_SECRET=pgx-super-secret-jwt-key-change-in-production-2026
    JWT_EXPIRATION=7d
-   FRONTEND_URL=https://nowripple.com,https://api.nowripple.com
+   FRONTEND_URL=https://playgroundfitnex.com,https://api.playgroundfitnex.com
    UPLOAD_DIR=./uploads
    MAX_FILE_SIZE=5242880
    SMTP_HOST=smtp.gmail.com
@@ -61,7 +61,7 @@ In your Docploy Dashboard:
    STRIPE_CURRENCY=eur
    ```
 6. **Domain**:
-   - Set your backend domain: `api.nowripple.com`. Docploy will issue an SSL certificate via Let's Encrypt.
+   - Set your backend domain: `api.playgroundfitnex.com`. Docploy will issue an SSL certificate via Let's Encrypt.
 7. Click **Deploy**.
 
 ---
@@ -83,11 +83,11 @@ In your Docploy Dashboard:
    > Next.js bundles all `NEXT_PUBLIC_*` variables during compilation. You **must** set these in the **Build Args** and **Environment Variables** section in Docploy before hitting deploy:
 
    ```env
-   NEXT_PUBLIC_API_URL=https://api.nowripple.com/api
-   NEXT_PUBLIC_IMAGE_BASE_URL=https://api.nowripple.com
+   NEXT_PUBLIC_API_URL=https://api.playgroundfitnex.com/api
+   NEXT_PUBLIC_IMAGE_BASE_URL=https://api.playgroundfitnex.com
    NEXT_PUBLIC_STORE_NAME=PGX
    NEXT_PUBLIC_WHATSAPP_NUMBER=+18005550199
-   NEXT_PUBLIC_SITE_URL=https://nowripple.com
+   NEXT_PUBLIC_SITE_URL=https://playgroundfitnex.com
    NODE_ENV=production
    PORT=3000
    HOSTNAME=0.0.0.0
@@ -101,7 +101,7 @@ In your Docploy Dashboard:
    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_... (or pk_live_...)
    ```
 5. **Domain**:
-   - Set your frontend domain: `nowripple.com`.
+   - Set your frontend domain: `playgroundfitnex.com`.
 6. Click **Deploy**.
 
 ---
@@ -118,7 +118,7 @@ The e-commerce backend processes wallet top-ups exclusively via Stripe Webhook (
 5. Configure the endpoint:
    - **Endpoint URL**: 
      ```
-     https://api.nowripple.com/api/webhook/stripe
+     https://api.playgroundfitnex.com/api/webhook/stripe
      ```
      *(Note: Ensure `/api/` is included because the NestJS backend uses global prefix `api`)*
    - **Listen to**: Select **Events on your account**.
@@ -140,19 +140,19 @@ The e-commerce backend processes wallet top-ups exclusively via Stripe Webhook (
 Once both containers report healthy in Docploy:
 
 1. **Test API**:
-   - Navigate to `https://api.nowripple.com/api/categories/tree`.
+   - Navigate to `https://api.playgroundfitnex.com/api/categories/tree`.
    - Verify that the JSON response returns the PGX fitness categories.
-   - Verify asset serving: `https://api.nowripple.com/uploads/placeholder-product.jpg`
+   - Verify asset serving: `https://api.playgroundfitnex.com/uploads/placeholder-product.jpg`
 2. **Test Frontend**:
-   - Open `https://nowripple.com`.
+   - Open `https://playgroundfitnex.com`.
    - Verify that the dark luxury PGX storefront loads with Euro (`€`) pricing, products, bundles, and product images.
 3. **Test Wallet Top-Up & Stripe Webhook**:
-   - Log in or register an account at `https://nowripple.com`.
-   - Go to `https://nowripple.com/my-account/wallet`.
+   - Log in or register an account at `https://playgroundfitnex.com`.
+   - Go to `https://playgroundfitnex.com/my-account/wallet`.
    - Click a preset amount (min €25) and click **Proceed to Checkout**.
    - Complete the Stripe payment.
    - Check the Stripe Dashboard ➔ **Webhooks** tab: the `checkout.session.completed` event should return HTTP `200 OK`.
-   - Refresh the wallet page on `https://nowripple.com` or check the adult platform to confirm both share the updated balance!
+   - Refresh the wallet page on `https://playgroundfitnex.com` or check the adult platform to confirm both share the updated balance!
 4. **Test Admin Portal**:
-   - Navigate to `https://nowripple.com/admin`.
+   - Navigate to `https://playgroundfitnex.com/admin`.
    - Log in with `admin@store.com` and password `admin123`.
