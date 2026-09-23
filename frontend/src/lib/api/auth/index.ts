@@ -7,6 +7,7 @@ import type { User, ApiResponse } from "@/types";
 export interface LoginResponse {
   user: User;
   token: string;
+  supabaseToken?: string;
 }
 
 export const useGetMe = (enabled: boolean = false) => {

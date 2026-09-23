@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { WalletProvider } from "@/providers/WalletProvider";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -40,9 +41,11 @@ export default function RootLayout({
         <NuqsAdapter>
           <QueryProvider>
             <AuthProvider>
-              {children}
-              {/* <GlobalApiLoader /> */}
-              <Toaster position="top-right" richColors />
+              <WalletProvider>
+                {children}
+                {/* <GlobalApiLoader /> */}
+                <Toaster position="top-right" richColors />
+              </WalletProvider>
             </AuthProvider>
           </QueryProvider>
         </NuqsAdapter>

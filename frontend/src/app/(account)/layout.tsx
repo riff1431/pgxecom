@@ -5,12 +5,13 @@ import { Navbar } from "@/components/storefront/Navbar";
 import { withPrivateRoute } from "@/helpers/with-route-guard";
 import { useAuth } from "@/providers/AuthProvider";
 import { StoreSettingsProvider } from "@/providers/StoreSettingsProvider";
-import { LogOut, MapPin, Package, Settings, User } from "lucide-react";
+import { Coins, LogOut, MapPin, Package, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const menuItems = [
   { name: "Dashboard", href: "/my-account", icon: User },
+  { name: "Wallet & Top-Up", href: "/my-account/wallet", icon: Coins },
   { name: "Orders", href: "/my-account/orders", icon: Package },
   { name: "Addresses", href: "/my-account/addresses", icon: MapPin },
   { name: "Account Info", href: "/my-account/profile", icon: User },

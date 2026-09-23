@@ -64,6 +64,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(result.user);
       setCookie(COOKIE_KEYS.TOKEN, result.token);
       setCookie(COOKIE_KEYS.USER, JSON.stringify(result.user));
+      if (result.supabaseToken) {
+        setCookie(COOKIE_KEYS.SUPABASE_TOKEN, result.supabaseToken);
+      }
       toast.success("Login successful!");
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Login failed");
@@ -77,6 +80,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(result.user);
       setCookie(COOKIE_KEYS.TOKEN, result.token);
       setCookie(COOKIE_KEYS.USER, JSON.stringify(result.user));
+      if (result.supabaseToken) {
+        setCookie(COOKIE_KEYS.SUPABASE_TOKEN, result.supabaseToken);
+      }
       toast.success("Account created successfully!");
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Registration failed");
@@ -88,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     removeCookie(COOKIE_KEYS.TOKEN);
     removeCookie(COOKIE_KEYS.USER);
+    removeCookie(COOKIE_KEYS.SUPABASE_TOKEN);
     // Optional: window.location.href = "/login";
   };
 

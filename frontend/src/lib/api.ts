@@ -30,12 +30,13 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only log out the user if /auth/me or a critical user endpoint specifically reports an unauthorized session
+    const requestUrl = error.config?.url || "";
+    if (error.response?.status === 401 && requestUrl.includes("/auth/me")) {
       if (typeof window !== "undefined") {
         removeCookie(COOKIE_KEYS.TOKEN);
         removeCookie(COOKIE_KEYS.USER);
-        
-        // Log out or redirect logic can be handled here or in specific components
+        removeCookie(COOKIE_KEYS.SUPABASE_TOKEN);
       }
     }
     return Promise.reject(error);

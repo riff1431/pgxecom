@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 export const COOKIE_KEYS = {
   TOKEN: "token",
   USER: "user",
+  SUPABASE_TOKEN: "sb_token",
 };
 
 export const setCookie = (key: string, value: string, options?: Cookies.CookieAttributes) => {

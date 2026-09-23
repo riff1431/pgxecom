@@ -16,8 +16,11 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { ProductsModule } from './modules/products/products.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { ShippingModule } from './modules/shipping/shipping.module';
+import { SupabaseModule } from './modules/supabase/supabase.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { UsersModule } from './modules/users/users.module';
+import { WalletModule } from './modules/wallet/wallet.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -37,6 +40,7 @@ import { PrismaModule } from './prisma/prisma.module';
       max: 100, // Maximum number of items in cache
     }),
     PrismaModule,
+    SupabaseModule,
     AuthModule,
     UsersModule,
     ProductsModule,
@@ -51,6 +55,8 @@ import { PrismaModule } from './prisma/prisma.module';
     BannersModule,
     AnalyticsModule,
     SettingsModule,
+    WalletModule,
+    WebhookModule,
   ],
   controllers: [AppController],
   providers: [

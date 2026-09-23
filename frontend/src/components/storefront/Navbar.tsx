@@ -28,6 +28,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { HeaderSearch } from "./HeaderSearch";
+import { WalletPill } from "./WalletPill";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -192,6 +193,9 @@ export function Navbar() {
 
         {/* Right Action Icons */}
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          {/* Universal Wallet Pill */}
+          <WalletPill />
+
           {/* User Account */}
           {isAuthenticated ? (
             <DropdownMenu>
@@ -211,6 +215,12 @@ export function Navbar() {
                   className="cursor-pointer text-xs hover:bg-[#152033] py-2"
                 >
                   My Account
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/my-account/wallet")}
+                  className="cursor-pointer text-xs hover:bg-[#152033] py-2 font-semibold text-[#00a3ff]"
+                >
+                  Wallet &amp; Top-Up
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => router.push("/orders")}
