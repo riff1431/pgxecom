@@ -137,8 +137,7 @@ function TrackOrderContent() {
             <div className="relative pb-4">
               {/* Progress Line */}
               <div className="absolute top-[24px] left-6 md:left-0 w-[calc(100%-48px)] md:w-full h-1.5 bg-gray-100 rounded-full hidden md:block" />
-              <div
-                className="absolute top-[24px] left-0 h-1.5 bg-emerald-500 transition-all duration-1000 ease-out rounded-full hidden md:block"
+              <div className="absolute top-[24px] left-0 h-1.5 bg-[#00a3ff] transition-all duration-1000 ease-out rounded-full hidden md:block"
                 style={{
                   width: `${(Math.max(0, currentStatusIndex) / (steps.length - 1)) * 100}%`,
                 }}
@@ -156,22 +155,21 @@ function TrackOrderContent() {
                       className="flex flex-row md:flex-col items-center gap-6 md:gap-0"
                     >
                       <div
-                        className={`w-14 h-14 rounded-2xl flex items-center justify-center z-10 transition-all duration-700 shadow-lg ${
-                          isCompleted
-                            ? "bg-emerald-600 text-white shadow-emerald-200"
-                            : "bg-white border-2 border-gray-100 text-gray-300 shadow-gray-50"
-                        } ${isCurrent ? "scale-125 ring-[12px] ring-emerald-50" : ""}`}
+                        className={`w-14 h-14 rounded-2xl flex items-center justify-center z-10 transition-all duration-700 shadow-lg ${isCompleted
+                          ? "bg-[#060b13] text-[#00a3ff] border border-slate-800 shadow-md"
+                          : "bg-white border-2 border-slate-200 text-slate-300"
+                          } ${isCurrent ? "scale-125 ring-[8px] ring-[#00a3ff]/20 border-[#00a3ff]" : ""}`}
                       >
                         <Icon className="w-7 h-7" />
                       </div>
                       <div className="md:mt-6 text-left md:text-center">
                         <p
-                          className={`text-lg font-black tracking-tight ${isCompleted ? "text-gray-900" : "text-gray-300"}`}
+                          className={`text-sm sm:text-base font-black uppercase font-mono tracking-tight ${isCompleted ? "text-slate-900" : "text-slate-400"}`}
                         >
                           {step.label}
                         </p>
                         {isCurrent && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 uppercase tracking-tighter mt-1">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#00a3ff]/10 text-[#00a3ff] uppercase tracking-wider mt-1 font-mono border border-[#00a3ff]/20">
                             Current Stage
                           </span>
                         )}
@@ -185,33 +183,33 @@ function TrackOrderContent() {
 
           {/* Details Grid */}
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white  border border-gray-100 p-8 shadow-sm">
-              <h3 className="font-bold text-xl mb-6 flex items-center gap-3 text-gray-900">
-                <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+            <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+              <h3 className="font-bold text-xl mb-6 flex items-center gap-3 text-slate-900 font-mono uppercase">
+                <div className="p-2 bg-slate-900 rounded-lg text-[#00a3ff]">
                   <Truck className="w-5 h-5" />
                 </div>
                 Delivery Information
               </h3>
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="w-1 h-auto bg-emerald-500 rounded-full" />
+                  <div className="w-1 h-auto bg-[#00a3ff] rounded-full" />
                   <div>
-                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest font-mono">
                       Recipient
                     </p>
-                    <p className="font-bold text-gray-900 text-lg">
+                    <p className="font-bold text-slate-900 text-lg">
                       {order.guestName}
                     </p>
-                    <p className="text-sm text-gray-500">{order.guestPhone}</p>
+                    <p className="text-sm text-slate-500">{order.guestPhone}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="w-1 h-auto bg-emerald-200 rounded-full" />
+                  <div className="w-1 h-auto bg-slate-300 rounded-full" />
                   <div>
-                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest font-mono">
                       Address
                     </p>
-                    <p className="mt-1 font-bold text-gray-900 leading-relaxed">
+                    <p className="mt-1 font-semibold text-slate-800 leading-relaxed text-sm">
                       {order.shippingAddress.street}
                       <br />
                       {order.shippingAddress.area}, {order.shippingAddress.city}
@@ -223,34 +221,34 @@ function TrackOrderContent() {
               </div>
             </div>
 
-            <div className="bg-white  border border-gray-100 p-8 shadow-sm">
-              <h3 className="font-bold text-xl mb-6 flex items-center gap-3 text-gray-900">
-                <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+            <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+              <h3 className="font-bold text-xl mb-6 flex items-center gap-3 text-slate-900 font-mono uppercase">
+                <div className="p-2 bg-slate-900 rounded-lg text-[#00a3ff]">
                   <Package className="w-5 h-5" />
                 </div>
                 Order Summary
               </h3>
               <div className="space-y-4">
-                <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                  <span className="text-gray-500 font-medium">Subtotal</span>
-                  <span className="font-bold text-gray-900">
+                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                  <span className="text-slate-500 font-medium">Subtotal</span>
+                  <span className="font-mono font-bold text-slate-900">
                     {CURRENCY}
                     {order.subtotal}
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                  <span className="text-gray-500 font-medium">
+                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                  <span className="text-slate-500 font-medium">
                     Shipping Fee
                   </span>
-                  <span className="font-bold text-gray-900">
+                  <span className="font-mono font-bold text-slate-900">
                     {CURRENCY}
                     {order.shippingCost}
                   </span>
                 </div>
                 {Number(order.discount) > 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-50 text-emerald-600">
+                  <div className="flex justify-between items-center py-2 border-b border-slate-100 text-[#00a3ff]">
                     <span className="font-medium">Coupon Discount</span>
-                    <span className="font-bold">
+                    <span className="font-mono font-bold">
                       -{CURRENCY}
                       {order.discount}
                     </span>

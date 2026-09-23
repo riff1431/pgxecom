@@ -1,41 +1,90 @@
+import { Dumbbell, ShieldCheck, Trophy, Truck, Users, Zap } from "lucide-react";
+
 export default function AboutUsPage() {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-4xl">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">About FreshMart</h1>
-      
-      <div className="prose prose-emerald max-w-none">
-        <p className="text-xl text-gray-600 leading-relaxed mb-8 text-center">
-          FreshMart is more than just an e-commerce platform. We are a journey dedicated to bringing pristine, unadulterated nature directly to your doorstep.
-        </p>
-
-        <div className="my-12 aspect-video bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
-          {/* Main Hero Image Placeholder */}
-          <span className="text-xl">Our Journey Image</span>
+    <div className="bg-white min-h-screen py-16">
+      <div className="container mx-auto px-4 max-w-5xl">
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#00a3ff]">
+            Our Story &amp; Mission
+          </span>
+          <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-slate-900 mt-2 font-mono">
+            About PG<span className="text-[#00a3ff]">X</span>
+          </h1>
+          <p className="text-slate-500 text-base mt-4 leading-relaxed">
+            A lifestyle that moves with you. Built for champions, elite athletes, and anyone dedicated to a stronger tomorrow.
+          </p>
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Our Mission</h2>
-        <p className="text-gray-600 leading-relaxed mb-6">
-          In a world full of artificial additives and endless processing, our mission is to provide 100% genuine and organic food products to health-conscious consumers across Bangladesh. We believe that good health starts with good food.
-        </p>
+        {/* Hero Banner Card */}
+        <div className="relative rounded-3xl bg-[#060b13] border border-slate-800 p-8 sm:p-12 text-white overflow-hidden shadow-2xl mb-16">
+          <div className="relative z-10 max-w-2xl">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#00a3ff] font-bold">
+              Engineering Excellence
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight mt-2 font-mono">
+              Designed For High Performance
+            </h2>
+            <p className="text-slate-300 text-sm sm:text-base mt-4 leading-relaxed">
+              At PGX, we engineer commercial-grade fitness equipment, performance sportswear, and everyday athletic gear designed to withstand rigorous training routines. From precision cable crossover machines to high-density dumbbells and ergonomic gear, every product is built to perform.
+            </p>
+          </div>
+          <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none translate-x-12 translate-y-12">
+            <Dumbbell className="w-96 h-96 text-white" />
+          </div>
+        </div>
 
-        <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">The Origin of Our Quality</h2>
-        <p className="text-gray-600 leading-relaxed mb-6">
-          We source directly from the roots. Our flagship product—raw Sundarbans honey—is collected by expert completely traditional Mawals Deep inside the largest mangrove forest. Every drop is handled with care to ensure the medicinal properties remain completely intact. We apply the same rigorous sourcing ideology to our dates, spices, and organic dry foods.
-        </p>
+        {/* Feature Highlights Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="bg-[#f8fafc] border border-slate-200/80 rounded-2xl p-6 text-left hover:border-slate-300 transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-[#00a3ff] flex items-center justify-center mb-4">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <h3 className="font-mono font-black uppercase text-base text-slate-900 mb-2">
+              Commercial Grade
+            </h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Industrial heavy-duty steel, laser-cut components, and precision weight stacks built for lifelong durability.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-           <div className="bg-emerald-50 p-6 rounded-xl text-center">
-              <h3 className="font-bold text-emerald-800 mb-2">100% Organic</h3>
-              <p className="text-sm text-emerald-700">No chemicals, no compromises.</p>
-           </div>
-           <div className="bg-emerald-50 p-6 rounded-xl text-center">
-              <h3 className="font-bold text-emerald-800 mb-2">Direct Sourcing</h3>
-              <p className="text-sm text-emerald-700">Supporting local farmers directly.</p>
-           </div>
-           <div className="bg-emerald-50 p-6 rounded-xl text-center">
-              <h3 className="font-bold text-emerald-800 mb-2">Eco Packaging</h3>
-              <p className="text-sm text-emerald-700">Sustainable for the environment.</p>
-           </div>
+          <div className="bg-[#f8fafc] border border-slate-200/80 rounded-2xl p-6 text-left hover:border-slate-300 transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-[#00a3ff] flex items-center justify-center mb-4">
+              <Truck className="w-5 h-5" />
+            </div>
+            <h3 className="font-mono font-black uppercase text-base text-slate-900 mb-2">
+              Worldwide Shipping
+            </h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Fast, secure courier delivery and freight support across 50+ countries with complete tracking transparency.
+            </p>
+          </div>
+
+          <div className="bg-[#f8fafc] border border-slate-200/80 rounded-2xl p-6 text-left hover:border-slate-300 transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-[#00a3ff] flex items-center justify-center mb-4">
+              <Trophy className="w-5 h-5" />
+            </div>
+            <h3 className="font-mono font-black uppercase text-base text-slate-900 mb-2">
+              Elite Support
+            </h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Expert gym equipment specialists standing by to assist with home gym layouts, commercial fitouts, and inquiries.
+            </p>
+          </div>
+        </div>
+
+        {/* Narrative Section */}
+        <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 text-slate-700 space-y-6">
+          <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900 font-mono">
+            Our Commitment
+          </h2>
+          <p className="leading-relaxed text-sm sm:text-base">
+            Whether you are outfitting a garage gym, upgrading a commercial fitness center, or elevating your training apparel, PGX is committed to delivering state-of-the-art innovation, rugged reliability, and uncompromising quality.
+          </p>
+          <p className="leading-relaxed text-sm sm:text-base">
+            Every piece of hardware undergoes strict stress testing, ergonomic assessment, and safety inspections before reaching your workout space. Train hard, recover smart, and push your limits with PGX.
+          </p>
         </div>
       </div>
     </div>

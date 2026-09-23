@@ -106,15 +106,15 @@ export default async function ProductDetailPage({ params }: Props) {
       {/* Breadcrumb */}
       <div className="border-b">
         <div className="container mx-auto px-4 py-3 flex items-center text-sm text-gray-500">
-          <Link href="/" className="hover:text-emerald-600">
+          <Link href="/" className="hover:text-[#00a3ff] transition-colors">
             Home
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <Link href="/shop" className="hover:text-emerald-600">
+          <Link href="/shop" className="hover:text-[#00a3ff] transition-colors">
             Shop
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-gray-900 truncate">{product.name}</span>
+          <span className="text-gray-900 truncate font-medium">{product.name}</span>
         </div>
       </div>
 

@@ -50,7 +50,7 @@ export function ShopHeader({ search, totalProducts, viewMode, setViewMode, sort,
                 <DropdownMenuItem 
                   key={option.value} 
                   onClick={() => setSort(option.value)}
-                  className={sort === option.value ? "text-emerald-600 font-medium" : ""}
+                  className={sort === option.value ? "text-[#00a3ff] font-bold" : ""}
                 >
                   {option.label}
                 </DropdownMenuItem>
@@ -62,13 +62,13 @@ export function ShopHeader({ search, totalProducts, viewMode, setViewMode, sort,
         <div className="flex items-center border rounded-lg bg-gray-50 p-1">
           <button
             onClick={() => setViewMode("grid")}
-            className={`p-1.5 rounded ${viewMode === "grid" ? "bg-white shadow-sm text-emerald-600" : "text-gray-500"}`}
+            className={`p-1.5 rounded ${viewMode === "grid" ? "bg-white shadow-sm text-slate-950" : "text-gray-500"}`}
           >
             <Grid className="h-4 w-4" />
           </button>
           <button
             onClick={() => setViewMode("list")}
-            className={`p-1.5 rounded ${viewMode === "list" ? "bg-white shadow-sm text-emerald-600" : "text-gray-500"}`}
+            className={`p-1.5 rounded ${viewMode === "list" ? "bg-white shadow-sm text-slate-950" : "text-gray-500"}`}
           >
             <ListIcon className="h-4 w-4" />
           </button>

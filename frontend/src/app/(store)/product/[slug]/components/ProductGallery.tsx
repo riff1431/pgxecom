@@ -47,7 +47,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
               type="button"
               onClick={() => setActiveIndex(index)}
               className={`relative aspect-square rounded-xl overflow-hidden border-2 transition ${activeIndex === index
-                ? "border-emerald-600"
+                ? "border-[#00a3ff] shadow-md shadow-[#00a3ff]/20"
                 : "border-transparent hover:border-gray-300"
                 }`}
               aria-label={`Show image ${index + 1}`}
