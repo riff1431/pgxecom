@@ -50,7 +50,8 @@ export function WalletPill({ className = "", compact = false }: WalletPillProps)
     try {
       setSubmitting(true);
       toast.loading("Redirecting to Stripe Checkout...", { id: "stripe-redirect" });
-      const { url } = await createTopUpSession(activeToken, effectiveAmount);
+      const returnUrl = window.location.href.split("?")[0];
+      const { url } = await createTopUpSession(activeToken, effectiveAmount, returnUrl);
       if (url) {
         window.location.href = url;
       } else {

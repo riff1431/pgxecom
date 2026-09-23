@@ -72,7 +72,8 @@ function WalletPageContent() {
     try {
       setSubmitting(true);
       toast.loading("Generating Stripe Checkout session...", { id: "wallet-checkout" });
-      const { url } = await createTopUpSession(activeToken, effectiveAmount);
+      const returnUrl = `${window.location.origin}/my-account/wallet`;
+      const { url } = await createTopUpSession(activeToken, effectiveAmount, returnUrl);
       if (url) {
         window.location.href = url;
       } else {

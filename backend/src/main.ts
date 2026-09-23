@@ -22,14 +22,18 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  // CORS configuration
-  const frontendUrl = configService.get<string>('FRONTEND_URL') || '*';
-  const origins = frontendUrl.includes(',')
-    ? frontendUrl.split(',').map((url) => url.trim())
-    : frontendUrl;
-
+  // CORS — hardcoded allowed origins (local dev + production)
   app.enableCors({
-    origin: origins === '*' ? true : origins,
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
+      'https://playgroundfitnex.com',
+      'https://www.playgroundfitnex.com',
+      'https://api.playgroundfitnex.com',
+      'https://playgroundx.vip',
+      'https://www.playgroundx.vip'
+    ],
     credentials: true,
   });
 
