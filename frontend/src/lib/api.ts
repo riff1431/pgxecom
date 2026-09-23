@@ -2,19 +2,25 @@ import axios from "axios";
 import { env } from "@/env";
 import { getCookie, removeCookie, COOKIE_KEYS } from "./cookie-client";
 
-// Determine API base URL: prioritize env, but if running in browser on production domain and localhost is detected, use production api
-const getBaseUrl = () => {
+// Determine API base URL: prioritize env, but ensure reliable production fallback both in browser and SSR
+export const getBaseApiUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || env.NEXT_PUBLIC_API_URL;
   if (typeof window !== "undefined") {
     // If running in browser on playgroundfitnex.com or any non-localhost domain, don't allow localhost:4000
-    if (!window.location.hostname.includes("localhost") && (!env.NEXT_PUBLIC_API_URL || env.NEXT_PUBLIC_API_URL.includes("localhost"))) {
+    if (!window.location.hostname.includes("localhost") && (!envUrl || envUrl.includes("localhost"))) {
+      return "https://api.playgroundfitnex.com/api";
+    }
+  } else {
+    // Server-side (SSR / RSC): If NODE_ENV is production or envUrl is missing/localhost, default to production API
+    if (process.env.NODE_ENV === "production" && (!envUrl || envUrl.includes("localhost"))) {
       return "https://api.playgroundfitnex.com/api";
     }
   }
-  return env.NEXT_PUBLIC_API_URL || "https://api.playgroundfitnex.com/api";
+  return envUrl || "https://api.playgroundfitnex.com/api";
 };
 
 export const api = axios.create({
-  baseURL: getBaseUrl(),
+  baseURL: getBaseApiUrl(),
 });
 
 // Attach JWT token from cookies

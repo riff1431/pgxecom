@@ -29,13 +29,16 @@ interface BlogApiResponse {
   data: BlogPost;
 }
 
+import { getBaseApiUrl } from "@/lib/api";
+
 interface BlogPageProps {
   params: Promise<{ slug: string }>;
 }
 
 async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
+  const baseUrl = getBaseApiUrl();
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/blog/details/${encodeURIComponent(slug)}`,
+    `${baseUrl}/blog/details/${encodeURIComponent(slug)}`,
     {
       next: { revalidate: 60 },
     },

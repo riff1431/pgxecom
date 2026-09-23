@@ -1,15 +1,17 @@
 import { MetadataRoute } from "next";
+import { getBaseApiUrl } from "@/lib/api";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const apiBaseUrl = getBaseApiUrl();
 
   try {
     const productsRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/products?limit=1000`,
+      `${apiBaseUrl}/products?limit=1000`,
       { next: { revalidate: 3600 } }
     );
     const categoriesRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/categories`,
+      `${apiBaseUrl}/categories`,
       { next: { revalidate: 3600 } }
     );
 

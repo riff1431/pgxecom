@@ -5,26 +5,35 @@ import { ProductDetailClient } from "./components/ProductDetailClient";
 import type { Product, Setting } from "@/types";
 import { Metadata, ResolvingMetadata } from "next";
 
+import { getBaseApiUrl } from "@/lib/api";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
+  const baseUrl = getBaseApiUrl();
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${slug}`, {
+    const url = `${baseUrl}/products/${slug}`;
+    const res = await fetch(url, {
       next: { revalidate: 3600 },
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`[getProduct] Fetch failed for ${url} - Status: ${res.status} ${res.statusText}`);
+      return null;
+    }
     const json = await res.json();
     return json.data;
   } catch (error) {
+    console.error(`[getProduct] Network error fetching ${baseUrl}/products/${slug}:`, error);
     return null;
   }
 }
 
 async function getSettings(): Promise<Record<string, string>> {
+  const baseUrl = getBaseApiUrl();
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/settings`, {
+    const res = await fetch(`${baseUrl}/settings`, {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return {};
@@ -36,6 +45,7 @@ async function getSettings(): Promise<Record<string, string>> {
     });
     return settingsMap;
   } catch (error) {
+    console.error(`[getSettings] Network error fetching ${baseUrl}/settings:`, error);
     return {};
   }
 }
