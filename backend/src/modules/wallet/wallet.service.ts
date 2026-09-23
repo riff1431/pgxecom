@@ -25,6 +25,15 @@ export class WalletService {
   async getBalance(userId: string) {
     const supabase = this.supabaseService.getAdminClient();
 
+    if (!supabase) {
+      this.logger.warn('Supabase is not configured; returning fallback balance 0');
+      return {
+        userId,
+        balance: 0,
+        currency: 'EUR',
+      };
+    }
+
     // Reconcile and fetch authoritative balance
     try {
       const { data: recBal, error: rpcErr } = await supabase.rpc('reconcile_wallet_balance', {

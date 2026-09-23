@@ -52,6 +52,10 @@ export class SupabaseAuthGuard implements CanActivate {
     // 2. Try verifying as Supabase token
     try {
       const supabase = this.supabaseService.getAdminClient();
+      if (!supabase) {
+        throw new UnauthorizedException('Authentication provider unavailable and local token invalid');
+      }
+
       const {
         data: { user },
         error,

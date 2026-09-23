@@ -43,49 +43,49 @@ export class AuthService {
       throw new ConflictException('User with this email or phone already exists');
     }
 
-    // 2. Create user in Supabase Auth (Single Source of Truth)
-    let supabaseUserId: string;
-    try {
-      const { data: sbUser, error: sbError } = await supabase.auth.admin.createUser({
-        email: dto.email.toLowerCase().trim(),
-        password: dto.password,
-        email_confirm: true,
-        user_metadata: {
-          name: dto.name,
-          role: 'fan',
-        },
-      });
+    // 2. Create user in Supabase Auth if available
+    let supabaseUserId: string = crypto.randomUUID();
+    if (supabase) {
+      try {
+        const { data: sbUser, error: sbError } = await supabase.auth.admin.createUser({
+          email: dto.email.toLowerCase().trim(),
+          password: dto.password,
+          email_confirm: true,
+          user_metadata: {
+            name: dto.name,
+            role: 'fan',
+          },
+        });
 
-      if (sbError) {
-        if (sbError.message.includes('already registered') || sbError.message.includes('already exists')) {
-          throw new ConflictException('An account with this email already exists on the PGX network.');
+        if (sbError) {
+          if (sbError.message.includes('already registered') || sbError.message.includes('already exists')) {
+            throw new ConflictException('An account with this email already exists on the PGX network.');
+          }
+          this.logger.error(`Supabase admin.createUser error: ${sbError.message}`);
+          throw new BadRequestException(sbError.message);
         }
-        this.logger.error(`Supabase admin.createUser error: ${sbError.message}`);
-        throw new BadRequestException(sbError.message);
+
+        if (sbUser?.user?.id) {
+          supabaseUserId = sbUser.user.id;
+        }
+      } catch (err: any) {
+        if (err instanceof ConflictException || err instanceof BadRequestException) {
+          throw err;
+        }
+        this.logger.error('Error creating Supabase user:', err);
+        throw new BadRequestException(err.message || 'Account registration failed');
       }
 
-      if (!sbUser.user?.id) {
-        throw new BadRequestException('Failed to create account in auth provider');
+      // 3. Ensure user has a Supabase wallet initialized
+      try {
+        await supabase
+          .from('wallets')
+          .insert({ user_id: supabaseUserId, balance: 0, currency: 'EUR' })
+          .select('id')
+          .maybeSingle();
+      } catch (wErr) {
+        this.logger.warn('Could not initialize Supabase wallet (may already exist):', wErr);
       }
-
-      supabaseUserId = sbUser.user.id;
-    } catch (err: any) {
-      if (err instanceof ConflictException || err instanceof BadRequestException) {
-        throw err;
-      }
-      this.logger.error('Error creating Supabase user:', err);
-      throw new BadRequestException(err.message || 'Account registration failed');
-    }
-
-    // 3. Ensure user has a Supabase wallet initialized
-    try {
-      await supabase
-        .from('wallets')
-        .insert({ user_id: supabaseUserId, balance: 0, currency: 'EUR' })
-        .select('id')
-        .maybeSingle();
-    } catch (wErr) {
-      this.logger.warn('Could not initialize Supabase wallet (may already exist):', wErr);
     }
 
     // 4. Hash password and save in local Prisma using the exact same Supabase UUID
@@ -112,14 +112,16 @@ export class AuthService {
 
     // 5. Generate both NestJS token and Supabase session token
     let supabaseToken = '';
-    try {
-      const { data: loginData } = await supabase.auth.signInWithPassword({
-        email: dto.email.toLowerCase().trim(),
-        password: dto.password,
-      });
-      supabaseToken = loginData.session?.access_token || '';
-    } catch (e) {
-      this.logger.warn('Could not get initial Supabase token on register:', e);
+    if (supabase) {
+      try {
+        const { data: loginData } = await supabase.auth.signInWithPassword({
+          email: dto.email.toLowerCase().trim(),
+          password: dto.password,
+        });
+        supabaseToken = loginData.session?.access_token || '';
+      } catch (e) {
+        this.logger.warn('Could not get initial Supabase token on register:', e);
+      }
     }
 
     const token = this.generateToken(user.id, user.role);
@@ -135,22 +137,24 @@ export class AuthService {
     const supabase = this.supabaseService.getAdminClient();
     const cleanEmail = dto.email.toLowerCase().trim();
 
-    // 1. Authenticate against Supabase Auth
+    // 1. Authenticate against Supabase Auth (if configured)
     let supabaseUser: any = null;
     let supabaseToken = '';
 
-    try {
-      const { data: sbAuth, error: sbError } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
-        password: dto.password,
-      });
+    if (supabase) {
+      try {
+        const { data: sbAuth, error: sbError } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password: dto.password,
+        });
 
-      if (!sbError && sbAuth.user) {
-        supabaseUser = sbAuth.user;
-        supabaseToken = sbAuth.session?.access_token || '';
+        if (!sbError && sbAuth.user) {
+          supabaseUser = sbAuth.user;
+          supabaseToken = sbAuth.session?.access_token || '';
+        }
+      } catch (e) {
+        this.logger.warn('Supabase signInWithPassword check failed:', e);
       }
-    } catch (e) {
-      this.logger.warn('Supabase signInWithPassword check failed:', e);
     }
 
     // 2. Fetch local user
@@ -190,23 +194,25 @@ export class AuthService {
       }
 
       // Check if user is in Supabase; if not, sync them to Supabase
-      try {
-        const { data: createdSb } = await supabase.auth.admin.createUser({
-          email: cleanEmail,
-          password: dto.password,
-          email_confirm: true,
-          user_metadata: { name: user.name, role: 'fan' },
-        });
-
-        if (createdSb?.user) {
-          const { data: sessionData } = await supabase.auth.signInWithPassword({
+      if (supabase) {
+        try {
+          const { data: createdSb } = await supabase.auth.admin.createUser({
             email: cleanEmail,
             password: dto.password,
+            email_confirm: true,
+            user_metadata: { name: user.name, role: 'fan' },
           });
-          supabaseToken = sessionData.session?.access_token || '';
+
+          if (createdSb?.user) {
+            const { data: sessionData } = await supabase.auth.signInWithPassword({
+              email: cleanEmail,
+              password: dto.password,
+            });
+            supabaseToken = sessionData.session?.access_token || '';
+          }
+        } catch (syncErr) {
+          this.logger.warn('Background Supabase user sync error during local login:', syncErr);
         }
-      } catch (syncErr) {
-        this.logger.warn('Background Supabase user sync error during local login:', syncErr);
       }
     }
 

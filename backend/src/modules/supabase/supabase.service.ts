@@ -24,10 +24,11 @@ export class SupabaseService {
     }
   }
 
-  getAdminClient(): SupabaseClient {
-    if (!this.adminClient) {
-      throw new Error('Supabase Admin Client is not initialized. Please check your environment variables.');
-    }
+  isAvailable(): boolean {
+    return this.adminClient !== null;
+  }
+
+  getAdminClient(): SupabaseClient | null {
     return this.adminClient;
   }
 }

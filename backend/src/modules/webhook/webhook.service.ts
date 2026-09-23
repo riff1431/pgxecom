@@ -81,6 +81,10 @@ export class WebhookService {
     }
 
     const supabase = this.supabaseService.getAdminClient();
+    if (!supabase) {
+      this.logger.error('Cannot process webhook topup: Supabase Admin Client is not initialized.');
+      throw new InternalServerErrorException('Database client unavailable');
+    }
 
     // Idempotency check: see if a transaction with this session ID already exists in transactions table
     const descText = `Stripe Top-Up (Session: ${session.id})`;
