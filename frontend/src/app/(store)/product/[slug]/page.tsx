@@ -1,120 +1,66 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { ProductDetailClient } from "./components/ProductDetailClient";
-import type { Product, Setting } from "@/types";
-import { Metadata, ResolvingMetadata } from "next";
+"use client";
 
-import { getBaseApiUrl } from "@/lib/api";
+import { use, useEffect } from "react";
+import Link from "next/link";
+import { ChevronRight, Loader2, ShieldAlert } from "lucide-react";
+import { ProductDetailClient } from "./components/ProductDetailClient";
+import { useGetProduct } from "@/lib/api/product";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-async function getProduct(slug: string): Promise<Product | null> {
-  const baseUrl = getBaseApiUrl();
-  try {
-    const url = `${baseUrl}/products/${slug}`;
-    const res = await fetch(url, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) {
-      console.warn(`[getProduct] Fetch failed for ${url} - Status: ${res.status} ${res.statusText}`);
-      return null;
-    }
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    console.error(`[getProduct] Network error fetching ${baseUrl}/products/${slug}:`, error);
-    return null;
-  }
-}
+export default function ProductDetailPage({ params }: Props) {
+  const { slug } = use(params);
+  const { data: product, isLoading, error } = useGetProduct(slug);
 
-async function getSettings(): Promise<Record<string, string>> {
-  const baseUrl = getBaseApiUrl();
-  try {
-    const res = await fetch(`${baseUrl}/settings`, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return {};
-    const json = await res.json();
-    const settingsArr: Setting[] = json.data || [];
-    const settingsMap: Record<string, string> = {};
-    settingsArr.forEach((s) => {
-      settingsMap[s.key] = s.value;
-    });
-    return settingsMap;
-  } catch (error) {
-    console.error(`[getSettings] Network error fetching ${baseUrl}/settings:`, error);
-    return {};
-  }
-}
-
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const { slug } = await params;
-  const [product, settings] = await Promise.all([getProduct(slug), getSettings()]);
-
-  const storeName = settings["store_name"] || process.env.NEXT_PUBLIC_STORE_NAME || "FreshMart";
-  const defaultDesc = settings["store_description"] || `Fresh and organic products at ${storeName}`;
-
-  if (!product) {
-    return { title: `Product Not Found | ${storeName}` };
+  if (isLoading) {
+    return (
+      <div className="bg-white min-h-[60vh] flex flex-col items-center justify-center py-20">
+        <Loader2 className="w-10 h-10 animate-spin text-[#00a3ff] mb-4" />
+        <p className="text-slate-500 font-mono text-xs uppercase tracking-widest font-bold">
+          Loading Product Details...
+        </p>
+      </div>
+    );
   }
 
-  return {
-    title: `${product.name} | ${storeName}`,
-    description: product.shortDesc || product.description || defaultDesc,
-    openGraph: {
-      title: `${product.name} | ${storeName}`,
-      description: product.shortDesc || product.description || "",
-      images: product.images?.[0]?.url ? [product.images[0].url] : [],
-    },
-  };
-}
-
-export default async function ProductDetailPage({ params }: Props) {
-  const { slug } = await params;
-  const product = await getProduct(slug);
-
-  if (!product) {
-    notFound();
+  if (error || !product) {
+    return (
+      <div className="bg-white min-h-[60vh] flex flex-col items-center justify-center py-20 px-4 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4 text-slate-400">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h1 className="text-2xl font-black uppercase tracking-tight text-slate-900 font-mono mb-2">
+          Product Not Found
+        </h1>
+        <p className="text-slate-500 text-sm max-w-md mb-6">
+          The fitness gear or equipment you are looking for is currently unavailable or the link may have expired.
+        </p>
+        <Link
+          href="/shop"
+          className="h-11 px-8 rounded-lg bg-[#060b13] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center transition-colors"
+        >
+          Return to Shop
+        </Link>
+      </div>
+    );
   }
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    image: product.images?.[0]?.url || "",
-    description: product.shortDesc || product.description || "",
-    offers: {
-      "@type": "Offer",
-      price: product.price,
-      priceCurrency: "BDT",
-      availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-    },
-  };
 
   return (
-    <div className="bg-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <div className="bg-white min-h-screen">
       {/* Breadcrumb */}
-      <div className="border-b">
-        <div className="container mx-auto px-4 py-3 flex items-center text-sm text-gray-500">
+      <div className="border-b border-slate-100">
+        <div className="container mx-auto px-4 py-3 flex items-center text-xs sm:text-sm text-slate-500">
           <Link href="/" className="hover:text-[#00a3ff] transition-colors">
             Home
           </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
+          <ChevronRight className="h-3.5 w-3.5 mx-2 text-slate-300" />
           <Link href="/shop" className="hover:text-[#00a3ff] transition-colors">
             Shop
           </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-gray-900 truncate font-medium">{product.name}</span>
+          <ChevronRight className="h-3.5 w-3.5 mx-2 text-slate-300" />
+          <span className="text-slate-900 truncate font-semibold">{product.name}</span>
         </div>
       </div>
 
