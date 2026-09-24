@@ -35,12 +35,13 @@ export const useGetAdminSettings = (params?: SettingQueryParams) => {
       const response = await instance.get<ApiResponse<Setting[]>>(
         "/admin/settings",
         {
-          params: cleanedParams,
+          params: { ...cleanedParams, _t: Date.now() },
         },
       );
 
       return response.data.data;
     },
+    staleTime: 0,
   });
 };
 
@@ -48,9 +49,12 @@ export const useGetPublicSettings = () => {
   return useQuery({
     queryKey: ["settings", "public"],
     queryFn: async () => {
-      const response = await instance.get<ApiResponse<Setting[]>>("/settings");
+      const response = await instance.get<ApiResponse<Setting[]>>("/settings", {
+        params: { _t: Date.now() },
+      });
       return response.data.data;
     },
+    staleTime: 0,
   });
 };
 

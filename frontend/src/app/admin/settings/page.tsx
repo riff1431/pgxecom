@@ -95,6 +95,7 @@ export default function AdminSettingsPage() {
       }));
 
       await bulkUpsertMutation.mutateAsync({ items: payload });
+      setFormValues({});
       await refreshSettingsQueries();
       toast.success("Store settings updated");
     } catch {

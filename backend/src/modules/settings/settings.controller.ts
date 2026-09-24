@@ -48,39 +48,7 @@ export class SettingsController {
 export class AdminSettingsController {
   constructor(private settingsService: SettingsService) {}
 
-  // ── Existing Key-Value Store Settings ──
-
-  @Get()
-  findAll(@Query('group') group?: string, @Query('search') search?: string) {
-    return this.settingsService.findAll({ group, search });
-  }
-
-  @Get('key/:key')
-  findOne(@Param('key') key: string) {
-    return this.settingsService.findOneByKey(key);
-  }
-
-  @Post()
-  create(@Body() data: CreateSettingDto) {
-    return this.settingsService.create(data);
-  }
-
-  @Post('bulk-upsert')
-  bulkUpsert(@Body() data: BulkUpsertSettingsDto) {
-    return this.settingsService.bulkUpsert(data);
-  }
-
-  @Put([':key', 'key/:key'])
-  update(@Param('key') key: string, @Body() data: UpdateSettingDto) {
-    return this.settingsService.updateByKey(key, data);
-  }
-
-  @Delete([':key', 'key/:key'])
-  delete(@Param('key') key: string) {
-    return this.settingsService.deleteByKey(key);
-  }
-
-  // ── SMTP Settings Endpoints ──
+  // ── SMTP Settings Endpoints (Must be before :key) ──
 
   @Get('smtp')
   getSmtpSettings() {
@@ -104,7 +72,7 @@ export class AdminSettingsController {
     return this.settingsService.importSmtpFromEnv(req.user);
   }
 
-  // ── Stripe Profiles Endpoints ──
+  // ── Stripe Profiles Endpoints (Must be before :key) ──
 
   @Get('stripe/profiles')
   getStripeProfiles() {
@@ -159,5 +127,47 @@ export class AdminSettingsController {
   @Get('audit-logs')
   getAuditLogs(@Query('entityType') entityType?: 'SMTP' | 'STRIPE') {
     return this.settingsService.getAuditLogs(entityType);
+  }
+
+  // ── Existing Key-Value Store Settings (Parameterized :key routes at the very end) ──
+
+  @Get()
+  findAll(@Query('group') group?: string, @Query('search') search?: string) {
+    return this.settingsService.findAll({ group, search });
+  }
+
+  @Post('bulk-upsert')
+  bulkUpsert(@Body() data: BulkUpsertSettingsDto) {
+    return this.settingsService.bulkUpsert(data);
+  }
+
+  @Post()
+  create(@Body() data: CreateSettingDto) {
+    return this.settingsService.create(data);
+  }
+
+  @Get('key/:key')
+  findOne(@Param('key') key: string) {
+    return this.settingsService.findOneByKey(key);
+  }
+
+  @Put('key/:key')
+  updateByPrefixedKey(@Param('key') key: string, @Body() data: UpdateSettingDto) {
+    return this.settingsService.updateByKey(key, data);
+  }
+
+  @Delete('key/:key')
+  deleteByPrefixedKey(@Param('key') key: string) {
+    return this.settingsService.deleteByKey(key);
+  }
+
+  @Put(':key')
+  update(@Param('key') key: string, @Body() data: UpdateSettingDto) {
+    return this.settingsService.updateByKey(key, data);
+  }
+
+  @Delete(':key')
+  delete(@Param('key') key: string) {
+    return this.settingsService.deleteByKey(key);
   }
 }

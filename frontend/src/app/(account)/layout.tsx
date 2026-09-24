@@ -33,11 +33,6 @@ function AccountLayout({ children }: { children: React.ReactNode }) {
             <aside className="w-full md:w-64 shrink-0">
               <div className="bg-[#0b1322] rounded-2xl border border-slate-800 p-5 space-y-2 sticky top-24 shadow-xl">
                 <div className="px-2 mb-6 pb-4 border-b border-slate-800/80 flex items-center gap-3">
-                  <img
-                    src="/logo.png"
-                    alt="PGX Logo"
-                    className="h-10 w-auto object-contain shrink-0"
-                  />
                   <div className="min-w-0 flex-1">
                     <span className="text-[9px] font-mono uppercase tracking-widest text-[#00a3ff] font-bold block truncate">
                       PGX Athlete Hub
@@ -57,11 +52,10 @@ function AccountLayout({ children }: { children: React.ReactNode }) {
                       <Link
                         key={item.name}
                         href={item.href}
-                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all ${
-                          isActive
-                            ? "bg-[#00a3ff] text-white shadow-lg shadow-[#00a3ff]/20 font-black"
-                            : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
-                        }`}
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all ${isActive
+                          ? "bg-[#00a3ff] text-white shadow-lg shadow-[#00a3ff]/20 font-black"
+                          : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
+                          }`}
                       >
                         <item.icon
                           className={`h-4 w-4 ${isActive ? "text-white" : "text-slate-400"}`}
