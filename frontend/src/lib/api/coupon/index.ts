@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api as instance } from "@/lib/api";
 import type {
@@ -96,6 +96,7 @@ export const useUpdateAdminCoupon = () => {
 };
 
 export const useToggleAdminCouponStatus = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { id: string; isActive: boolean }) => {
       const response = await instance.put<ApiResponse<AdminCoupon>>(
@@ -105,6 +106,24 @@ export const useToggleAdminCouponStatus = () => {
         },
       );
       return response.data.data;
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({ queryKey: ["admin", "coupons"] });
+      queryClient.setQueriesData({ queryKey: ["admin", "coupons"] }, (oldData: any) => {
+        if (!oldData) return oldData;
+        if (Array.isArray(oldData.data)) {
+          return {
+            ...oldData,
+            data: oldData.data.map((c: AdminCoupon) =>
+              c.id === payload.id ? { ...c, isActive: payload.isActive } : c,
+            ),
+          };
+        }
+        return oldData;
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "coupons"] });
     },
   });
 };

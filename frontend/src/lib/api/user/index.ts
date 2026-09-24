@@ -8,7 +8,7 @@ import type {
   Order,
   User,
 } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface MessageResponse {
   message: string;
@@ -255,6 +255,7 @@ export const useGetAdminCustomerOrders = (
 };
 
 export const useBanAdminCustomer = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { id: string; reason?: string }) => {
       const response = await instance.put<ApiResponse<{ isBanned: boolean }>>(
@@ -266,10 +267,29 @@ export const useBanAdminCustomer = () => {
 
       return response.data.data;
     },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({ queryKey: ["admin", "customers"] });
+      queryClient.setQueriesData({ queryKey: ["admin", "customers"] }, (oldData: any) => {
+        if (!oldData) return oldData;
+        if (Array.isArray(oldData.data)) {
+          return {
+            ...oldData,
+            data: oldData.data.map((c: AdminCustomer) =>
+              c.id === payload.id ? { ...c, isBanned: true } : c,
+            ),
+          };
+        }
+        return oldData;
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "customers"] });
+    },
   });
 };
 
 export const useUnbanAdminCustomer = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await instance.put<ApiResponse<{ isBanned: boolean }>>(
@@ -277,6 +297,24 @@ export const useUnbanAdminCustomer = () => {
       );
 
       return response.data.data;
+    },
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["admin", "customers"] });
+      queryClient.setQueriesData({ queryKey: ["admin", "customers"] }, (oldData: any) => {
+        if (!oldData) return oldData;
+        if (Array.isArray(oldData.data)) {
+          return {
+            ...oldData,
+            data: oldData.data.map((c: AdminCustomer) =>
+              c.id === id ? { ...c, isBanned: false } : c,
+            ),
+          };
+        }
+        return oldData;
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "customers"] });
     },
   });
 };

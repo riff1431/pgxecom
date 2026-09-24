@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api as instance } from "@/lib/api";
 import type {
@@ -128,6 +128,7 @@ export const useUpdateAdminBlogPost = () => {
 };
 
 export const useToggleAdminBlogStatus = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { id: string; isPublished: boolean }) => {
       const response = await instance.put<ApiResponse<BlogPost>>(
@@ -136,6 +137,25 @@ export const useToggleAdminBlogStatus = () => {
       );
 
       return response.data.data;
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({ queryKey: ["admin", "blog"] });
+      queryClient.setQueriesData({ queryKey: ["admin", "blog"] }, (oldData: any) => {
+        if (!oldData) return oldData;
+        if (Array.isArray(oldData.data)) {
+          return {
+            ...oldData,
+            data: oldData.data.map((b: BlogPost) =>
+              b.id === payload.id ? { ...b, isPublished: payload.isPublished } : b,
+            ),
+          };
+        }
+        return oldData;
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "blog"] });
+      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
     },
   });
 };

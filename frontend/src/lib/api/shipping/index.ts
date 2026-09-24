@@ -103,6 +103,17 @@ export const useToggleAdminShippingZone = () => {
 
       return response.data.data;
     },
+    onMutate: async ({ id, isActive }) => {
+      await queryClient.cancelQueries({ queryKey: ["admin", "shipping-zones"] });
+
+      queryClient.setQueriesData({ queryKey: ["admin", "shipping-zones"] }, (oldData: any) => {
+        if (!oldData) return oldData;
+        if (Array.isArray(oldData)) {
+          return oldData.map((z: ShippingZone) => (z.id === id ? { ...z, isActive } : z));
+        }
+        return oldData;
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "shipping-zones"] });
       queryClient.invalidateQueries({ queryKey: ["shipping-zones"] });

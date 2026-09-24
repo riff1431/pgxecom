@@ -91,7 +91,44 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     refresh();
+
+    // Auto-polling interval every 15 seconds to ensure wallet balance is consistently fresh
+    const intervalId = setInterval(() => {
+      refresh();
+    }, 15000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [refresh]);
+
+  // Subscribe to Supabase Realtime postgres_changes on the `wallets` table for instant push updates
+  useEffect(() => {
+    if (!supabase) return;
+
+    const channel = supabase
+      .channel('wallet_balance_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'wallets',
+        },
+        (payload: any) => {
+          // If the change belongs to the active user (or on any wallet change), refresh balance immediately
+          const changedUserId = payload.new?.user_id || payload.old?.user_id;
+          if (!changedUserId || changedUserId === user?.id || changedUserId === appUser?.id) {
+            refresh();
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, user?.id, appUser?.id, refresh]);
 
   return (
     <WalletContext.Provider

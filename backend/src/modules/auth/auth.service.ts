@@ -162,6 +162,16 @@ export class AuthService {
       where: { email: cleanEmail },
     });
 
+    // If user already exists locally, ensure supabaseUserId is linked
+    if (supabaseUser && user) {
+      if (user.supabaseUserId !== supabaseUser.id) {
+        user = await this.prisma.user.update({
+          where: { id: user.id },
+          data: { supabaseUserId: supabaseUser.id },
+        });
+      }
+    }
+
     // If password matched in Supabase but user does not exist locally yet (account created on adult site)
     if (supabaseUser && !user) {
       const hashedPassword = await bcrypt.hash(dto.password, 12);
@@ -173,6 +183,7 @@ export class AuthService {
       user = await this.prisma.user.create({
         data: {
           id: supabaseUser.id,
+          supabaseUserId: supabaseUser.id,
           name,
           email: cleanEmail,
           password: hashedPassword,

@@ -157,6 +157,23 @@ export const useToggleProductActive = () => {
       const response = await instance.patch<ApiResponse<Product>>(`/admin/products/${id}/toggle`);
       return response.data.data;
     },
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: ["admin-products"] });
+
+      // Optimistically flip isActive in all admin-products queries
+      queryClient.setQueriesData({ queryKey: ["admin-products"] }, (oldData: any) => {
+        if (!oldData) return oldData;
+        if (Array.isArray(oldData.data)) {
+          return {
+            ...oldData,
+            data: oldData.data.map((prod: Product) =>
+              prod.id === id ? { ...prod, isActive: !prod.isActive } : prod,
+            ),
+          };
+        }
+        return oldData;
+      });
+    },
     onSuccess: (data, id) => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       queryClient.invalidateQueries({ queryKey: ["admin-product", id] });

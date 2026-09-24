@@ -17,6 +17,7 @@ import type { Product } from "@/types";
 import { Edit, Package, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface ProductsTableProps {
@@ -26,13 +27,17 @@ interface ProductsTableProps {
 
 export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
   const toggleMutation = useToggleProductActive();
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const onToggle = async (id: string) => {
     try {
+      setTogglingId(id);
       await toggleMutation.mutateAsync(id);
       toast.success("Product status updated");
     } catch {
       toast.error("Failed to update status");
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -133,7 +138,7 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
                   onCheckedChange={() => onToggle(product.id)}
                   activeLabel="Active"
                   inactiveLabel="Hidden"
-                  disabled={toggleMutation.isPending}
+                  disabled={togglingId === product.id}
                 />
               </TableCell>
               <TableCell className="text-right">
@@ -162,9 +167,6 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
           ))}
         </TableBody>
       </Table>
-      {toggleMutation.isPending ? (
-        <div className="absolute inset-0 bg-slate-950/60 flex items-center justify-center backdrop-blur-[1px] z-10" />
-      ) : null}
     </div>
   );
 }
