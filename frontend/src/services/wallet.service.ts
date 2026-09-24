@@ -13,8 +13,13 @@ export interface TopUpResponse {
 
 export async function getWalletBalance(supabaseToken: string): Promise<WalletBalanceResponse> {
   const response = await api.get('/wallet/balance', {
+    params: {
+      _t: Date.now(),
+    },
     headers: {
       Authorization: `Bearer ${supabaseToken}`,
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
     },
   });
   return response.data?.data || response.data;

@@ -1,7 +1,5 @@
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
@@ -34,11 +32,6 @@ import { PrismaModule } from './prisma/prisma.module';
         },
       ],
     }), // 100 requests per minute from the same IP
-    CacheModule.register({
-      isGlobal: true,
-      ttl: 60000, // 1 Minute cache
-      max: 100, // Maximum number of items in cache
-    }),
     PrismaModule,
     SupabaseModule,
     AuthModule,
@@ -59,11 +52,6 @@ import { PrismaModule } from './prisma/prisma.module';
     WebhookModule,
   ],
   controllers: [AppController],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-  ],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule { }
