@@ -149,7 +149,7 @@ Once both containers report healthy in Docploy:
 3. **Test Wallet Top-Up & Stripe Webhook**:
    - Log in or register an account at `https://playgroundfitnex.com`.
    - Go to `https://playgroundfitnex.com/my-account/wallet`.
-   - Click a preset amount (min €25) and click **Proceed to Checkout**.
+   - Click a preset amount (min €1) and click **Proceed to Checkout**.
    - Complete the Stripe payment.
    - Check the Stripe Dashboard ➔ **Webhooks** tab: the `checkout.session.completed` event should return HTTP `200 OK`.
    - Refresh the wallet page on `https://playgroundfitnex.com` or check the adult platform to confirm both share the updated balance!

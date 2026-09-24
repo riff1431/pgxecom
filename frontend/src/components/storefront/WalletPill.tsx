@@ -22,7 +22,7 @@ interface WalletPillProps {
 const PRESET_AMOUNTS = [25, 50, 100, 250, 500];
 
 export function WalletPill({ className = "", compact = false }: WalletPillProps) {
-  const { balance, currency, isLoading, token, user } = useWallet();
+  const { balance, isLoading, token, user } = useWallet();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState<string>("");
@@ -42,8 +42,8 @@ export function WalletPill({ className = "", compact = false }: WalletPillProps)
       return;
     }
 
-    if (isNaN(effectiveAmount) || effectiveAmount < 25) {
-      toast.error("Minimum deposit amount is €25");
+    if (isNaN(effectiveAmount) || effectiveAmount < 1) {
+      toast.error("Minimum deposit amount is €1");
       return;
     }
 
@@ -68,9 +68,8 @@ export function WalletPill({ className = "", compact = false }: WalletPillProps)
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className={`inline-flex items-center gap-1.5 rounded-full border border-slate-700/80 bg-slate-900/90 hover:bg-slate-800/90 hover:border-[#00a3ff]/50 transition-all duration-200 group shadow-sm ${
-          compact ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-xs sm:text-sm"
-        } ${className}`}
+        className={`inline-flex items-center gap-1.5 rounded-full border border-slate-700/80 bg-slate-900/90 hover:bg-slate-800/90 hover:border-[#00a3ff]/50 transition-all duration-200 group shadow-sm ${compact ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-xs sm:text-sm"
+          } ${className}`}
         title="Universal Wallet Balance - Click to top up"
       >
         <Coins size={compact ? 13 : 15} className="text-amber-400 group-hover:rotate-12 transition-transform" />
@@ -116,11 +115,10 @@ export function WalletPill({ className = "", compact = false }: WalletPillProps)
                         setSelectedAmount(amt);
                         setCustomAmount("");
                       }}
-                      className={`py-2.5 px-3 rounded-xl border text-sm font-bold transition-all ${
-                        isSelected
-                          ? "border-[#00a3ff] bg-[#00a3ff]/15 text-[#00a3ff] shadow-sm shadow-[#00a3ff]/20"
-                          : "border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700 hover:text-white"
-                      }`}
+                      className={`py-2.5 px-3 rounded-xl border text-sm font-bold transition-all ${isSelected
+                        ? "border-[#00a3ff] bg-[#00a3ff]/15 text-[#00a3ff] shadow-sm shadow-[#00a3ff]/20"
+                        : "border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700 hover:text-white"
+                        }`}
                     >
                       €{amt}
                     </button>
@@ -132,11 +130,10 @@ export function WalletPill({ className = "", compact = false }: WalletPillProps)
                     setSelectedAmount(0);
                     if (!customAmount) setCustomAmount("300");
                   }}
-                  className={`py-2.5 px-3 rounded-xl border text-sm font-bold transition-all ${
-                    customAmount
-                      ? "border-[#00a3ff] bg-[#00a3ff]/15 text-[#00a3ff] shadow-sm shadow-[#00a3ff]/20"
-                      : "border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700 hover:text-white"
-                  }`}
+                  className={`py-2.5 px-3 rounded-xl border text-sm font-bold transition-all ${customAmount
+                    ? "border-[#00a3ff] bg-[#00a3ff]/15 text-[#00a3ff] shadow-sm shadow-[#00a3ff]/20"
+                    : "border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700 hover:text-white"
+                    }`}
                 >
                   Custom
                 </button>
@@ -146,17 +143,17 @@ export function WalletPill({ className = "", compact = false }: WalletPillProps)
             {/* Custom Input if active */}
             {customAmount !== "" && (
               <div className="space-y-1.5 animate-in fade-in duration-200">
-                <label className="text-xs font-semibold text-slate-300">Custom Amount (Min €25)</label>
+                <label className="text-xs font-semibold text-slate-300">Custom Amount (Min €1)</label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">€</span>
                   <input
                     type="number"
-                    min="25"
+                    min="1"
                     step="5"
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
                     className="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2 pl-8 pr-4 text-white font-mono font-bold focus:outline-none focus:border-[#00a3ff]"
-                    placeholder="25"
+                    placeholder="99"
                   />
                 </div>
               </div>

@@ -64,8 +64,8 @@ function WalletPageContent() {
       return;
     }
 
-    if (isNaN(effectiveAmount) || effectiveAmount < 25) {
-      toast.error("Minimum deposit amount is €25");
+    if (isNaN(effectiveAmount) || effectiveAmount < 1) {
+      toast.error("Minimum deposit amount is €1");
       return;
     }
 
@@ -158,7 +158,7 @@ function WalletPageContent() {
           </div>
           <div>
             <h2 className="text-lg font-bold text-white tracking-wide">Instant Stripe Deposit</h2>
-            <p className="text-xs text-slate-400">All transactions processed in Euros (€). Minimum top-up is €25.</p>
+            <p className="text-xs text-slate-400">All transactions processed in Euros (€). Minimum top-up is €1.</p>
           </div>
         </div>
 
@@ -199,12 +199,12 @@ function WalletPageContent() {
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">€</span>
             <input
               type="number"
-              min="25"
+              min="1"
               step="5"
               value={customAmount}
               onChange={(e) => setCustomAmount(e.target.value)}
               className="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2.5 pl-8 pr-4 text-white font-mono font-bold focus:outline-none focus:border-[#00a3ff]"
-              placeholder="e.g. 75"
+              placeholder="e.g. 99"
             />
           </div>
         </div>
@@ -230,7 +230,7 @@ function WalletPageContent() {
         {/* Action Button */}
         <button
           onClick={handleTopUp}
-          disabled={submitting || effectiveAmount < 25}
+          disabled={submitting || effectiveAmount < 1}
           className="w-full sm:w-auto min-w-[260px] py-4 px-6 rounded-xl bg-[#00a3ff] hover:bg-[#008fdf] text-white font-black uppercase tracking-wider text-xs shadow-lg shadow-[#00a3ff]/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? (

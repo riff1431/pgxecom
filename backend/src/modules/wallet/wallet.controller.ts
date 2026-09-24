@@ -18,7 +18,7 @@ import { WalletService } from './wallet.service';
 @UseGuards(SupabaseAuthGuard)
 @ApiBearerAuth('bearer')
 export class WalletController {
-  constructor(private readonly walletService: WalletService) {}
+  constructor(private readonly walletService: WalletService) { }
 
   @Get('balance')
   @ApiOperation({ summary: 'Get current user wallet balance from Supabase' })
@@ -33,7 +33,7 @@ export class WalletController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Create Stripe Checkout session for wallet top-up' })
   @ApiResponse({ status: 200, description: 'Stripe Checkout URL generated successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid amount (min 25 EUR)' })
+  @ApiResponse({ status: 400, description: 'Invalid amount (min 1 EUR)' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async createTopUpSession(@Req() req: any, @Body() dto: TopUpDto) {
     const userId = req.user.id;
