@@ -50,8 +50,8 @@ export class WalletService {
       if (supabase) {
         try {
           const { data: usersData } = await supabase.auth.admin.listUsers();
-          const matched = usersData?.users?.find(
-            (u) => u.email?.toLowerCase().trim() === localUser.email.toLowerCase().trim(),
+          const matched = (usersData?.users as any[])?.find(
+            (u: any) => u.email?.toLowerCase().trim() === localUser.email.toLowerCase().trim(),
           );
           if (matched?.id) {
             await this.prisma.user.update({
