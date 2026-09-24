@@ -12,11 +12,20 @@ async function bootstrap() {
     rawBody: true,
   });
   app.set('trust proxy', 'loopback'); // Trust requests from the loopback address
+  app.set('etag', false); // Disable ETag generation to prevent 304 Not Modified caching on dynamic settings
 
   const configService = app.get(ConfigService);
 
   // Global prefix
   app.setGlobalPrefix('api');
+
+  // Prevent browser/proxy 304 caching of dynamic JSON APIs
+  app.use((req: any, res: any, next: any) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+  });
 
   // Global interceptors and filters
   app.useGlobalInterceptors(new TransformInterceptor());

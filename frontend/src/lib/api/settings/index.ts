@@ -176,9 +176,13 @@ export const useGetAdminSmtpSettings = () => {
     queryFn: async () => {
       const response = await instance.get<ApiResponse<import("@/types").SmtpSettings>>(
         "/admin/settings/smtp",
+        {
+          params: { _t: Date.now() },
+        },
       );
       return response.data.data;
     },
+    staleTime: 0,
   });
 };
 
@@ -237,9 +241,13 @@ export const useGetAdminStripeProfiles = () => {
     queryFn: async () => {
       const response = await instance.get<ApiResponse<import("@/types").StripeProfilesResponse>>(
         "/admin/settings/stripe/profiles",
+        {
+          params: { _t: Date.now() },
+        },
       );
       return response.data.data;
     },
+    staleTime: 0,
   });
 };
 

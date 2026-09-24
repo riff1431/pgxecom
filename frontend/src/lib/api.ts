@@ -21,6 +21,10 @@ export const getBaseApiUrl = () => {
 
 export const api = axios.create({
   baseURL: getBaseApiUrl(),
+  headers: {
+    "Cache-Control": "no-cache",
+    Pragma: "no-cache",
+  },
 });
 
 // Attach JWT token from cookies
