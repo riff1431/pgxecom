@@ -6,44 +6,59 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
+import { DynamicSettingsService } from '../settings/dynamic-settings.service';
 import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable()
 export class WebhookService {
   private readonly logger = new Logger(WebhookService.name);
-  private stripe: Stripe;
-  private readonly webhookSecret: string;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly supabaseService: SupabaseService,
-  ) {
-    const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    this.webhookSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET') || '';
-
-    this.stripe = new Stripe(stripeSecretKey || '', {
-      apiVersion: '2025-02-24.acacia' as any,
-    });
-  }
+    private readonly dynamicSettingsService: DynamicSettingsService,
+  ) {}
 
   async handleStripeWebhook(signature: string, rawBody: Buffer) {
     if (!signature) {
       throw new BadRequestException('Missing Stripe signature header');
     }
 
-    let event: Stripe.Event;
+    const { client: stripeClient } = await this.dynamicSettingsService.getStripeClient();
+    const webhookSecrets = await this.dynamicSettingsService.getAllWebhookSecrets();
 
-    try {
-      if (this.webhookSecret && this.webhookSecret !== 'whsec_test_placeholder_or_live_secret') {
-        event = this.stripe.webhooks.constructEvent(rawBody, signature, this.webhookSecret);
-      } else {
-        // Fallback for dev/unconfigured test secrets (parses event payload)
-        this.logger.warn('STRIPE_WEBHOOK_SECRET not configured with a valid secret. Using JSON parse fallback for event.');
-        event = JSON.parse(rawBody.toString()) as Stripe.Event;
+    let event: Stripe.Event | null = null;
+    let lastError: Error | null = null;
+
+    // Attempt signature verification across available secrets (active first, then secondary profiles, then env)
+    for (const item of webhookSecrets) {
+      const sec = item.secret;
+      if (!sec || sec === 'whsec_test_placeholder_or_live_secret') continue;
+      try {
+        event = stripeClient.webhooks.constructEvent(rawBody, signature, sec);
+        if (event) break;
+      } catch (err: any) {
+        lastError = err;
       }
-    } catch (err: any) {
-      this.logger.error(`Webhook signature verification failed: ${err.message}`);
-      throw new BadRequestException(`Webhook Error: ${err.message}`);
+    }
+
+    // If no secret succeeded, check if we should allow JSON parse fallback in dev when no valid secret is configured
+    if (!event) {
+      const hasAnyConfiguredSecret = webhookSecrets.some(
+        (s) => s.secret && s.secret !== 'whsec_test_placeholder_or_live_secret',
+      );
+
+      if (!hasAnyConfiguredSecret) {
+        this.logger.warn('No valid Stripe webhook secret configured. Using JSON parse fallback for event.');
+        try {
+          event = JSON.parse(rawBody.toString()) as Stripe.Event;
+        } catch (jsonErr: any) {
+          throw new BadRequestException(`Invalid JSON payload: ${jsonErr.message}`);
+        }
+      } else {
+        this.logger.error(`Webhook signature verification failed: ${lastError?.message}`);
+        throw new BadRequestException(`Webhook Error: ${lastError?.message || 'Invalid signature'}`);
+      }
     }
 
     this.logger.log(`Received Stripe webhook event: ${event.type} [${event.id}]`);

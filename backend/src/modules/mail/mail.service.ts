@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
+import { DynamicSettingsService } from '../settings/dynamic-settings.service';
 import { SettingsService } from '../settings/settings.service';
 
 interface ContactFormNotificationPayload {
@@ -14,21 +14,40 @@ interface ContactFormNotificationPayload {
 
 @Injectable()
 export class MailService {
-  private transporter: nodemailer.Transporter;
+  private readonly logger = new Logger(MailService.name);
 
   constructor(
     private configService: ConfigService,
     private settingsService: SettingsService,
-  ) {
-    this.transporter = nodemailer.createTransport({
-      host: this.configService.get('SMTP_HOST'),
-      port: this.configService.get('SMTP_PORT'),
-      secure: false,
-      auth: {
-        user: this.configService.get('SMTP_USER'),
-        pass: this.configService.get('SMTP_PASS'),
-      },
-    });
+    private dynamicSettingsService: DynamicSettingsService,
+  ) {}
+
+  private async deliverMail(options: {
+    to: string;
+    subject: string;
+    html: string;
+    replyTo?: string;
+  }) {
+    try {
+      const { transporter, from, isEnabled } =
+        await this.dynamicSettingsService.createMailTransporter();
+
+      if (!isEnabled) {
+        this.logger.warn(`SMTP is disabled in settings. Skipping email to ${options.to}`);
+        return;
+      }
+
+      await transporter.sendMail({
+        from,
+        to: options.to,
+        subject: options.subject,
+        html: options.html,
+        ...(options.replyTo ? { replyTo: options.replyTo } : {}),
+      });
+      this.logger.log(`Email successfully delivered to ${options.to} [${options.subject}]`);
+    } catch (err: any) {
+      this.logger.error(`Failed to send email to ${options.to}: ${err.message}`);
+    }
   }
 
   async sendOrderConfirmation(email: string, order: any) {
@@ -38,8 +57,7 @@ export class MailService {
       message: 'Thank you for your order! We have received your request and are currently processing it.',
     });
 
-    await this.transporter.sendMail({
-      from: this.configService.get('MAIL_FROM'),
+    await this.deliverMail({
       to: email,
       subject: `Order Confirmed - ${order.orderNumber}`,
       html,
@@ -62,8 +80,7 @@ export class MailService {
       message: statusMessages[order.status] || `Your order status has been updated to ${order.status}.`,
     });
 
-    await this.transporter.sendMail({
-      from: this.configService.get('MAIL_FROM'),
+    await this.deliverMail({
       to: email,
       subject: `Order Update - ${order.orderNumber} - ${order.status}`,
       html,
@@ -298,8 +315,7 @@ export class MailService {
   }
 
   async sendPasswordReset(email: string, name: string, resetUrl: string) {
-    await this.transporter.sendMail({
-      from: this.configService.get('MAIL_FROM'),
+    await this.deliverMail({
       to: email,
       subject: 'Password Reset Request',
       html: `
@@ -316,8 +332,7 @@ export class MailService {
   }
 
   async sendEmailVerificationCode(email: string, code: string) {
-    await this.transporter.sendMail({
-      from: this.configService.get('MAIL_FROM'),
+    await this.deliverMail({
       to: email,
       subject: 'Email Verification Code',
       html: `
@@ -340,8 +355,7 @@ export class MailService {
     subject: string,
     message: string,
   ) {
-    await this.transporter.sendMail({
-      from: this.configService.get('MAIL_FROM'),
+    await this.deliverMail({
       to: email,
       subject,
       html: `
@@ -360,7 +374,9 @@ export class MailService {
   }
 
   async sendContactFormNotification(payload: ContactFormNotificationPayload) {
+    const smtpConfig = await this.dynamicSettingsService.getSmtpConfig();
     const fallbackEmail =
+      smtpConfig.fromEmail ||
       this.configService.get<string>('MAIL_FROM') ||
       this.configService.get<string>('SMTP_USER');
 
@@ -370,8 +386,7 @@ export class MailService {
       return;
     }
 
-    await this.transporter.sendMail({
-      from: this.configService.get('MAIL_FROM'),
+    await this.deliverMail({
       to: recipient,
       replyTo: payload.email,
       subject: `[Contact] ${payload.subject}`,

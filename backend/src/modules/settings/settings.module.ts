@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-
+import { CryptoService } from '../../common/crypto/crypto.service';
+import { DynamicSettingsService } from './dynamic-settings.service';
 import {
   AdminSettingsController,
   SettingsController,
@@ -8,7 +9,7 @@ import { SettingsService } from './settings.service';
 
 @Module({
   controllers: [SettingsController, AdminSettingsController],
-  providers: [SettingsService],
-  exports: [SettingsService],
+  providers: [SettingsService, DynamicSettingsService, CryptoService],
+  exports: [SettingsService, DynamicSettingsService, CryptoService],
 })
 export class SettingsModule {}

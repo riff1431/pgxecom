@@ -16,14 +16,20 @@ import {
 } from "@/lib/api/settings";
 import type { Setting } from "@/types";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CreditCard, Globe, Mail } from "lucide-react";
+
 import { SETTING_FIELDS } from "./components/setting-config";
 import { SettingFormDialog } from "./components/SettingFormDialog";
 import { SettingsHeader } from "./components/SettingsHeader";
 import { SettingsTableSection } from "./components/SettingsTableSection";
 import { SettingsTabsEditor } from "./components/SettingsTabsEditor";
+import { SmtpSettingsTab } from "./components/SmtpSettingsTab";
+import { StripeSettingsTab } from "./components/StripeSettingsTab";
 
 export default function AdminSettingsPage() {
   const queryClient = useQueryClient();
+  const [mainTab, setMainTab] = useState("storefront");
   const [search, setSearch] = useState("");
   const [group, setGroup] = useState<string>("all");
 
@@ -170,36 +176,83 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <SettingsHeader
-        onAddSetting={openCreateDialog}
-        onSaveSettings={handleSaveBulk}
-        isSaving={bulkUpsertMutation.isPending}
-      />
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono uppercase">
+            System & Store Settings
+          </h1>
+          <p className="text-slate-400 font-medium text-xs mt-1">
+            Configure dynamic SMTP email delivery, Stripe payment gateways, and storefront branding.
+          </p>
+        </div>
+      </div>
 
-      <SettingsTabsEditor
-        getFieldValue={getFieldValue}
-        onFieldChange={(key, value) =>
-          setFormValues((prev) => ({
-            ...prev,
-            [key]: value,
-          }))
-        }
-        logoInputRef={logoInputRef}
-        onLogoFileSelected={handleLogoUpload}
-        isUploadingLogo={uploadMutation.isPending}
-      />
+      <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-6">
+        <TabsList className="bg-[#080e18] border border-slate-800 p-1 rounded-xl">
+          <TabsTrigger
+            value="storefront"
+            className="data-[state=active]:bg-[#00a3ff] data-[state=active]:text-slate-950 font-mono text-xs font-bold uppercase flex items-center gap-2 px-4 py-2"
+          >
+            <Globe className="h-4 w-4" />
+            Storefront
+          </TabsTrigger>
+          <TabsTrigger
+            value="smtp"
+            className="data-[state=active]:bg-[#00a3ff] data-[state=active]:text-slate-950 font-mono text-xs font-bold uppercase flex items-center gap-2 px-4 py-2"
+          >
+            <Mail className="h-4 w-4" />
+            Email (SMTP)
+          </TabsTrigger>
+          <TabsTrigger
+            value="stripe"
+            className="data-[state=active]:bg-[#00a3ff] data-[state=active]:text-slate-950 font-mono text-xs font-bold uppercase flex items-center gap-2 px-4 py-2"
+          >
+            <CreditCard className="h-4 w-4" />
+            Payment (Stripe)
+          </TabsTrigger>
+        </TabsList>
 
-      <SettingsTableSection
-        settings={settings}
-        isLoading={isLoading}
-        search={search}
-        group={group}
-        onSearchChange={setSearch}
-        onGroupChange={setGroup}
-        onClearFilters={clearFilters}
-        onEdit={openEditDialog}
-        onDelete={setSettingToDelete}
-      />
+        <TabsContent value="storefront" className="space-y-6 mt-0">
+          <SettingsHeader
+            onAddSetting={openCreateDialog}
+            onSaveSettings={handleSaveBulk}
+            isSaving={bulkUpsertMutation.isPending}
+          />
+
+          <SettingsTabsEditor
+            getFieldValue={getFieldValue}
+            onFieldChange={(key, value) =>
+              setFormValues((prev) => ({
+                ...prev,
+                [key]: value,
+              }))
+            }
+            logoInputRef={logoInputRef}
+            onLogoFileSelected={handleLogoUpload}
+            isUploadingLogo={uploadMutation.isPending}
+          />
+
+          <SettingsTableSection
+            settings={settings}
+            isLoading={isLoading}
+            search={search}
+            group={group}
+            onSearchChange={setSearch}
+            onGroupChange={setGroup}
+            onClearFilters={clearFilters}
+            onEdit={openEditDialog}
+            onDelete={setSettingToDelete}
+          />
+        </TabsContent>
+
+        <TabsContent value="smtp" className="mt-0">
+          <SmtpSettingsTab />
+        </TabsContent>
+
+        <TabsContent value="stripe" className="mt-0">
+          <StripeSettingsTab />
+        </TabsContent>
+      </Tabs>
 
       <SettingFormDialog
         open={isFormDialogOpen}

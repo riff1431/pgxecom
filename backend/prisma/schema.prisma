@@ -381,3 +381,65 @@ model Banner {
 
   @@map("banners")
 }
+
+// ─── SMTP CONFIGURATION ──────────────────────────
+model SmtpSettings {
+  id                String   @id @default(cuid())
+  host              String
+  port              Int      @default(587)
+  secure            Boolean  @default(false)
+  username          String?
+  encryptedPassword String?
+  passwordIv        String?
+  passwordTag       String?
+  fromName          String   @default("PGX Store")
+  fromEmail         String
+  isEnabled         Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("smtp_settings")
+}
+
+// ─── STRIPE PROFILES ─────────────────────────────
+enum StripeMode {
+  TEST
+  LIVE
+}
+
+model StripeProfile {
+  id                     String     @id @default(cuid())
+  label                  String
+  mode                   StripeMode @default(TEST)
+  publishableKey         String
+  encryptedSecretKey     String
+  secretKeyIv            String
+  secretKeyTag           String
+  encryptedWebhookSecret String
+  webhookSecretIv        String
+  webhookSecretTag       String
+  currency               String     @default("eur")
+  isActive               Boolean    @default(false)
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+
+  @@index([isActive])
+  @@map("stripe_profiles")
+}
+
+// ─── SETTINGS AUDIT LOG ──────────────────────────
+model SettingsAuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actorEmail String?
+  action     String
+  entityType String
+  entityId   String?
+  details    Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, createdAt])
+  @@map("settings_audit_logs")
+}

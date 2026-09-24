@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Stripe from 'stripe';
 import { PrismaService } from '../../prisma/prisma.service';
+import { DynamicSettingsService } from '../settings/dynamic-settings.service';
 import { SupabaseService } from '../supabase/supabase.service';
 import { TopUpDto } from './dto/top-up.dto';
 
@@ -10,21 +10,13 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 @Injectable()
 export class WalletService {
   private readonly logger = new Logger(WalletService.name);
-  private stripe: Stripe;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly supabaseService: SupabaseService,
     private readonly prisma: PrismaService,
-  ) {
-    const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    if (!stripeSecretKey) {
-      this.logger.error('STRIPE_SECRET_KEY is not defined in configuration');
-    }
-    this.stripe = new Stripe(stripeSecretKey || '', {
-      apiVersion: '2025-02-24.acacia' as any,
-    });
-  }
+    private readonly dynamicSettingsService: DynamicSettingsService,
+  ) {}
 
   /**
    * Helper to resolve the correct Supabase UUID for a given local user ID or Supabase ID.
@@ -159,17 +151,20 @@ export class WalletService {
     const targetUserId = (await this.resolveSupabaseUserId(userId)) || userId;
 
     try {
-      const session = await this.stripe.checkout.sessions.create({
+      const { client: stripeClient, profile } = await this.dynamicSettingsService.getStripeClient();
+      const currency = (profile.currency || 'eur').toLowerCase();
+
+      const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
         customer_email: userEmail,
         line_items: [
           {
             price_data: {
-              currency: 'eur',
+              currency,
               product_data: {
                 name: 'PGX Wallet Deposit',
-                description: `Add €${dto.amount.toFixed(2)} credits to your universal PGX wallet`,
+                description: `Add ${currency.toUpperCase()} ${dto.amount.toFixed(2)} credits to your universal PGX wallet`,
               },
               unit_amount: amountInCents,
             },

@@ -125,3 +125,165 @@ export const useUploadAdminSettingImage = () => {
     },
   });
 };
+
+// ───────────────────────────────────────────────
+// SMTP SETTINGS HOOKS
+// ───────────────────────────────────────────────
+
+export const useGetAdminSmtpSettings = () => {
+  return useQuery({
+    queryKey: ["admin", "settings", "smtp"],
+    queryFn: async () => {
+      const response = await instance.get<ApiResponse<import("@/types").SmtpSettings>>(
+        "/admin/settings/smtp",
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useUpdateAdminSmtpSettings = () => {
+  return useMutation({
+    mutationFn: async (payload: import("@/types").UpdateSmtpSettingsPayload) => {
+      const response = await instance.put<ApiResponse<import("@/types").SmtpSettings>>(
+        "/admin/settings/smtp",
+        payload,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useTestAdminSmtpSettings = () => {
+  return useMutation({
+    mutationFn: async (payload: import("@/types").TestSmtpPayload) => {
+      const response = await instance.post<ApiResponse<{ success: boolean; message: string }>>(
+        "/admin/settings/smtp/test",
+        payload,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useImportSmtpFromEnv = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await instance.post<ApiResponse<import("@/types").SmtpSettings>>(
+        "/admin/settings/smtp/import-env",
+      );
+      return response.data.data;
+    },
+  });
+};
+
+// ───────────────────────────────────────────────
+// STRIPE PROFILES HOOKS
+// ───────────────────────────────────────────────
+
+export const useGetAdminStripeProfiles = () => {
+  return useQuery({
+    queryKey: ["admin", "settings", "stripe", "profiles"],
+    queryFn: async () => {
+      const response = await instance.get<ApiResponse<import("@/types").StripeProfilesResponse>>(
+        "/admin/settings/stripe/profiles",
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useCreateAdminStripeProfile = () => {
+  return useMutation({
+    mutationFn: async (payload: import("@/types").CreateStripeProfilePayload) => {
+      const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
+        "/admin/settings/stripe/profiles",
+        payload,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useUpdateAdminStripeProfile = () => {
+  return useMutation({
+    mutationFn: async (params: {
+      id: string;
+      data: import("@/types").UpdateStripeProfilePayload;
+    }) => {
+      const response = await instance.put<ApiResponse<import("@/types").StripeProfile>>(
+        `/admin/settings/stripe/profiles/${params.id}`,
+        params.data,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useActivateAdminStripeProfile = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
+        `/admin/settings/stripe/profiles/${id}/activate`,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useDuplicateAdminStripeProfile = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
+        `/admin/settings/stripe/profiles/${id}/duplicate`,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useDeleteAdminStripeProfile = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await instance.delete<ApiResponse<{ message: string }>>(
+        `/admin/settings/stripe/profiles/${id}`,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useVerifyAdminStripeConnection = () => {
+  return useMutation({
+    mutationFn: async (payload: import("@/types").VerifyStripePayload) => {
+      const response = await instance.post<ApiResponse<import("@/types").VerifyStripeResponse>>(
+        "/admin/settings/stripe/verify",
+        payload,
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useImportStripeFromEnv = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
+        "/admin/settings/stripe/import-env",
+      );
+      return response.data.data;
+    },
+  });
+};
+
+export const useGetPublicStripeSettings = () => {
+  return useQuery({
+    queryKey: ["settings", "stripe", "public"],
+    queryFn: async () => {
+      const response = await instance.get<
+        ApiResponse<{ publishableKey: string; currency: string; mode: string }>
+      >("/settings/stripe-public");
+      return response.data.data;
+    },
+  });
+};
