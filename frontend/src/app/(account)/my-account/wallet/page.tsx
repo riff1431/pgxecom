@@ -9,10 +9,8 @@ import {
   ShieldCheck,
   CheckCircle2,
   XCircle,
-  Sparkles,
   Loader2,
   CreditCard,
-  Lock,
   Wallet2Icon,
 } from "lucide-react";
 import { useWallet } from "@/providers/WalletProvider";

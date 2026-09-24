@@ -160,9 +160,9 @@ export function CheckoutSummary(props: CheckoutSummaryProps) {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 bg-[#060b13] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider rounded-lg"
+          className="w-full h-12 bg-[#00a3ff] hover:bg-[#008fdf] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-[#00a3ff]/20 transition-all cursor-pointer"
         >
-          {isSubmitting ? "Processing..." : "Place Order"}{" "}
+          {isSubmitting ? "Processing Wallet Payment..." : "Pay with Universal Wallet"}{" "}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
 

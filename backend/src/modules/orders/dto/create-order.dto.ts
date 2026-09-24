@@ -22,6 +22,9 @@ class CreateOrderItemDto {
   @IsInt()
   @Min(1)
   quantity!: number;
+
+  @IsOptional()
+  price?: any;
 }
 
 export class CreateOrderDto {

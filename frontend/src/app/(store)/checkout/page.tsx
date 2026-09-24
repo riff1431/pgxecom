@@ -7,13 +7,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { LogIn, ShoppingBag } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
 import { useValidateCoupon } from "@/lib/api/coupon";
 import { useCreateOrder } from "@/lib/api/order";
 import { useGetActiveShippingZones } from "@/lib/api/shipping";
 import { useCreateAddress, useGetAddresses } from "@/lib/api/user";
 import { useAuth } from "@/providers/AuthProvider";
+import { useWallet } from "@/providers/WalletProvider";
 import {
   GuestCheckoutInput,
   guestCheckoutSchema,
@@ -26,7 +27,8 @@ import { CheckoutSummary } from "./components/CheckoutSummary";
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCartStore();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { balance, refresh: refreshWallet } = useWallet();
 
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState<{
@@ -46,7 +48,8 @@ export default function CheckoutPage() {
     defaultValues: {
       name: user?.name || "",
       email: user?.email || "",
-      paymentMethod: "CASH_ON_DELIVERY",
+      country: "United States",
+      paymentMethod: "WALLET",
       saveAddress: false,
     },
   });
@@ -57,6 +60,15 @@ export default function CheckoutPage() {
     setValue,
     formState: { isSubmitting },
   } = form;
+
+  // Auto-fill user profile info if available
+  useEffect(() => {
+    if (user) {
+      if (user.name) setValue("name", user.name);
+      if (user.email) setValue("email", user.email);
+      if (user.phone) setValue("phone", user.phone);
+    }
+  }, [user, setValue]);
 
   // Auto-fill default address
   useEffect(() => {
@@ -71,8 +83,12 @@ export default function CheckoutPage() {
           "street",
           defaultAddr.street || defaultAddr.addressLine1 || "",
         );
-        setValue("area", defaultAddr.area || defaultAddr.addressLine2 || "");
+        setValue("addressLine2", defaultAddr.addressLine2 || "");
+        setValue("area", defaultAddr.area || "");
         setValue("city", defaultAddr.city);
+        setValue("state", defaultAddr.state || "");
+        setValue("postalCode", defaultAddr.zipCode || "");
+        setValue("country", defaultAddr.country || "United States");
         if (defaultAddr.zone) {
           setValue("zone", defaultAddr.zone as GuestCheckoutInput["zone"]);
         }
@@ -91,7 +107,7 @@ export default function CheckoutPage() {
   const selectedZone = shippingZones?.find((z) => z.slug === selectedZoneSlug);
   const shippingCost = Number(selectedZone?.cost || 0);
   const currentSubtotal = subtotal();
-  const total = currentSubtotal + shippingCost - Number(discount?.amount || 0);
+  const total = Math.max(0, currentSubtotal + shippingCost - Number(discount?.amount || 0));
 
   const handleApplyCoupon = async () => {
     if (!isAuthenticated) {
@@ -133,6 +149,19 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (!isAuthenticated || !user) {
+      toast.error("Please log in or sign up to complete order payment with your PGX Universal Wallet.");
+      router.push(`/login?redirect=/checkout`);
+      return;
+    }
+
+    if (balance < total) {
+      toast.error(
+        `Insufficient PGX Wallet balance (€${balance.toFixed(2)} available, €${total.toFixed(2)} required). Please top up your wallet.`,
+      );
+      return;
+    }
+
     try {
       let finalAddressId = data.addressId;
 
@@ -142,8 +171,11 @@ export default function CheckoutPage() {
           name: data.name,
           phone: data.phone,
           addressLine1: data.street,
-          addressLine2: data.area,
+          addressLine2: data.addressLine2 || data.area || "",
           city: data.city,
+          state: data.state,
+          zipCode: data.postalCode,
+          country: data.country,
           zone: data.zone,
           label: "HOME",
           isDefault: addresses?.length === 0,
@@ -152,34 +184,38 @@ export default function CheckoutPage() {
       }
 
       const orderData = {
-        userId: user?.id,
+        userId: user.id,
         addressId: finalAddressId,
         guestName: data.name,
         guestPhone: data.phone,
-        guestEmail: data.email,
+        guestEmail: data.email || user.email,
         shippingAddress: {
           name: data.name,
           phone: data.phone,
           street: data.street,
+          addressLine2: data.addressLine2 || "",
           area: data.area || "",
           city: data.city,
+          state: data.state || "",
+          postalCode: data.postalCode || "",
+          country: data.country || "United States",
           zone: data.zone,
         },
         zone: data.zone,
         notes: data.notes,
-        paymentMethod: data.paymentMethod ?? "CASH_ON_DELIVERY",
+        paymentMethod: "WALLET",
         items: items.map((item) => ({
           productId: item.productId,
           variantId: item.variantId,
           quantity: item.quantity,
-          price: item.price,
         })),
         couponCode: isAuthenticated ? discount?.code : undefined,
       };
 
       const result = await createOrderMutation.mutateAsync(orderData);
       clearCart();
-      toast.success("Order placed successfully!");
+      await refreshWallet();
+      toast.success("Order placed and paid successfully via PGX Universal Wallet!");
       router.push(`/order-confirmation/${result.orderNumber}`);
     } catch (error: unknown) {
       if (axios.isAxiosError<{ message?: string }>(error)) {
@@ -191,18 +227,49 @@ export default function CheckoutPage() {
     }
   };
 
+  if (!isAuthLoading && !isAuthenticated) {
+    return (
+      <div className="container mx-auto px-4 py-20 max-w-xl text-center">
+        <div className="w-16 h-16 bg-[#00a3ff]/10 text-[#0070cc] rounded-full flex items-center justify-center mx-auto mb-6">
+          <LogIn className="w-8 h-8" />
+        </div>
+        <h1 className="text-3xl font-black text-gray-900 mb-3">Login Required for Checkout</h1>
+        <p className="text-gray-600 mb-8 leading-relaxed">
+          Orders on the PGX store are processed securely through your <strong>Universal PGX Wallet</strong>. Please log in or create an account to proceed with your order.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/login?redirect=/checkout"
+            className="px-6 py-3.5 rounded-xl bg-[#00a3ff] hover:bg-[#008fdf] text-white font-bold text-sm shadow-lg shadow-[#00a3ff]/20 transition-all"
+          >
+            Sign In to Account
+          </Link>
+          <Link
+            href="/register?redirect=/checkout"
+            className="px-6 py-3.5 rounded-xl border border-slate-300 hover:bg-slate-50 font-bold text-sm text-gray-700 transition-all"
+          >
+            Create New Account
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold mb-4">Checkout</h1>
-        <p className="text-gray-600 mb-8">
-          You need items in your cart to checkout.
+      <div className="container mx-auto px-4 py-20 text-center max-w-md">
+        <div className="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-6">
+          <ShoppingBag className="w-8 h-8" />
+        </div>
+        <h1 className="text-3xl font-bold mb-3 text-gray-900">Your Cart is Empty</h1>
+        <p className="text-gray-600 mb-8 text-sm">
+          Explore our premium catalog of high-performance gear, apparel, and equipment.
         </p>
         <Link
           href="/shop"
-          className={buttonVariants({ className: "bg-emerald-600" })}
+          className="inline-block px-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all"
         >
-          Back to Shop
+          Explore Store
         </Link>
       </div>
     );
@@ -210,7 +277,12 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-6xl">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+      <div className="mb-8 space-y-1">
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Express International Checkout</h1>
+        <p className="text-sm text-slate-500">
+          Fast worldwide fulfillment with seamless Universal PGX Wallet debit payment.
+        </p>
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -220,6 +292,7 @@ export default function CheckoutPage() {
           form={form}
           shippingZones={shippingZones || []}
           addresses={addresses}
+          totalOrderAmount={total}
         />
 
         <CheckoutSummary
@@ -241,3 +314,4 @@ export default function CheckoutPage() {
     </div>
   );
 }
+

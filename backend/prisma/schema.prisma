@@ -166,6 +166,7 @@ enum OrderStatus {
 }
 
 enum PaymentMethod {
+  WALLET
   CASH_ON_DELIVERY
   BKASH
   NAGAD

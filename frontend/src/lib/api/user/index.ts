@@ -24,6 +24,9 @@ interface Address {
   addressLine2?: string;
   area?: string;
   city: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
   zone?: string;
   isDefault: boolean;
 }

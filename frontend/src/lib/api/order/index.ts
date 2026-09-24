@@ -5,22 +5,31 @@ import type { ApiResponse, Order } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export interface CreateOrderPayload {
+  userId?: string;
+  addressId?: string;
   guestName?: string;
   guestPhone?: string;
   guestEmail?: string;
   shippingAddress: {
+    name?: string;
+    phone?: string;
     street: string;
-    area: string;
+    addressLine2?: string;
+    area?: string;
     city: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
     zone: string;
   };
+  zone: string;
   notes?: string;
   paymentMethod: string;
   items: {
     productId: string;
     variantId?: string;
     quantity: number;
-    price: number;
+    price?: number;
   }[];
   couponCode?: string;
 }

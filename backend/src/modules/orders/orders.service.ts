@@ -3,10 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { OrderStatus, Prisma } from '@prisma/client';
+import { OrderStatus, PaymentMethod, PaymentStatus, Prisma } from '@prisma/client';
 import { CouponsService } from 'modules/coupons/service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { MailService } from '../mail/mail.service';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class OrdersService {
@@ -14,6 +15,7 @@ export class OrdersService {
     private prisma: PrismaService,
     private mailService: MailService,
     private couponsService: CouponsService,
+    private walletService: WalletService,
   ) {}
 
   async create(data: {
@@ -104,6 +106,21 @@ export class OrdersService {
     const shippingCost = Number(shippingZone.cost);
     const total = subtotal - discount + shippingCost;
 
+    const requestedPaymentMethod = (data.paymentMethod as PaymentMethod) || PaymentMethod.WALLET;
+
+    if (requestedPaymentMethod === PaymentMethod.WALLET) {
+      if (!data.userId) {
+        throw new BadRequestException('You must be logged in to complete checkout with your Universal Wallet.');
+      }
+      // Check wallet balance first before creating order
+      const { balance } = await this.walletService.getBalance(data.userId);
+      if (balance < total) {
+        throw new BadRequestException(
+          `Insufficient wallet balance. Total: €${total.toFixed(2)}, Available Balance: €${balance.toFixed(2)}. Please top up your wallet to proceed.`,
+        );
+      }
+    }
+
     const order = await this.prisma.$transaction(async (tx) => {
       // Create order
       const order = await tx.order.create({
@@ -121,10 +138,14 @@ export class OrdersService {
           total,
           couponId,
           notes: data.notes,
-          paymentMethod: (data.paymentMethod as any) || 'CASH_ON_DELIVERY',
+          paymentMethod: requestedPaymentMethod,
+          paymentStatus: requestedPaymentMethod === PaymentMethod.WALLET ? PaymentStatus.PAID : PaymentStatus.UNPAID,
           items: { create: orderItems },
           statusHistory: {
-            create: { status: 'PENDING', note: 'Order placed' },
+            create: {
+              status: 'PENDING',
+              note: requestedPaymentMethod === PaymentMethod.WALLET ? 'Order placed and paid via PGX Universal Wallet' : 'Order placed',
+            },
           },
           invoice: {
             create: {
@@ -162,6 +183,31 @@ export class OrdersService {
 
       return order;
     });
+
+    // If paid with wallet, atomically debit the wallet funds
+    if (requestedPaymentMethod === PaymentMethod.WALLET && data.userId) {
+      try {
+        await this.walletService.deductFunds(
+          data.userId,
+          total,
+          order.orderNumber,
+          `PGX Store Order Payment #${order.orderNumber}`,
+        );
+      } catch (debitErr: any) {
+        // Rollback order status to CANCELLED if wallet debit fails unexpectedly
+        await this.prisma.order.update({
+          where: { id: order.id },
+          data: {
+            status: OrderStatus.CANCELLED,
+            paymentStatus: PaymentStatus.UNPAID,
+            statusHistory: {
+              create: { status: OrderStatus.CANCELLED, note: `Wallet debit failed: ${debitErr.message}` },
+            },
+          },
+        });
+        throw new BadRequestException(debitErr.message || 'Failed to debit wallet balance for order payment');
+      }
+    }
 
     // Send confirmation email
     const email =
@@ -354,6 +400,34 @@ export class OrdersService {
 
       return order;
     });
+
+    // Refund wallet balance if order was paid with WALLET and is cancelled or returned
+    const isNowCancelled = status === 'CANCELLED' || status === 'RETURNED';
+    const wasAlreadyCancelled =
+      oldOrder.status === 'CANCELLED' || oldOrder.status === 'RETURNED';
+
+    if (
+      isNowCancelled &&
+      !wasAlreadyCancelled &&
+      oldOrder.paymentMethod === PaymentMethod.WALLET &&
+      oldOrder.paymentStatus === PaymentStatus.PAID &&
+      oldOrder.userId
+    ) {
+      try {
+        await this.walletService.refundFunds(
+          oldOrder.userId,
+          Number(oldOrder.total),
+          oldOrder.orderNumber,
+          `PGX Store Order Refund #${oldOrder.orderNumber} (${status})`,
+        );
+        await this.prisma.order.update({
+          where: { id },
+          data: { paymentStatus: PaymentStatus.REFUNDED },
+        });
+      } catch (refundErr) {
+        console.error(`Failed to refund wallet for cancelled order ${oldOrder.orderNumber}:`, refundErr);
+      }
+    }
 
     // Send status update email
     const email = order.guestEmail || order.user?.email;

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -194,6 +194,151 @@ export class WalletService {
     } catch (err: any) {
       this.logger.error(`Failed to create Stripe Checkout session for user ${userId}:`, err);
       throw new InternalServerErrorException(err.message || 'Failed to create Stripe payment session');
+    }
+  }
+
+  /**
+   * Atomically debits a user's wallet for an order payment.
+   */
+  async deductFunds(userId: string, amount: number, orderNumber: string, description?: string) {
+    if (amount <= 0) {
+      throw new BadRequestException('Debit amount must be greater than 0');
+    }
+
+    const supabase = this.supabaseService.getAdminClient();
+    if (!supabase) {
+      this.logger.error('Supabase admin client unavailable');
+      throw new InternalServerErrorException('Payment processing service is unavailable');
+    }
+
+    const targetUserId = (await this.resolveSupabaseUserId(userId)) || userId;
+    if (!UUID_REGEX.test(targetUserId)) {
+      throw new BadRequestException('A valid PGX user account is required to pay with wallet');
+    }
+
+    const descText = description || `Order Payment (#${orderNumber})`;
+
+    // Check current balance first
+    const { balance } = await this.getBalance(targetUserId);
+    if (balance < amount) {
+      throw new BadRequestException(
+        `Insufficient wallet balance. Required: €${amount.toFixed(2)}, Current Balance: €${balance.toFixed(2)}. Please top up your wallet.`,
+      );
+    }
+
+    // Try deduct_funds RPC if available in database
+    try {
+      const { data: rpcRes, error: rpcErr } = await supabase.rpc('deduct_funds', {
+        user_uuid: targetUserId,
+        amount_val: amount,
+        desc_text: descText,
+      });
+
+      if (!rpcErr) {
+        this.logger.log(`deduct_funds RPC succeeded for user ${targetUserId}, order ${orderNumber}, amount €${amount}`);
+        return { success: true, targetUserId };
+      }
+      this.logger.warn(`deduct_funds RPC returned error, falling back to direct transaction: ${rpcErr.message}`);
+    } catch (rpcCallErr) {
+      this.logger.warn('deduct_funds RPC failed, executing direct Supabase balance decrement:', rpcCallErr);
+    }
+
+    // Fallback: fetch wallet, verify balance, update balance, and record transaction
+    const { data: wallet, error: getWalletErr } = await supabase
+      .from('wallets')
+      .select('id, balance')
+      .eq('user_id', targetUserId)
+      .single();
+
+    if (getWalletErr || !wallet) {
+      this.logger.error(`Wallet not found for user ${targetUserId}:`, getWalletErr);
+      throw new BadRequestException('Wallet account not found. Please top up first.');
+    }
+
+    const currentWalletBal = Number(wallet.balance ?? 0);
+    if (currentWalletBal < amount) {
+      throw new BadRequestException(
+        `Insufficient wallet balance. Required: €${amount.toFixed(2)}, Current Balance: €${currentWalletBal.toFixed(2)}.`,
+      );
+    }
+
+    const newBalance = Number((currentWalletBal - amount).toFixed(2));
+
+    const { error: updateErr } = await supabase
+      .from('wallets')
+      .update({ balance: newBalance, updated_at: new Date().toISOString() })
+      .eq('id', wallet.id);
+
+    if (updateErr) {
+      this.logger.error(`Failed to update wallet balance for user ${targetUserId}:`, updateErr);
+      throw new InternalServerErrorException('Failed to process wallet payment transaction');
+    }
+
+    // Record transaction
+    await supabase.from('transactions').insert({
+      user_id: targetUserId,
+      type: 'debit',
+      amount: amount,
+      status: 'completed',
+      description: descText,
+      metadata: { order_number: orderNumber, type: 'order_payment' },
+    });
+
+    this.logger.log(`Successfully deducted €${amount} from user ${targetUserId} for order ${orderNumber}`);
+    return { success: true, targetUserId, newBalance };
+  }
+
+  /**
+   * Credits funds back to the user's wallet upon order cancellation/refund.
+   */
+  async refundFunds(userId: string, amount: number, orderNumber: string, reason?: string) {
+    if (amount <= 0) return;
+
+    const supabase = this.supabaseService.getAdminClient();
+    if (!supabase) return;
+
+    const targetUserId = (await this.resolveSupabaseUserId(userId)) || userId;
+    if (!UUID_REGEX.test(targetUserId)) return;
+
+    const descText = reason || `Order Refund (#${orderNumber})`;
+
+    try {
+      const { error: rpcErr } = await supabase.rpc('add_funds', {
+        user_uuid: targetUserId,
+        amount_val: amount,
+        desc_text: descText,
+      });
+
+      if (!rpcErr) {
+        this.logger.log(`Successfully refunded €${amount} to user ${targetUserId} for order ${orderNumber}`);
+        return;
+      }
+    } catch (err) {
+      this.logger.warn(`add_funds RPC refund error, trying direct increment:`, err);
+    }
+
+    // Direct fallback
+    const { data: wallet } = await supabase
+      .from('wallets')
+      .select('id, balance')
+      .eq('user_id', targetUserId)
+      .maybeSingle();
+
+    if (wallet) {
+      const newBal = Number((Number(wallet.balance ?? 0) + amount).toFixed(2));
+      await supabase
+        .from('wallets')
+        .update({ balance: newBal, updated_at: new Date().toISOString() })
+        .eq('id', wallet.id);
+
+      await supabase.from('transactions').insert({
+        user_id: targetUserId,
+        type: 'credit',
+        amount: amount,
+        status: 'completed',
+        description: descText,
+        metadata: { order_number: orderNumber, type: 'order_refund' },
+      });
     }
   }
 }
