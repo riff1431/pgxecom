@@ -75,9 +75,11 @@ export function StripeSettingsTab() {
   // Verification testing state
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
 
-  const refreshProfiles = () => {
-    queryClient.invalidateQueries({ queryKey: ["admin", "settings", "stripe", "profiles"] });
-    queryClient.invalidateQueries({ queryKey: ["settings", "stripe", "public"] });
+  const refreshProfiles = async () => {
+    await Promise.all([
+      queryClient.refetchQueries({ queryKey: ["admin", "settings", "stripe"] }),
+      queryClient.refetchQueries({ queryKey: ["settings", "stripe"] }),
+    ]);
   };
 
   const openCreateModal = () => {
@@ -181,7 +183,7 @@ export function StripeSettingsTab() {
         toast.success("New Stripe profile created");
       }
 
-      refreshProfiles();
+      await refreshProfiles();
       setIsModalOpen(false);
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Failed to save Stripe profile");
@@ -205,7 +207,7 @@ export function StripeSettingsTab() {
 
     try {
       await activateMutation.mutateAsync(activatingProfile.id);
-      refreshProfiles();
+      await refreshProfiles();
       toast.success(`Active Stripe profile switched to "${activatingProfile.label}"`);
       setActivatingProfile(null);
     } catch (err: any) {
@@ -216,7 +218,7 @@ export function StripeSettingsTab() {
   const handleDuplicate = async (id: string) => {
     try {
       await duplicateMutation.mutateAsync(id);
-      refreshProfiles();
+      await refreshProfiles();
       toast.success("Profile duplicated successfully");
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Failed to duplicate profile");
@@ -228,7 +230,7 @@ export function StripeSettingsTab() {
 
     try {
       await deleteMutation.mutateAsync(id);
-      refreshProfiles();
+      await refreshProfiles();
       toast.success("Stripe profile deleted");
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Failed to delete profile");
@@ -238,7 +240,7 @@ export function StripeSettingsTab() {
   const handleImportEnv = async () => {
     try {
       await importEnvMutation.mutateAsync();
-      refreshProfiles();
+      await refreshProfiles();
       toast.success("Imported Stripe profile from .env successfully");
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Failed to import from .env");

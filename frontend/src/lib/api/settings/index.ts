@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api as instance } from "@/lib/api";
 import type {
@@ -55,6 +55,8 @@ export const useGetPublicSettings = () => {
 };
 
 export const useCreateAdminSetting = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (payload: CreateSettingPayload) => {
       const response = await instance.post<ApiResponse<Setting>>(
@@ -63,10 +65,18 @@ export const useCreateAdminSetting = () => {
       );
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "public"] }),
+      ]);
+    },
   });
 };
 
 export const useUpdateAdminSetting = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (payload: {
       key: string;
@@ -79,10 +89,18 @@ export const useUpdateAdminSetting = () => {
 
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "public"] }),
+      ]);
+    },
   });
 };
 
 export const useDeleteAdminSetting = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (key: string) => {
       const response = await instance.delete<ApiResponse<{ message: string }>>(
@@ -91,10 +109,18 @@ export const useDeleteAdminSetting = () => {
 
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "public"] }),
+      ]);
+    },
   });
 };
 
 export const useBulkUpsertAdminSettings = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (payload: BulkUpsertSettingsPayload) => {
       const response = await instance.post<ApiResponse<Setting[]>>(
@@ -104,10 +130,18 @@ export const useBulkUpsertAdminSettings = () => {
 
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "public"] }),
+      ]);
+    },
   });
 };
 
 export const useUploadAdminSettingImage = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
@@ -122,6 +156,12 @@ export const useUploadAdminSettingImage = () => {
       );
 
       return response.data.data;
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "public"] }),
+      ]);
     },
   });
 };
@@ -143,6 +183,8 @@ export const useGetAdminSmtpSettings = () => {
 };
 
 export const useUpdateAdminSmtpSettings = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (payload: import("@/types").UpdateSmtpSettingsPayload) => {
       const response = await instance.put<ApiResponse<import("@/types").SmtpSettings>>(
@@ -150,6 +192,9 @@ export const useUpdateAdminSmtpSettings = () => {
         payload,
       );
       return response.data.data;
+    },
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: ["admin", "settings", "smtp"] });
     },
   });
 };
@@ -167,12 +212,17 @@ export const useTestAdminSmtpSettings = () => {
 };
 
 export const useImportSmtpFromEnv = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async () => {
       const response = await instance.post<ApiResponse<import("@/types").SmtpSettings>>(
         "/admin/settings/smtp/import-env",
       );
       return response.data.data;
+    },
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: ["admin", "settings", "smtp"] });
     },
   });
 };
@@ -194,6 +244,8 @@ export const useGetAdminStripeProfiles = () => {
 };
 
 export const useCreateAdminStripeProfile = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (payload: import("@/types").CreateStripeProfilePayload) => {
       const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
@@ -202,10 +254,18 @@ export const useCreateAdminStripeProfile = () => {
       );
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings", "stripe"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "stripe"] }),
+      ]);
+    },
   });
 };
 
 export const useUpdateAdminStripeProfile = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (params: {
       id: string;
@@ -217,10 +277,18 @@ export const useUpdateAdminStripeProfile = () => {
       );
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings", "stripe"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "stripe"] }),
+      ]);
+    },
   });
 };
 
 export const useActivateAdminStripeProfile = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
@@ -228,10 +296,18 @@ export const useActivateAdminStripeProfile = () => {
       );
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings", "stripe"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "stripe"] }),
+      ]);
+    },
   });
 };
 
 export const useDuplicateAdminStripeProfile = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
@@ -239,16 +315,30 @@ export const useDuplicateAdminStripeProfile = () => {
       );
       return response.data.data;
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings", "stripe"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "stripe"] }),
+      ]);
+    },
   });
 };
 
 export const useDeleteAdminStripeProfile = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await instance.delete<ApiResponse<{ message: string }>>(
         `/admin/settings/stripe/profiles/${id}`,
       );
       return response.data.data;
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings", "stripe"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "stripe"] }),
+      ]);
     },
   });
 };
@@ -266,12 +356,20 @@ export const useVerifyAdminStripeConnection = () => {
 };
 
 export const useImportStripeFromEnv = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async () => {
       const response = await instance.post<ApiResponse<import("@/types").StripeProfile>>(
         "/admin/settings/stripe/import-env",
       );
       return response.data.data;
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["admin", "settings", "stripe"] }),
+        queryClient.refetchQueries({ queryKey: ["settings", "stripe"] }),
+      ]);
     },
   });
 };

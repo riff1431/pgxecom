@@ -89,7 +89,7 @@ export function SmtpSettingsTab() {
         isEnabled,
       });
 
-      queryClient.invalidateQueries({ queryKey: ["admin", "settings", "smtp"] });
+      await queryClient.refetchQueries({ queryKey: ["admin", "settings", "smtp"] });
       toast.success("SMTP configuration updated and encrypted successfully");
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Failed to update SMTP settings");
@@ -116,7 +116,7 @@ export function SmtpSettingsTab() {
   const handleImportEnv = async () => {
     try {
       await importEnvMutation.mutateAsync();
-      queryClient.invalidateQueries({ queryKey: ["admin", "settings", "smtp"] });
+      await queryClient.refetchQueries({ queryKey: ["admin", "settings", "smtp"] });
       toast.success("Imported SMTP configuration from environment variables");
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Failed to import from .env");

@@ -12,6 +12,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
@@ -21,9 +24,13 @@ import { resolveImageUrl } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import {
   BarChart3,
+  ChevronDown,
+  CreditCard,
   FileText,
+  Globe,
   LayoutDashboard,
   LogOut,
+  Mail,
   Package,
   Settings,
   ShoppingCart,
@@ -35,6 +42,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
@@ -47,18 +55,26 @@ const menuItems = [
   // { label: "Banners", icon: ImageIcon, href: "/admin/banners" },
   { label: "Shipping", icon: Truck, href: "/admin/shipping" },
   { label: "Analytics", icon: BarChart3, href: "/admin/analytics" },
-  { label: "Settings", icon: Settings, href: "/admin/settings" },
+];
+
+const settingsSubmenu = [
+  { label: "Storefront", icon: Globe, href: "/admin/settings" },
+  { label: "Email (SMTP)", icon: Mail, href: "/admin/settings/smtp" },
+  { label: "Payment (Stripe)", icon: CreditCard, href: "/admin/settings/payment" },
 ];
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { logout } = useAuth();
+  const [settingsOpen, setSettingsOpen] = useState(true);
   const { data: storeSettings } = useGetPublicSettings();
   const settings = storeSettings || [];
   const map = new Map(settings.map((item) => [item.key, item.value]));
   const getSetting = (key: string, fallback = "") => map.get(key) || fallback;
   const rawStoreLogo = getSetting("store_logo", "/logo.png");
   const logoUrl = resolveImageUrl(rawStoreLogo);
+
+  const isSettingsActive = pathname.startsWith("/admin/settings");
 
   return (
     <div className="dark min-h-screen bg-[#060b13] text-slate-100 flex">
@@ -120,6 +136,66 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       </SidebarMenuItem>
                     );
                   })}
+
+                  {/* Settings Item with Submenu */}
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      onClick={() => setSettingsOpen((prev) => !prev)}
+                      isActive={isSettingsActive}
+                      tooltip="Settings"
+                      className={`w-full h-10 rounded-xl px-3.5 text-xs font-semibold tracking-wide transition-all ${
+                        isSettingsActive
+                          ? "bg-gradient-to-r from-[#00a3ff]/20 to-[#00a3ff]/10 text-white font-bold border border-[#00a3ff]/40 shadow-[0_0_15px_rgba(0,163,255,0.2)]"
+                          : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent"
+                      }`}
+                    >
+                      <Settings
+                        className={`w-4 h-4 transition-colors shrink-0 ${
+                          isSettingsActive
+                            ? "text-[#00a3ff] stroke-[2.2]"
+                            : "text-slate-400 group-hover:text-slate-200"
+                        }`}
+                      />
+                      <span className="flex-1 truncate text-left">Settings</span>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                          settingsOpen ? "rotate-180 text-white" : ""
+                        }`}
+                      />
+                    </SidebarMenuButton>
+
+                    {settingsOpen && (
+                      <SidebarMenuSub className="mt-1 space-y-1 border-l-2 border-slate-800/80 ml-5 pl-2.5">
+                        {settingsSubmenu.map((sub) => {
+                          const isSubActive =
+                            sub.href === "/admin/settings"
+                              ? pathname === "/admin/settings"
+                              : pathname.startsWith(sub.href);
+
+                          return (
+                            <SidebarMenuSubItem key={sub.href}>
+                              <SidebarMenuSubButton
+                                render={<Link href={sub.href} />}
+                                isActive={isSubActive}
+                                className={`w-full h-8 rounded-lg px-2.5 text-xs font-medium transition-all flex items-center gap-2 ${
+                                  isSubActive
+                                    ? "bg-[#00a3ff]/15 text-[#00a3ff] font-bold border border-[#00a3ff]/30 shadow-[0_0_10px_rgba(0,163,255,0.15)]"
+                                    : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-transparent"
+                                }`}
+                              >
+                                <sub.icon
+                                  className={`w-3.5 h-3.5 shrink-0 ${
+                                    isSubActive ? "text-[#00a3ff]" : "text-slate-400"
+                                  }`}
+                                />
+                                <span className="truncate">{sub.label}</span>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
+                      </SidebarMenuSub>
+                    )}
+                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
