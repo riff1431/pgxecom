@@ -32,21 +32,22 @@ export function AdminDeleteDialog({
 }: AdminDeleteDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="rounded-xl">
+      <AlertDialogContent className="rounded-xl bg-[#0b1322] border border-slate-800 text-white">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-xl font-bold text-gray-900">
+          <AlertDialogTitle className="text-xl font-bold text-white font-mono uppercase tracking-wider">
             {title}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-gray-500">
+          <AlertDialogDescription className="text-slate-400">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="bg-[#080e18] border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">Cancel</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={onConfirm}
             disabled={isDeleting}
+            className="bg-rose-600 hover:bg-rose-700 text-white font-mono uppercase text-xs"
           >
             {isDeleting ? "Deleting..." : confirmLabel}
           </AlertDialogAction>

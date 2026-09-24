@@ -67,19 +67,19 @@ export default function AdminCategoriesPage() {
         onAction={handleCreate}
       />
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
+      <div className="bg-[#0b1322] rounded-xl shadow-sm border border-slate-800 overflow-hidden">
+        <div className="p-6 border-b border-slate-800/80 flex items-center justify-between bg-[#080e18]">
           <div className="relative max-w-sm w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Find category..."
-              className="pl-12 h-12 rounded-xl border-gray-200 bg-white shadow-inner"
+              className="pl-12 h-12 rounded-xl border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 shadow-inner"
               value={params.search}
               onChange={handleSearch}
             />
           </div>
           {isLoading && (
-            <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
+            <Loader2 className="h-5 w-5 animate-spin text-[#00a3ff]" />
           )}
         </div>
 
@@ -87,7 +87,7 @@ export default function AdminCategoriesPage() {
           {isLoading ? (
             <div className="p-6 space-y-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="w-full h-16 rounded-2xl" />
+                <Skeleton key={i} className="w-full h-16 rounded-2xl bg-slate-800/60" />
               ))}
             </div>
           ) : (
@@ -96,7 +96,7 @@ export default function AdminCategoriesPage() {
         </div>
 
         {!isLoading && categories.length > 0 && (
-          <div className="p-6 border-t border-gray-50 bg-gray-50/30">
+          <div className="p-6 border-t border-slate-800/80 bg-[#080e18]">
             <AppPagination
               currentPage={params.page}
               totalPages={meta?.totalPage || 1}
@@ -107,7 +107,7 @@ export default function AdminCategoriesPage() {
 
         {!isLoading && categories.length === 0 && (
           <div className="py-20 text-center">
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">
               No categories found
             </p>
           </div>

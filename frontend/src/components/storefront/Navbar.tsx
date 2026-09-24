@@ -12,13 +12,8 @@ import { useCartStore } from "@/store/cart.store";
 import {
   ChevronDown,
   Globe,
-  HelpCircle,
   LogOut,
-  Mail,
   Menu,
-  Phone,
-  ShieldCheck,
-  ShoppingBag,
   ShoppingCart,
   Truck,
   User,
@@ -140,17 +135,12 @@ export function Navbar() {
       {/* Main Navigation Bar */}
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-          <div className="flex flex-col">
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white font-mono uppercase">
-                PG<span className="text-[#00a3ff]">X</span>
-              </span>
-            </div>
-            <span className="text-[7.5px] uppercase tracking-[0.25em] text-slate-400 font-semibold -mt-1 group-hover:text-slate-200 transition-colors">
-              Lifestyle • Fitness • Gear • Everyday
-            </span>
-          </div>
+        <Link href="/" className="inline-flex items-center shrink-0">
+          <img
+            src="/logo.png"
+            alt="PGX Logo"
+            className="h-9 sm:h-11 w-auto object-contain"
+          />
         </Link>
 
         {/* Center Desktop Navigation */}

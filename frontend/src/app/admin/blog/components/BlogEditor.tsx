@@ -68,7 +68,7 @@ export function BlogEditor({
     editorProps: {
       attributes: {
         class:
-          "min-h-72 rounded-b-xl border border-t-0 border-gray-200 p-4 focus:outline-none prose max-w-none",
+          "min-h-72 rounded-b-xl border border-t-0 border-slate-800 bg-[#060b13] p-4 focus:outline-none prose prose-invert max-w-none text-slate-200",
       },
     },
   });
@@ -125,10 +125,10 @@ export function BlogEditor({
   if (!editor) return null;
 
   return (
-    <div className="rounded-xl border border-gray-200">
-      <div className="flex flex-wrap gap-2 border-b border-gray-200 p-3 bg-gray-50 rounded-t-xl">
+    <div className="rounded-xl border border-slate-800 bg-[#080e18]">
+      <div className="flex flex-wrap gap-2 border-b border-slate-800 p-3 bg-[#0b1322] rounded-t-xl">
         <select
-          className="h-9 rounded-lg border border-gray-200 px-2 text-sm"
+          className="h-9 rounded-lg border border-slate-700 bg-[#080e18] px-2 text-sm text-white focus:outline-none"
           onChange={(event) => {
             const selected = event.target.value;
             if (!selected) {
@@ -145,7 +145,7 @@ export function BlogEditor({
           defaultValue=""
         >
           {fontOptions.map((font) => (
-            <option key={font.label} value={font.value}>
+            <option key={font.label} value={font.value} className="bg-[#0b1322] text-white">
               {font.label}
             </option>
           ))}
@@ -153,66 +153,96 @@ export function BlogEditor({
 
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().toggleBold().run()}
         >
           <Bold className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           <Italic className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().toggleUnderline().run()}
         >
           <UnderlineIcon className="h-4 w-4" />
         </Button>
-        <Button type="button" onClick={applyLink}>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
+          onClick={applyLink}
+        >
           <Link2 className="h-4 w-4" />
         </Button>
-        <Button type="button" onClick={insertImage}>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
+          onClick={insertImage}
+        >
           <ImagePlus className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           <List className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
         >
           <AlignLeft className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().setTextAlign("center").run()}
         >
           <AlignCenter className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().setTextAlign("right").run()}
         >
           <AlignRight className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().undo().run()}
         >
           <Undo2 className="h-4 w-4" />
         </Button>
         <Button
           type="button"
+          variant="outline"
+          className="h-9 w-9 p-0 bg-[#080e18] border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
           onClick={() => editor.chain().focus().redo().run()}
         >
           <Redo2 className="h-4 w-4" />

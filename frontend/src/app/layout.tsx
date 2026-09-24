@@ -26,6 +26,19 @@ export const metadata: Metadata = {
     "PGX",
     "power rack",
   ],
+  icons: {
+    icon: [
+      { url: "/logo.png" },
+      { url: "/icon.png" },
+    ],
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
+  openGraph: {
+    title: "PGX — Lifestyle, Fitness, Gear, Everyday",
+    description: "Premium fitness equipment, apparel and everyday essentials.",
+    images: [{ url: "/logo.png" }],
+  },
 };
 
 export default function RootLayout({

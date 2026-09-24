@@ -92,24 +92,29 @@ export default function AdminProductsPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900">Products</h1>
-          <p className="text-sm text-gray-500 mt-1 font-medium">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono uppercase">
+            Products
+          </h1>
+          <p className="text-slate-400 font-medium text-xs mt-1">
             Manage your storefront inventory and catalogs.
           </p>
         </div>
-        <Button asChild>
+        <Button
+          asChild
+          className="bg-[#00a3ff] hover:bg-[#0091e6] text-slate-950 font-bold font-mono text-xs uppercase px-5 h-10 rounded-xl shadow-lg shadow-[#00a3ff]/20 transition-all"
+        >
           <Link href="/admin/products/new">Add Product</Link>
         </Button>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-4 border-b bg-gray-50/50 space-y-4">
+      <div className="bg-[#0b1322] rounded-2xl shadow-sm border border-slate-800 overflow-hidden text-slate-100">
+        <div className="p-4 border-b border-slate-800/80 bg-[#080e18] space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative flex-1 min-w-60">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 placeholder="Search by name or SKU..."
-                className="pl-10 h-11 rounded-xl border-gray-200 focus:ring-emerald-500"
+                className="pl-10 h-11 rounded-xl border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
                 value={params.search}
                 onChange={(e) => handleSearchChange(e.target.value)}
               />
@@ -146,7 +151,11 @@ export default function AdminProductsPage() {
             {(params.search ||
               params.categoryId !== "all" ||
               params.isActive !== "all") && (
-              <Button onClick={clearFilters}>
+              <Button
+                onClick={clearFilters}
+                variant="outline"
+                className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-mono text-xs"
+              >
                 <FilterX className="h-4 w-4 mr-2" /> Clear
               </Button>
             )}
@@ -156,7 +165,7 @@ export default function AdminProductsPage() {
         {isLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="w-full h-16 rounded-xl" />
+              <Skeleton key={i} className="w-full h-16 rounded-xl bg-slate-800/60" />
             ))}
           </div>
         ) : (
@@ -167,13 +176,13 @@ export default function AdminProductsPage() {
             />
             {adminProducts?.data.length === 0 && (
               <div className="py-20 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-4">
-                  <Search className="h-8 w-8 text-gray-300" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 border border-slate-800 mb-4">
+                  <Search className="h-8 w-8 text-slate-500" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900">
+                <h3 className="text-lg font-bold text-white font-mono">
                   No products found
                 </h3>
-                <p className="text-gray-500">
+                <p className="text-slate-400 text-xs mt-1">
                   Try adjusting your filters or search terms.
                 </p>
               </div>
@@ -182,7 +191,7 @@ export default function AdminProductsPage() {
         )}
 
         {adminProducts?.meta && adminProducts.meta.totalPage > 1 && (
-          <div className="p-4 border-t bg-gray-50/30">
+          <div className="p-4 border-t border-slate-800/80 bg-[#080e18]">
             <AppPagination
               currentPage={params.page}
               totalPages={adminProducts.meta.totalPage || 1}

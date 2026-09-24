@@ -42,17 +42,17 @@ export default function EditProductPage({
 
   if (isError || !product) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 bg-white  border-2 border-dashed border-gray-100">
-        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
-          <Package className="h-10 w-10 text-red-200" />
+      <div className="flex flex-col items-center justify-center py-20 bg-[#0b1322] border-2 border-dashed border-slate-800 rounded-2xl text-slate-100">
+        <div className="w-20 h-20 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mb-6 text-red-400">
+          <Package className="h-10 w-10" />
         </div>
-        <h2 className="text-2xl font-black text-gray-900 mb-2">
+        <h2 className="text-2xl font-black text-white mb-2 font-mono uppercase">
           Product Not Found
         </h2>
-        <p className="text-gray-500 font-medium mb-8">
+        <p className="text-slate-400 font-medium mb-8 text-xs">
           The product you are trying to edit does not exist or has been removed.
         </p>
-        <Button asChild>
+        <Button asChild className="bg-[#00a3ff] hover:bg-[#0091e6] text-slate-950 font-bold font-mono text-xs uppercase px-5 h-10 rounded-xl">
           <Link href="/admin/products">Back to Products</Link>
         </Button>
       </div>
@@ -62,20 +62,25 @@ export default function EditProductPage({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button asChild>
+        <Button
+          asChild
+          variant="outline"
+          size="icon"
+          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white h-10 w-10 rounded-xl"
+        >
           <Link href="/admin/products">
-            <ChevronLeft className="h-6 w-6 text-gray-600" />
+            <ChevronLeft className="h-5 w-5" />
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono uppercase">
             Edit Product
           </h1>
-          <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-sm text-gray-500 font-medium tracking-tight">
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-xs text-slate-400 font-medium">
               Updating:
             </span>
-            <span className="text-sm text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-lg">
+            <span className="text-xs font-mono font-bold text-[#00a3ff] bg-slate-900 border border-slate-800 px-2.5 py-0.5 rounded-md">
               {product.name}
             </span>
           </div>

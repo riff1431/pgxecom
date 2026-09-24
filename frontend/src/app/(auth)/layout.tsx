@@ -15,13 +15,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-flex flex-col items-center">
-          <span className="text-4xl font-black tracking-tighter text-white font-mono uppercase">
-            PG<span className="text-[#00a3ff]">X</span>
-          </span>
-          <span className="text-[9px] uppercase tracking-[0.25em] text-slate-400 font-semibold mt-1">
-            Lifestyle • Fitness • Gear • Everyday
-          </span>
+        <Link href="/" className="inline-flex justify-center">
+          <img
+            src="/logo.png"
+            alt="PGX Logo"
+            className="h-14 sm:h-16 w-auto object-contain"
+          />
         </Link>
       </div>
 

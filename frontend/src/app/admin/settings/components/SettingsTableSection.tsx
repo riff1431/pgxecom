@@ -38,12 +38,12 @@ export function SettingsTableSection({
   onDelete,
 }: SettingsTableSectionProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border">
-      <div className="p-4 border-b flex flex-wrap items-center gap-3 bg-gray-50/50">
+    <div className="bg-[#0b1322] rounded-xl shadow-sm border border-slate-800 overflow-hidden text-slate-100">
+      <div className="p-4 border-b border-slate-800/80 flex flex-wrap items-center gap-3 bg-[#080e18]">
         <div className="relative flex-1 min-w-56">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
-            className="pl-10 h-11 rounded-xl"
+            className="pl-10 h-11 rounded-xl border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
             placeholder="Search by key or value..."
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
@@ -51,7 +51,7 @@ export function SettingsTableSection({
         </div>
 
         <select
-          className="h-11 rounded-xl border border-gray-200 bg-white px-3 text-sm"
+          className="h-11 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-200 focus:border-[#00a3ff] outline-none"
           value={group}
           onChange={(event) => onGroupChange(event.target.value)}
         >
@@ -62,7 +62,11 @@ export function SettingsTableSection({
         </select>
 
         {search || group !== "all" ? (
-          <Button onClick={onClearFilters}>
+          <Button
+            onClick={onClearFilters}
+            variant="outline"
+            className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-mono text-xs"
+          >
             <FilterX className="h-4 w-4 mr-2" /> Clear
           </Button>
         ) : null}
@@ -71,44 +75,48 @@ export function SettingsTableSection({
       {isLoading ? (
         <div className="p-4 space-y-2">
           {Array.from({ length: 6 }).map((_, index) => (
-            <Skeleton key={index} className="h-12 w-full" />
+            <Skeleton key={index} className="h-12 w-full bg-slate-800/60" />
           ))}
         </div>
       ) : (
         <AdminTable>
           <TableHeader>
-            <TableRow>
-              <TableHead>Key</TableHead>
-              <TableHead>Value</TableHead>
-              <TableHead>Group</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
+              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Key</TableHead>
+              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Value</TableHead>
+              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Group</TableHead>
+              <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {settings.map((setting) => (
-              <TableRow key={setting.id}>
-                <TableCell className="font-medium">{setting.key}</TableCell>
-                <TableCell className="max-w-md truncate">
+              <TableRow
+                key={setting.id}
+                className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+              >
+                <TableCell className="font-bold font-mono text-white text-xs">{setting.key}</TableCell>
+                <TableCell className="max-w-md truncate font-mono text-xs text-slate-300">
                   {setting.value}
                 </TableCell>
                 <TableCell>
-                  <Badge className="bg-gray-100 text-gray-700 border-0">
+                  <Badge className="bg-slate-900 border border-slate-700 text-slate-300 font-mono text-[11px] uppercase">
                     {setting.group || "general"}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="icon"
                       onClick={() => onEdit(setting)}
+                      className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="icon"
-                      className="text-red-600"
+                      className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8 rounded-lg"
                       onClick={() => onDelete(setting)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -122,7 +130,7 @@ export function SettingsTableSection({
               <TableRow>
                 <TableCell
                   colSpan={4}
-                  className="text-center py-14 text-gray-500"
+                  className="text-center py-14 text-slate-400 font-mono text-xs"
                 >
                   No settings found.
                 </TableCell>

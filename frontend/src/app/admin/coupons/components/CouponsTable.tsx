@@ -35,32 +35,35 @@ export function CouponsTable({
   return (
     <AdminTable>
       <TableHeader>
-        <TableRow>
-          <TableHead>Code</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Usage</TableHead>
-          <TableHead>Valid Until</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+        <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
+          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Code</TableHead>
+          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Type</TableHead>
+          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Usage</TableHead>
+          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Valid Until</TableHead>
+          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Status</TableHead>
+          <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {coupons.map((coupon) => (
-          <TableRow key={coupon.id}>
+          <TableRow
+            key={coupon.id}
+            className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+          >
             <TableCell>
-              <p className="font-semibold text-gray-900">{coupon.code}</p>
-              <p className="text-xs text-gray-500 line-clamp-1">
+              <p className="font-bold font-mono text-white tracking-wide">{coupon.code}</p>
+              <p className="text-xs text-slate-400 line-clamp-1">
                 {coupon.description || "No description"}
               </p>
             </TableCell>
-            <TableCell className="text-sm font-medium text-gray-700">
+            <TableCell className="text-sm font-bold font-mono text-[#00a3ff]">
               {formatDiscount(coupon)}
             </TableCell>
-            <TableCell className="text-sm text-gray-600">
+            <TableCell className="text-sm font-mono text-slate-300">
               {coupon.usedCount}
               {coupon.usageLimit ? ` / ${coupon.usageLimit}` : ""}
             </TableCell>
-            <TableCell className="text-sm text-gray-600">
+            <TableCell className="text-sm font-mono text-slate-400">
               {coupon.expiresAt
                 ? new Date(coupon.expiresAt).toLocaleDateString()
                 : "No expiry"}
@@ -77,10 +80,10 @@ export function CouponsTable({
             <TableCell className="text-right">
               <div className="flex items-center justify-end gap-3">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
                   onClick={() => onEdit(coupon)}
-                  className="h-8 w-8"
+                  className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>

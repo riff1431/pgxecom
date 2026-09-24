@@ -158,53 +158,53 @@ export function CategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-125">
+      <DialogContent className="sm:max-w-125 bg-[#0b1322] border-slate-800 text-white rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-black">
+          <DialogTitle className="text-xl font-bold text-white font-mono uppercase tracking-wider">
             {category ? "Edit Category" : "Add New Category"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-4">
           <div className="space-y-2 text-left">
-            <Label htmlFor="name" className="font-bold">
+            <Label htmlFor="name" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
               Name
             </Label>
             <Input
               id="name"
               placeholder="Electronics"
-              className="h-12 rounded-xl"
+              className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
               {...register("name")}
             />
             {errors.name && (
-              <p className="text-xs text-red-500 font-bold">
+              <p className="text-xs text-rose-400 font-medium">
                 {errors.name.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="slug" className="font-bold">
+            <Label htmlFor="slug" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
               Slug
             </Label>
             <Input
               id="slug"
               placeholder="electronics"
-              className="h-12 rounded-xl"
+              className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 font-mono text-xs"
               {...register("slug")}
             />
-            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+            <div className="text-[10px] text-slate-500 font-mono uppercase tracking-wider mt-1">
               Used in URL: /category/electronics
             </div>
             {errors.slug && (
-              <p className="text-xs text-red-500 font-bold">
+              <p className="text-xs text-rose-400 font-medium">
                 {errors.slug.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="parent-category" className="font-bold">
+            <Label htmlFor="parent-category" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
               Parent Category
             </Label>
             <Cascader
@@ -214,62 +214,62 @@ export function CategoryDialog({
                 setValue("parentPath", path, { shouldDirty: true })
               }
               placeholder="Optional: select parent category"
-              className="w-full h-12 rounded-xl"
+              className="w-full h-11 rounded-xl bg-[#080e18] border-slate-700 text-white"
               allowClear
               changeOnSelect
               expandTrigger="hover"
             />
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+            <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider mt-1">
               Leave empty to keep this category at root level.
             </p>
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="description" className="font-bold">
+            <Label htmlFor="description" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
               Description
             </Label>
             <Textarea
               id="description"
               placeholder="Brief category description..."
-              className="min-h-25 rounded-xl"
+              className="min-h-24 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
               {...register("description")}
             />
             {errors.description && (
-              <p className="text-xs text-red-500 font-bold">
+              <p className="text-xs text-rose-400 font-medium">
                 {errors.description.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="sortOrder" className="font-bold">
+            <Label htmlFor="sortOrder" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
               Sort Order
             </Label>
             <Input
               id="sortOrder"
               type="number"
-              className="h-12 rounded-xl"
+              className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white"
               {...register("sortOrder")}
             />
             {errors.sortOrder && (
-              <p className="text-xs text-red-500 font-bold">
+              <p className="text-xs text-rose-400 font-medium">
                 {errors.sortOrder.message}
               </p>
             )}
           </div>
 
-          <div className="flex gap-3 pt-6">
+          <div className="flex gap-3 pt-4">
             <Button
               type="button"
               variant="outline"
-              className="flex-1 h-12 rounded-xl font-bold"
+              className="flex-1 h-11 rounded-xl bg-[#080e18] border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
               onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold"
+              className="flex-1 h-11 bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono uppercase tracking-wider text-xs rounded-xl"
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               {createMutation.isPending || updateMutation.isPending ? (

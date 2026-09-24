@@ -122,20 +122,22 @@ export default function AdminCustomersPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Customers</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono uppercase">
+            Customers
+          </h1>
+          <p className="text-slate-400 font-medium text-xs mt-1">
             Manage customer accounts, status, and communication.
           </p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border mt-4">
-        <div className="p-4 border-b flex flex-wrap gap-4 items-center bg-gray-50/50">
+      <div className="bg-[#0b1322] rounded-xl shadow-sm border border-slate-800 mt-4 overflow-hidden text-slate-100">
+        <div className="p-4 border-b border-slate-800/80 flex flex-wrap gap-4 items-center bg-[#080e18]">
           <div className="relative flex-1 min-w-60">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Search by name, email, phone..."
-              className="pl-10 h-11 rounded-xl"
+              className="pl-10 h-11 rounded-xl border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
               value={params.search}
               onChange={(e) => setParams({ search: e.target.value })}
             />
@@ -151,7 +153,11 @@ export default function AdminCustomersPage() {
           />
 
           {(params.search || params.status !== "all") && (
-            <Button onClick={clearFilters}>
+            <Button
+              onClick={clearFilters}
+              variant="outline"
+              className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-mono text-xs"
+            >
               <FilterX className="h-4 w-4 mr-2" /> Clear
             </Button>
           )}
@@ -160,7 +166,7 @@ export default function AdminCustomersPage() {
         {isLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="w-full h-14" />
+              <Skeleton key={i} className="w-full h-14 bg-slate-800/60" />
             ))}
           </div>
         ) : (
@@ -172,13 +178,13 @@ export default function AdminCustomersPage() {
             />
             {customerData?.data?.length === 0 && (
               <div className="py-20 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-4">
-                  <Search className="h-8 w-8 text-gray-300" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 border border-slate-800 mb-4">
+                  <Search className="h-8 w-8 text-slate-500" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900">
+                <h3 className="text-lg font-bold text-white font-mono">
                   No customers found
                 </h3>
-                <p className="text-gray-500">
+                <p className="text-slate-400 text-xs mt-1">
                   Try adjusting your filters or search terms.
                 </p>
               </div>
@@ -187,7 +193,7 @@ export default function AdminCustomersPage() {
         )}
 
         {customerData?.meta && customerData.meta.totalPage > 1 && (
-          <div className="p-4 border-t bg-gray-50/30">
+          <div className="p-4 border-t border-slate-800/80 bg-[#080e18]">
             <AppPagination
               currentPage={params.page}
               totalPages={customerData.meta.totalPage}

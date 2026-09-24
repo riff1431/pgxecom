@@ -32,15 +32,20 @@ export function RecentOrdersTable({
   onPageChange,
 }: RecentOrdersTableProps) {
   return (
-    <Card className="border-gray-100 shadow-sm flex flex-col h-full">
-      <CardHeader className="pb-3 px-6">
+    <Card className="border-slate-800 bg-[#0b1322] shadow-sm flex flex-col h-full text-slate-100">
+      <CardHeader className="pb-3 px-6 border-b border-slate-800/80">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold text-gray-900 uppercase tracking-tight">
+          <CardTitle className="text-sm font-mono font-bold text-white uppercase tracking-wider">
             Recent Orders
           </CardTitle>
-          <Button asChild>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 text-xs font-mono uppercase"
+          >
             <Link href="/admin/orders">
-              View All <ArrowUpRight className="ml-1 h-3 w-3" />
+              View All <ArrowUpRight className="ml-1 h-3 w-3 text-[#00a3ff]" />
             </Link>
           </Button>
         </div>
@@ -48,37 +53,37 @@ export function RecentOrdersTable({
       <CardContent className="px-0 flex-1 flex flex-col">
         <div className="flex-1 overflow-x-auto">
           <Table>
-            <TableHeader className="bg-gray-50/50">
-              <TableRow className="border-gray-100">
-                <TableHead className="px-6 py-4 font-bold text-gray-500 text-xs uppercase tracking-widest">
+            <TableHeader className="bg-[#080e18]">
+              <TableRow className="border-slate-800/80 hover:bg-transparent">
+                <TableHead className="px-6 py-3 font-mono font-bold text-slate-400 text-[11px] uppercase tracking-widest">
                   Order
                 </TableHead>
-                <TableHead className="py-4 font-bold text-gray-500 text-xs uppercase tracking-widest">
+                <TableHead className="py-3 font-mono font-bold text-slate-400 text-[11px] uppercase tracking-widest">
                   Customer
                 </TableHead>
-                <TableHead className="py-4 font-bold text-gray-500 text-xs uppercase tracking-widest">
+                <TableHead className="py-3 font-mono font-bold text-slate-400 text-[11px] uppercase tracking-widest">
                   Total
                 </TableHead>
-                <TableHead className="px-6 py-4 font-bold text-gray-500 text-xs uppercase tracking-widest text-right">
+                <TableHead className="px-6 py-3 font-mono font-bold text-slate-400 text-[11px] uppercase tracking-widest text-right">
                   Status
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow>
+                <TableRow className="border-slate-800 hover:bg-transparent">
                   <TableCell colSpan={4} className="h-64 text-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mx-auto" />
-                    <p className="text-gray-400 mt-2 font-medium">
+                    <Loader2 className="w-8 h-8 animate-spin text-[#00a3ff] mx-auto" />
+                    <p className="text-slate-400 mt-2 font-mono text-xs">
                       Loading orders...
                     </p>
                   </TableCell>
                 </TableRow>
               ) : orders.length === 0 ? (
-                <TableRow>
+                <TableRow className="border-slate-800 hover:bg-transparent">
                   <TableCell
                     colSpan={4}
-                    className="h-64 text-center text-gray-500 font-medium"
+                    className="h-64 text-center text-slate-500 font-mono text-xs"
                   >
                     No orders found.
                   </TableCell>
@@ -87,41 +92,41 @@ export function RecentOrdersTable({
                 orders.map((order) => {
                   const statusConfig = ORDER_STATUSES[order.status] || {
                     label: order.status,
-                    color: "bg-gray-100 text-gray-800",
+                    color: "bg-slate-800 text-slate-300",
                   };
                   return (
                     <TableRow
                       key={order.id}
-                      className="border-gray-50 group hover:bg-emerald-50/30 transition-colors"
+                      className="border-slate-800/60 group hover:bg-slate-800/40 transition-colors"
                     >
-                      <TableCell className="px-6 py-4">
+                      <TableCell className="px-6 py-3.5">
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          className="font-bold text-gray-900 hover:text-emerald-600 transition-colors block"
+                          className="font-mono font-bold text-white hover:text-[#00a3ff] transition-colors block text-sm"
                         >
                           #{order.orderNumber}
                         </Link>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase mt-0.5">
+                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">
                           {new Date(order.createdAt).toLocaleDateString()}
                         </p>
                       </TableCell>
-                      <TableCell className="py-4">
-                        <p className="font-semibold text-gray-700">
+                      <TableCell className="py-3.5">
+                        <p className="font-semibold text-slate-200 text-sm">
                           {order.guestName || order.user?.name || "Guest"}
                         </p>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase">
+                        <p className="text-[10px] text-slate-400 font-mono">
                           {order.items.length} Items
                         </p>
                       </TableCell>
-                      <TableCell className="py-4">
-                        <p className="font-black text-gray-900">
+                      <TableCell className="py-3.5">
+                        <p className="font-mono font-bold text-white text-sm">
                           {CURRENCY}
                           {order.total.toLocaleString()}
                         </p>
                       </TableCell>
-                      <TableCell className="px-6 py-4 text-right">
+                      <TableCell className="px-6 py-3.5 text-right">
                         <Badge
-                          className={`font-black text-[10px] uppercase tracking-tighter px-3 py-0.5 rounded-lg border-0 ${statusConfig.color}`}
+                          className={`font-mono font-bold text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-md border-0 ${statusConfig.color}`}
                         >
                           {statusConfig.label}
                         </Badge>
@@ -134,7 +139,7 @@ export function RecentOrdersTable({
           </Table>
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-50 mt-auto">
+        <div className="px-6 py-4 border-t border-slate-800/80 mt-auto">
           <AppPagination
             currentPage={currentPage}
             totalPages={totalPages}

@@ -12,6 +12,16 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ or
   return (
     <div className="min-h-[75vh] flex items-center justify-center py-16 px-4 bg-white">
       <div className="max-w-xl w-full text-center">
+        <div className="flex justify-center mb-6">
+          <Link href="/" className="inline-flex items-center">
+            <img
+              src="/logo.png"
+              alt="PGX Logo"
+              className="h-12 w-auto object-contain"
+            />
+          </Link>
+        </div>
+
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}

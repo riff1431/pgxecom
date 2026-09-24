@@ -10,11 +10,11 @@ export function OrderNotesCard({ notes }: OrderNotesCardProps) {
   }
 
   return (
-    <div className="rounded-xl border border-yellow-100 bg-yellow-50 p-4">
-      <h4 className="mb-1 text-sm font-semibold text-yellow-800">
+    <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
+      <h4 className="mb-1 text-xs font-mono uppercase tracking-wider font-semibold text-amber-400">
         Customer Notes
       </h4>
-      <p className="text-sm text-yellow-700">{notes}</p>
+      <p className="text-sm text-amber-200">{notes}</p>
     </div>
   );
 }

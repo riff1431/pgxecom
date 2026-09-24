@@ -54,7 +54,7 @@ export function OrderDetailHeader({
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between print:gap-2">
       <div className="flex items-center gap-4">
-        <Button asChild className="print:hidden" variant="outline">
+        <Button asChild className="print:hidden bg-[#0b1322] border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800" variant="outline">
           <Link href="/admin/orders">
             <ArrowLeft className="h-5 w-5" />
           </Link>
@@ -62,15 +62,15 @@ export function OrderDetailHeader({
 
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-white font-mono uppercase tracking-wider">
               Order #{order.orderNumber}
             </h1>
             <Badge className={`${statusConfig.color} border-0`}>
               {statusConfig.label}
             </Badge>
           </div>
-          <p className="mt-1 flex items-center gap-1 text-sm text-gray-500">
-            <Calendar className="h-3.5 w-3.5" />
+          <p className="mt-1 flex items-center gap-1 text-sm text-slate-400">
+            <Calendar className="h-3.5 w-3.5 text-[#00a3ff]" />
             {new Date(order.createdAt).toLocaleString()}
           </p>
         </div>
@@ -79,22 +79,22 @@ export function OrderDetailHeader({
       <div className="flex flex-wrap items-center gap-3 print:hidden">
         {canPrintInvoice && (
           <>
-            <Button variant="outline" onClick={() => handlePrint()} disabled={isLoading || !invoiceData}>
-              <Printer className="mr-2 h-4 w-4" />
+            <Button variant="outline" className="bg-[#0b1322] border-slate-800 text-slate-200 hover:bg-slate-800 hover:text-white font-mono uppercase text-xs" onClick={() => handlePrint()} disabled={isLoading || !invoiceData}>
+              <Printer className="mr-2 h-4 w-4 text-[#00a3ff]" />
               {isLoading ? "Loading..." : "Print Invoice"}
             </Button>
             {invoiceData && <InvoicePrintTemplate ref={printRef} data={invoiceData} />}
           </>
         )}
 
-        <span className="text-sm font-medium text-gray-700">
-          Update Status:
+        <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
+          Status:
         </span>
         <Select defaultValue={order.status} onValueChange={onUpdateStatus}>
-          <SelectTrigger className="w-45">
+          <SelectTrigger className="w-45 bg-[#0b1322] border-slate-800 text-white font-mono text-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-[#0b1322] border-slate-800 text-white">
             <SelectItem value="PENDING">Pending</SelectItem>
             <SelectItem value="CONFIRMED">Confirmed</SelectItem>
             <SelectItem value="PROCESSING">Processing</SelectItem>

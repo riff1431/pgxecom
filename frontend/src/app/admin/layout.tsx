@@ -33,7 +33,6 @@ import {
   Truck,
   Users,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -58,89 +57,124 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   const settings = storeSettings || [];
   const map = new Map(settings.map((item) => [item.key, item.value]));
   const getSetting = (key: string, fallback = "") => map.get(key) || fallback;
+  const rawStoreLogo = getSetting("store_logo", "/logo.png");
+  const logoUrl = resolveImageUrl(rawStoreLogo);
 
   return (
-    <SidebarProvider>
-      <Sidebar variant="inset">
-        <SidebarHeader className="h-16 flex items-center justify-center border-b px-4">
-          <Link
-            href="/admin"
-            className="flex items-center gap-2.5 w-full justify-start px-2"
-          >
-            <div className="w-8 h-8 rounded-lg bg-[#060b13] flex items-center justify-center text-white font-black font-mono text-sm border border-slate-700">
-              PG<span className="text-[#00a3ff]">X</span>
+    <div className="dark min-h-screen bg-[#060b13] text-slate-100 flex">
+      <SidebarProvider className="bg-[#060b13] text-slate-100 min-h-screen w-full">
+        <Sidebar
+          className="border-r border-slate-800/80 bg-[#070d18] text-slate-200"
+        >
+          {/* Logo Header */}
+          <SidebarHeader className="h-20 flex items-center justify-center border-b border-slate-800/80 px-6 bg-[#070d18]">
+            <Link
+              href="/admin"
+              className="flex items-center justify-center w-full py-2 hover:opacity-90 transition-opacity"
+            >
+              <img
+                src={logoUrl}
+                alt="PGX Admin Logo"
+                className="h-10 w-auto max-h-12 max-w-[160px] object-contain shrink-0 drop-shadow-[0_2px_12px_rgba(0,163,255,0.15)]"
+              />
+            </Link>
+          </SidebarHeader>
+
+          {/* Navigation Menu */}
+          <SidebarContent className="bg-[#070d18] px-3 py-4">
+            <SidebarGroup>
+              <SidebarGroupLabel className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#00a3ff] px-3 mb-2">
+                Administration
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu className="space-y-1.5">
+                  {menuItems.map((item) => {
+                    const isActive =
+                      pathname === item.href ||
+                      (item.href !== "/admin" && pathname.startsWith(item.href));
+
+                    return (
+                      <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton
+                          render={<Link href={item.href} />}
+                          isActive={isActive}
+                          tooltip={item.label}
+                          className={`w-full h-10 rounded-xl px-3.5 text-xs font-semibold tracking-wide transition-all ${
+                            isActive
+                              ? "bg-gradient-to-r from-[#00a3ff]/20 to-[#00a3ff]/10 text-white font-bold border border-[#00a3ff]/40 shadow-[0_0_15px_rgba(0,163,255,0.2)] hover:bg-[#00a3ff]/25 hover:text-white"
+                              : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent"
+                          }`}
+                        >
+                          <item.icon
+                            className={`w-4 h-4 transition-colors shrink-0 ${
+                              isActive
+                                ? "text-[#00a3ff] stroke-[2.2]"
+                                : "text-slate-400 group-hover:text-slate-200"
+                            }`}
+                          />
+                          <span className="flex-1 truncate text-left">{item.label}</span>
+                          {isActive && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00a3ff] shadow-[0_0_6px_#00a3ff] shrink-0" />
+                          )}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+
+          {/* Footer Navigation */}
+          <SidebarFooter className="border-t border-slate-800/80 bg-[#050911] p-3">
+            <div className="grid grid-cols-2 gap-2">
+              <SidebarMenuButton
+                render={<Link href="/" target="_blank" />}
+                tooltip="Storefront"
+                className="h-9 w-full text-slate-300 hover:text-white hover:bg-slate-800/70 rounded-lg text-xs font-medium border border-slate-800 flex items-center justify-center gap-2 px-2"
+              >
+                <Store className="w-4 h-4 text-[#00a3ff] shrink-0" />
+                <span className="truncate">Storefront</span>
+              </SidebarMenuButton>
+
+              <SidebarMenuButton
+                onClick={logout}
+                className="h-9 w-full text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg text-xs font-medium border border-red-500/20 flex items-center justify-center gap-1.5 px-2"
+                tooltip="Logout"
+              >
+                <LogOut className="w-4 h-4 shrink-0" />
+                <span className="truncate">Logout</span>
+              </SidebarMenuButton>
             </div>
-            <div className="flex flex-col">
-              <span className="font-black text-slate-900 leading-tight font-mono tracking-tight text-sm">
-                PGX ADMIN
-              </span>
-              <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold">
+          </SidebarFooter>
+        </Sidebar>
+
+        <SidebarInset className="bg-[#060b13] text-slate-100 flex-1 flex flex-col min-w-0 border-l border-slate-800/60">
+          <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-slate-800/80 px-6 bg-[#060b13]/90 backdrop-blur sticky top-0 z-30">
+            <div className="flex items-center gap-3">
+              <SidebarTrigger className="text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg" />
+              <div className="h-4 w-px bg-slate-800 hidden sm:block" />
+              <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 font-semibold hidden sm:inline-block">
                 Store Console
               </span>
             </div>
-          </Link>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Menu</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {menuItems.map((item) => {
-                  const isActive =
-                    pathname === item.href ||
-                    (item.href !== "/admin" && pathname.startsWith(item.href));
-
-                  return (
-                    <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton
-                        isActive={isActive}
-                        tooltip={item.label}
-                        className="w-full"
-                      >
-                        <Link
-                          href={item.href}
-                          className="flex items-center gap-2 w-full"
-                        >
-                          <item.icon className="w-4 h-4" />
-                          <span>{item.label}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter className="border-t">
-          <div className="flex gap-2 p-2">
-            <SidebarMenuButton tooltip="Store" className="w-full">
-              <Link href="/" className="flex items-center gap-2 w-full">
-                <Store className="w-4 h-4" />
-                <span>Home</span>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                target="_blank"
+                className="text-xs font-bold text-[#00a3ff] hover:underline uppercase tracking-wider flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#00a3ff]/30 hover:bg-[#00a3ff]/10 transition-colors"
+              >
+                <Store className="w-3.5 h-3.5" />
+                Live Store
               </Link>
-            </SidebarMenuButton>
-            <SidebarMenuButton
-              onClick={logout}
-              className="text-red-600 hover:text-red-700"
-              tooltip="Logout"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Logout</span>
-            </SidebarMenuButton>
-          </div>
-        </SidebarFooter>
-      </Sidebar>
-
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
-        </header>
-        <main className="flex-1 overflow-auto p-4 lg:p-6 bg-gray-50/50">
-          {children}
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+            </div>
+          </header>
+          <main className="flex-1 overflow-auto p-4 lg:p-8 bg-[#060b13] text-slate-100">
+            {children}
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
   );
 }
 

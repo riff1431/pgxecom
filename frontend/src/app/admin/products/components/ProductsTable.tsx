@@ -40,18 +40,18 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
     <div className="relative">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent bg-gray-50/50">
-            <TableHead className="w-20 font-bold text-gray-700">
+          <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
+            <TableHead className="w-20 font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
               Preview
             </TableHead>
-            <TableHead className="font-bold text-gray-700">
+            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
               Product Details
             </TableHead>
-            <TableHead className="font-bold text-gray-700">Category</TableHead>
-            <TableHead className="font-bold text-gray-700">Pricing</TableHead>
-            <TableHead className="font-bold text-gray-700">Inventory</TableHead>
-            <TableHead className="font-bold text-gray-700">Status</TableHead>
-            <TableHead className="text-right font-bold text-gray-700">
+            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Category</TableHead>
+            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Pricing</TableHead>
+            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Inventory</TableHead>
+            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Status</TableHead>
+            <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
               Actions
             </TableHead>
           </TableRow>
@@ -60,10 +60,10 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
           {products.map((product) => (
             <TableRow
               key={product.id}
-              className="group hover:bg-gray-50/50 transition-colors"
+              className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
             >
               <TableCell>
-                <div className="relative w-12 h-12 rounded-xl bg-gray-100 overflow-hidden border border-gray-100 group-hover:border-emerald-200 transition-colors">
+                <div className="relative w-12 h-12 rounded-xl bg-slate-900 overflow-hidden border border-slate-800 group-hover:border-[#00a3ff]/40 transition-colors">
                   {product.images?.[0]?.url ? (
                     <Image
                       src={
@@ -77,7 +77,7 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
                       unoptimized
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full text-gray-300">
+                    <div className="flex items-center justify-center w-full h-full text-slate-500">
                       <Package className="h-6 w-6" />
                     </div>
                   )}
@@ -85,10 +85,10 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
               </TableCell>
               <TableCell>
                 <div className="flex flex-col">
-                  <span className="font-bold text-gray-900 leading-tight group-hover:text-emerald-700 transition-colors">
+                  <span className="font-bold text-white leading-tight group-hover:text-[#00a3ff] transition-colors">
                     {product.name}
                   </span>
-                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-400 mt-0.5">
+                  <span className="text-[10px] uppercase tracking-wider font-mono font-semibold text-slate-400 mt-0.5">
                     SKU: {product.sku || "NO-SKU"}
                   </span>
                 </div>
@@ -96,19 +96,19 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
               <TableCell>
                 <Badge
                   variant="outline"
-                  className="rounded-lg bg-gray-50 border-gray-200 text-gray-600 font-bold px-2 py-0"
+                  className="rounded-lg bg-slate-900 border-slate-700 text-slate-300 font-mono text-[11px] px-2 py-0.5"
                 >
                   {product.category?.name || "Uncategorized"}
                 </Badge>
               </TableCell>
               <TableCell>
                 <div className="flex flex-col font-bold">
-                  <span className="text-gray-900">
+                  <span className="text-white font-mono">
                     {CURRENCY}
                     {product.price}
                   </span>
                   {product.comparePrice && (
-                    <span className="text-xs text-red-500 line-through opacity-60">
+                    <span className="text-xs text-red-400 line-through opacity-70 font-mono">
                       {CURRENCY}
                       {product.comparePrice}
                     </span>
@@ -118,10 +118,10 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
               <TableCell>
                 <div className="flex items-center gap-2">
                   <div
-                    className={`w-2 h-2 rounded-full ${product.stock > 0 ? "bg-emerald-500" : "bg-red-500"}`}
+                    className={`w-2 h-2 rounded-full ${product.stock > 0 ? "bg-[#00a3ff]" : "bg-red-500"}`}
                   />
                   <span
-                    className={`text-sm font-bold ${product.stock > 0 ? "text-gray-700" : "text-red-600"}`}
+                    className={`text-sm font-semibold font-mono ${product.stock > 0 ? "text-slate-300" : "text-red-400"}`}
                   >
                     {product.stock} in stock
                   </span>
@@ -138,7 +138,12 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-2">
-                  <Button variant="outline" size="icon" asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
+                    asChild
+                  >
                     <Link href={`/admin/products/${product.id}/edit`}>
                       <Edit className="h-4 w-4" />
                     </Link>
@@ -146,7 +151,7 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="text-red-600"
+                    className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8 rounded-lg"
                     onClick={() => handleDelete(product.id)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -158,7 +163,7 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
         </TableBody>
       </Table>
       {toggleMutation.isPending ? (
-        <div className="absolute inset-0 bg-white/50 flex items-center justify-center backdrop-blur-[1px] z-10" />
+        <div className="absolute inset-0 bg-slate-950/60 flex items-center justify-center backdrop-blur-[1px] z-10" />
       ) : null}
     </div>
   );

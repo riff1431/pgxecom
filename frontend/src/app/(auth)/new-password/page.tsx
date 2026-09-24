@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useResetPassword } from "@/lib/api/auth";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Lock, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
@@ -39,12 +40,12 @@ function NewPasswordContent() {
     } catch (error: unknown) {
       const message =
         typeof error === "object" &&
-        error !== null &&
-        "response" in error &&
-        typeof (error as { response?: { data?: { message?: string } } })
-          .response?.data?.message === "string"
+          error !== null &&
+          "response" in error &&
+          typeof (error as { response?: { data?: { message?: string } } })
+            .response?.data?.message === "string"
           ? (error as { response?: { data?: { message?: string } } }).response
-              ?.data?.message
+            ?.data?.message
           : "Invalid or expired token";
 
       toast.error(message);
@@ -53,12 +54,20 @@ function NewPasswordContent() {
 
   if (!token) {
     return (
-      <div className="bg-white p-10 ">
-        <h2 className="text-2xl font-bold text-red-600">Invalid Link</h2>
-        <p className="mt-2 text-gray-600">
+      <div className="space-y-4 text-center">
+        <h2 className="text-2xl font-black uppercase tracking-tight text-red-400 font-mono">Invalid Link</h2>
+        <p className="text-xs text-slate-400">
           The password reset link is invalid or missing a token. Please request
           a new one.
         </p>
+        <div className="pt-2">
+          <Link
+            href="/forgot-password"
+            className="text-xs font-bold uppercase tracking-wider text-[#00a3ff] hover:underline"
+          >
+            Request new reset link
+          </Link>
+        </div>
       </div>
     );
   }
@@ -67,63 +76,63 @@ function NewPasswordContent() {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="max-w-md w-full space-y-8  p-10 "
+      className="space-y-6"
     >
       <div className="text-center">
-        <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="w-16 h-16 bg-slate-900 border border-slate-800 text-[#00a3ff] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
           <ShieldCheck className="w-8 h-8" />
         </div>
-        <h2 className="text-4xl font-bold text-gray-900 tracking-tight">
-          Set new password
+        <h2 className="text-2xl font-black uppercase tracking-tight text-white font-mono">
+          Set New Password
         </h2>
-        <p className="mt-4 text-gray-600">
-          Secure your account by choosing a strong password.
+        <p className="text-xs text-slate-400 mt-1">
+          Secure your athlete account with a new password.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-gray-700 ml-1">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
               New Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="h-14 pl-12 pr-12 rounded-2xl border-gray-200 focus:ring-emerald-500 bg-gray-50/50"
+                className="h-11 pl-10 pr-10 rounded-lg bg-slate-900 border-slate-700 text-white placeholder-slate-500 focus:border-[#00a3ff]"
                 required
                 minLength={6}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
               >
                 {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
+                  <EyeOff className="w-4 h-4" />
                 ) : (
-                  <Eye className="w-5 h-5" />
+                  <Eye className="w-4 h-4" />
                 )}
               </button>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-gray-700 ml-1">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
               Confirm New Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="h-14 pl-12 rounded-2xl border-gray-200 focus:ring-emerald-500 bg-gray-50/50"
+                className="h-11 pl-10 rounded-lg bg-slate-900 border-slate-700 text-white placeholder-slate-500 focus:border-[#00a3ff]"
                 required
                 minLength={6}
               />
@@ -134,9 +143,9 @@ function NewPasswordContent() {
         <Button
           type="submit"
           disabled={resetPasswordMutation.isPending}
-          className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 rounded-2xl text-lg font-bold shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          className="w-full h-11 bg-[#00a3ff] hover:bg-[#0091e6] text-slate-950 font-black text-xs uppercase tracking-wider rounded-lg transition-all shadow-lg shadow-[#00a3ff]/20 mt-2"
         >
-          {resetPasswordMutation.isPending ? "Resetting..." : "Update password"}
+          {resetPasswordMutation.isPending ? "Resetting..." : "Update Password"}
         </Button>
       </form>
     </motion.div>

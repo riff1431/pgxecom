@@ -32,16 +32,23 @@ function AccountLayout({ children }: { children: React.ReactNode }) {
             {/* Account Sidebar */}
             <aside className="w-full md:w-64 shrink-0">
               <div className="bg-[#0b1322] rounded-2xl border border-slate-800 p-5 space-y-2 sticky top-24 shadow-xl">
-                <div className="px-2 mb-6 pb-4 border-b border-slate-800/80">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#00a3ff] font-bold block mb-1">
-                    PGX Athlete Hub
-                  </span>
-                  <h2 className="font-mono font-black text-lg text-white uppercase tracking-wide">
-                    My Account
-                  </h2>
-                  <p className="text-xs text-slate-400 mt-1 truncate font-mono">
-                    {user?.email}
-                  </p>
+                <div className="px-2 mb-6 pb-4 border-b border-slate-800/80 flex items-center gap-3">
+                  <img
+                    src="/logo.png"
+                    alt="PGX Logo"
+                    className="h-10 w-auto object-contain shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[9px] font-mono uppercase tracking-widest text-[#00a3ff] font-bold block truncate">
+                      PGX Athlete Hub
+                    </span>
+                    <h2 className="font-mono font-black text-base text-white uppercase tracking-wide truncate">
+                      My Account
+                    </h2>
+                    <p className="text-[11px] text-slate-400 truncate font-mono">
+                      {user?.email}
+                    </p>
+                  </div>
                 </div>
                 <nav className="space-y-1.5">
                   {menuItems.map((item) => {

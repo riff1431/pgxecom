@@ -45,7 +45,7 @@ export function StoreSettingsProvider({ children }: { children: ReactNode }) {
         "store_description",
         "PGX — Lifestyle, Fitness, Gear, Everyday. Premium fitness equipment, apparel and everyday essentials.",
       ),
-      storeLogo: getSetting("store_logo", ""),
+      storeLogo: getSetting("store_logo", "/logo.png"),
       storeEmail: getSetting("store_email", "support@pgxfitness.com"),
       storePhone: getSetting("store_phone", "+1 (800) 555-0199"),
       storeAddress: getSetting("store_address", "Amsterdam / London / Global Hubs"),

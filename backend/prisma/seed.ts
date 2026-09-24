@@ -372,6 +372,7 @@ async function main() {
   // Store settings for PGX
   const settings = [
     { key: 'store_name', value: 'PGX', group: 'general' },
+    { key: 'store_logo', value: '/logo.png', group: 'general' },
     {
       key: 'store_description',
       value: 'PGX — Lifestyle, Fitness, Gear, Everyday. Premium fitness equipment, apparel and everyday essentials.',

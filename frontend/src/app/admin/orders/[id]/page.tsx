@@ -43,13 +43,13 @@ export default function OrderDetailPage({
   if (isLoading)
     return (
       <div className="p-8 space-y-4">
-        <Skeleton className="h-10 w-48" />
-        <Skeleton className="h-100 w-full" />
+        <Skeleton className="h-10 w-48 bg-slate-800" />
+        <Skeleton className="h-100 w-full bg-slate-800" />
       </div>
     );
   if (!order)
     return (
-      <div className="p-8 text-center text-gray-500 font-medium">
+      <div className="p-8 text-center text-slate-400 font-medium">
         Order not found
       </div>
     );

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ChevronDown,
-  Globe,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -29,9 +23,11 @@ export function Footer() {
           {/* Brand Col (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <Link href="/" className="inline-block">
-              <span className="text-3xl font-black tracking-tighter text-white font-mono uppercase">
-                PG<span className="text-[#00a3ff]">X</span>
-              </span>
+              <img
+                src="/logo.png"
+                alt="PGX Logo"
+                className="h-10 sm:h-12 w-auto object-contain"
+              />
             </Link>
             <p className="text-slate-400 font-medium">
               A Lifestyle That Moves With You.
