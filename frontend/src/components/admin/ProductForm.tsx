@@ -1,56 +1,58 @@
 "use client";
 
 import { BlogEditor } from "@/app/admin/blog/components/BlogEditor";
-import { api as instance } from "@/lib/api";
-import { resolveImageUrl } from "@/lib/utils";
-
 import { ImageUpload } from "@/components/shared/ImageUpload";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Combobox } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { api as instance } from "@/lib/api";
 import { useGetCategories } from "@/lib/api/category";
 import { useCreateProduct, useUpdateProduct } from "@/lib/api/product";
+import { CURRENCY } from "@/lib/constants";
+import { resolveImageUrl } from "@/lib/utils";
 import {
   CreateProductFormInput,
   CreateProductInput,
   createProductSchema,
 } from "@/schemas/product.schema";
-import type { Category, ProductImage } from "@/types";
+import type { Category, Product, ProductImage } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import {
-  BadgeDollarSign,
-  Image as ImageIcon,
+  ArrowLeft,
+  DollarSign,
+  Globe,
+  ImageIcon,
   Info,
-  LayoutGrid,
+  Layers,
   Loader2,
   Plus,
-  Settings,
+  Save,
+  Tag,
   Trash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface ProductFormProps {
-  initialData?: Partial<Omit<CreateProductInput, "images">> & {
-    images?: Array<ProductImage | string>;
-  };
+  initialData?: Product | null;
   productId?: string;
 }
 
 export function ProductForm({ initialData, productId }: ProductFormProps) {
   const router = useRouter();
-  const { data: categories } = useGetCategories();
-  const createProduct = useCreateProduct();
-  const updateProduct = useUpdateProduct();
+  const { data: categories, isLoading: isCategoriesLoading } = useGetCategories();
+  const createProductMutation = useCreateProduct();
+  const updateProductMutation = useUpdateProduct();
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
-  const isEditing = !!initialData;
+  const isEditing = Boolean(initialData && productId);
 
   const {
     register,
@@ -60,31 +62,55 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
     watch,
     getValues,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<CreateProductFormInput, unknown, CreateProductInput>({
     resolver: zodResolver(createProductSchema),
     defaultValues: initialData
       ? {
-          ...initialData,
+          name: initialData.name || "",
+          slug: initialData.slug || "",
+          namebn: initialData.namebn || "",
+          shortDesc: initialData.shortDesc || "",
+          description: initialData.description || "",
           categoryId: initialData.categoryId || "",
+          price: Number(initialData.price) || 0,
+          comparePrice: initialData.comparePrice ? Number(initialData.comparePrice) : null,
+          costPrice: initialData.costPrice ? Number(initialData.costPrice) : null,
+          stock: initialData.stock ?? 0,
+          lowStockAlert: initialData.lowStockAlert ?? 5,
+          weight: initialData.weight || "",
+          sku: initialData.sku || "",
+          isActive: initialData.isActive ?? true,
+          isFeatured: initialData.isFeatured ?? false,
+          isHot: initialData.isHot ?? false,
+          metaTitle: initialData.metaTitle || "",
+          metaDesc: initialData.metaDesc || "",
           images:
-            initialData.images?.map((img) =>
+            initialData.images?.map((img: ProductImage | string) =>
               typeof img === "string" ? img : img.url,
             ) || [],
+          variants:
+            initialData.variants?.map((v) => ({
+              name: v.name,
+              price: Number(v.price) || 0,
+              comparePrice: v.comparePrice ? Number(v.comparePrice) : null,
+              stock: v.stock ?? 0,
+            })) || [],
         }
       : {
           name: "",
           slug: "",
           namebn: "",
-          description: "",
           shortDesc: "",
-          sku: "",
+          description: "",
+          categoryId: "",
           price: 0,
-          comparePrice: 0,
-          costPrice: 0,
+          comparePrice: null,
+          costPrice: null,
           stock: 0,
           lowStockAlert: 5,
           weight: "",
+          sku: "",
           isActive: true,
           isFeatured: false,
           isHot: false,
@@ -104,158 +130,261 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
     name: "variants",
   });
 
+  // Sync form values when initialData updates (e.g. cache refetch, image updates)
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        name: initialData.name || "",
+        slug: initialData.slug || "",
+        namebn: initialData.namebn || "",
+        shortDesc: initialData.shortDesc || "",
+        description: initialData.description || "",
+        categoryId: initialData.categoryId || "",
+        price: Number(initialData.price) || 0,
+        comparePrice: initialData.comparePrice ? Number(initialData.comparePrice) : null,
+        costPrice: initialData.costPrice ? Number(initialData.costPrice) : null,
+        stock: initialData.stock ?? 0,
+        lowStockAlert: initialData.lowStockAlert ?? 5,
+        weight: initialData.weight || "",
+        sku: initialData.sku || "",
+        isActive: initialData.isActive ?? true,
+        isFeatured: initialData.isFeatured ?? false,
+        isHot: initialData.isHot ?? false,
+        metaTitle: initialData.metaTitle || "",
+        metaDesc: initialData.metaDesc || "",
+        images:
+          initialData.images?.map((img: ProductImage | string) =>
+            typeof img === "string" ? img : img.url,
+          ) || [],
+        variants:
+          initialData.variants?.map((v) => ({
+            name: v.name,
+            price: Number(v.price) || 0,
+            comparePrice: v.comparePrice ? Number(v.comparePrice) : null,
+            stock: v.stock ?? 0,
+          })) || [],
+      });
+    }
+  }, [initialData, reset]);
+
+  // Automatically derive URL-friendly slug from name when adding new product
   const productName = watch("name");
   useEffect(() => {
     if (!isEditing && productName) {
-      const slug = productName
+      const generatedSlug = productName
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
-      setValue("slug", slug, { shouldValidate: true });
+      setValue("slug", generatedSlug, { shouldValidate: true });
     }
   }, [productName, setValue, isEditing]);
 
+  // Keep total stock in sync with variants sum if variants exist
+  const watchedVariants = watch("variants");
+  useEffect(() => {
+    if (watchedVariants && watchedVariants.length > 0) {
+      const sum = watchedVariants.reduce((total, v) => total + (Number(v.stock) || 0), 0);
+      setValue("stock", sum, { shouldValidate: true });
+    }
+  }, [watchedVariants, setValue]);
+
   const onSubmit = async (data: CreateProductInput) => {
     try {
-      const formData = new FormData();
-      const imageItems = data.images ?? [];
+      setIsUploadingImages(true);
+      const rawImages = data.images ?? [];
 
-      // Separate files from existing URLs
-      const existingImages = imageItems.filter(
-        (item): item is string => typeof item === "string",
-      );
-      const newFiles = imageItems.filter(
-        (item): item is File =>
-          typeof File !== "undefined" && item instanceof File,
-      );
+      // Upload any new File objects to /admin/upload
+      const uploadedImageUrls: string[] = [];
+      for (const item of rawImages) {
+        if (typeof item === "string") {
+          uploadedImageUrls.push(item);
+        } else if (typeof File !== "undefined" && item instanceof File) {
+          const uploadData = new FormData();
+          uploadData.append("file", item);
+          const uploadRes = await instance.post("/admin/upload", uploadData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          const url = uploadRes.data?.data?.url;
+          if (url) {
+            uploadedImageUrls.push(url);
+          }
+        }
+      }
+      setIsUploadingImages(false);
 
-      // Clean payload for JSON part
-      const jsonPayload = {
-        ...data,
-        images: existingImages.map((url: string) => ({ url })),
+      // Construct clean JSON payload matching Prisma Schema exactly
+      const payload: Record<string, any> = {
+        name: data.name.trim(),
+        slug: data.slug.trim(),
+        categoryId: data.categoryId,
+        price: Number(data.price),
+        stock: Number(data.stock),
+        lowStockAlert: Number(data.lowStockAlert),
+        isActive: data.isActive,
+        isFeatured: data.isFeatured,
+        isHot: data.isHot,
       };
 
-      formData.append("data", JSON.stringify(jsonPayload));
-      newFiles.forEach((file: File) => {
-        formData.append("images", file);
-      });
+      if (data.namebn && data.namebn.trim()) payload.namebn = data.namebn.trim();
+      if (data.shortDesc && data.shortDesc.trim()) payload.shortDesc = data.shortDesc.trim();
+      if (data.description && data.description.trim()) payload.description = data.description.trim();
+      if (data.sku && data.sku.trim()) payload.sku = data.sku.trim();
+      if (data.comparePrice !== undefined && data.comparePrice !== null) {
+        payload.comparePrice = Number(data.comparePrice);
+      }
+      if (data.costPrice !== undefined && data.costPrice !== null) {
+        payload.costPrice = Number(data.costPrice);
+      }
+      if (data.weight && data.weight.trim()) payload.weight = data.weight.trim();
+      if (data.metaTitle && data.metaTitle.trim()) payload.metaTitle = data.metaTitle.trim();
+      if (data.metaDesc && data.metaDesc.trim()) payload.metaDesc = data.metaDesc.trim();
+
+      // Images formatted as { url, sortOrder }
+      payload.images = uploadedImageUrls.map((url, index) => ({
+        url,
+        sortOrder: index,
+      }));
+
+      // Variants
+      if (data.variants && data.variants.length > 0) {
+        payload.variants = data.variants.map((v) => ({
+          name: v.name.trim(),
+          price: Number(v.price),
+          comparePrice: v.comparePrice !== undefined && v.comparePrice !== null ? Number(v.comparePrice) : undefined,
+          stock: Number(v.stock),
+        }));
+      } else {
+        payload.variants = [];
+      }
 
       if (isEditing && productId) {
-        await updateProduct.mutateAsync({ id: productId, data: formData });
+        await updateProductMutation.mutateAsync({ id: productId, data: payload });
         toast.success("Product updated successfully!");
       } else {
-        await createProduct.mutateAsync(formData);
+        await createProductMutation.mutateAsync(payload);
         toast.success("Product created successfully!");
       }
-      reset();
+
       router.push("/admin/products");
     } catch (error: unknown) {
+      setIsUploadingImages(false);
       if (axios.isAxiosError<{ message?: string }>(error)) {
-        toast.error(error.response?.data?.message || "Something went wrong");
+        toast.error(error.response?.data?.message || "Failed to save product");
         return;
       }
-
-      toast.error("Something went wrong");
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Failed to save product");
     }
   };
 
+  const isSaving =
+    isSubmitting ||
+    isUploadingImages ||
+    createProductMutation.isPending ||
+    updateProductMutation.isPending;
+
+  const categoryOptions =
+    (categories as Category[] | undefined)?.map((cat) => ({
+      value: cat.id,
+      label: cat.name,
+    })) || [];
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit, (err) => {
-        console.error("Form Errors:", err);
-        toast.error("Please fix the errors in the form before submitting.");
+      onSubmit={handleSubmit(onSubmit, (formErrors) => {
+        const errorKeys = Object.keys(formErrors);
+        if (errorKeys.length > 0) {
+          const firstError = formErrors[errorKeys[0] as keyof typeof formErrors];
+          const msg = firstError?.message || "Please fix validation errors.";
+          toast.error(String(msg));
+        }
       })}
-      className="space-y-8 pb-20"
+      className="space-y-8 pb-28"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          <Card className="bg-[#0b1322] border-slate-800 shadow-sm overflow-hidden text-white">
-            <CardHeader className="border-b border-slate-800 bg-[#080e18]">
-              <CardTitle className="flex items-center gap-2 text-xl font-bold font-mono uppercase tracking-wider text-white">
-                <Info className="h-5 w-5 text-[#00a3ff]" />
-                General Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Column (2 spans) */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Card: Basic Information */}
+          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
+              <Info className="h-4 w-4 text-[#00a3ff]" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                Basic Information
+              </h2>
+            </div>
+            <div className="p-6 space-y-5">
               <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center gap-1">
-                  Product Name <span className="text-rose-500">*</span>
+                <Label htmlFor="product-name" className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center justify-between">
+                  <span>Product Title <span className="text-rose-500">*</span></span>
+                  <span className="text-[10px] text-slate-500 font-normal lowercase">required</span>
                 </Label>
                 <Input
-                  placeholder="Sundarbans Pure Honey"
+                  id="product-name"
+                  placeholder="e.g. Wireless Noise-Cancelling Headphones"
                   {...register("name")}
-                  className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 ${errors.name ? "border-rose-500" : ""}`}
+                  className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 focus:border-[#00a3ff] ${errors.name ? "border-rose-500" : ""}`}
                 />
                 {errors.name && (
-                  <p className="text-xs text-rose-400 font-medium">
-                    {errors.name.message}
-                  </p>
+                  <p className="text-xs text-rose-400 font-medium">{errors.name.message}</p>
                 )}
-              </div>
-
-              <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center justify-between">
-                  Product Slug{" "}
-                  <span className="text-[#00a3ff] text-[10px] font-mono font-bold uppercase tracking-widest">
-                    URL Handle
-                  </span>
-                </Label>
-                <Input
-                  placeholder="sundarbans-pure-honey"
-                  {...register("slug")}
-                  className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs placeholder:text-slate-500 ${errors.slug ? "border-rose-500" : ""}`}
-                />
-                {errors.slug && (
-                  <p className="text-xs text-rose-400 font-medium">
-                    {errors.slug.message}
-                  </p>
-                )}
-                <p className="text-[10px] text-slate-500 font-mono uppercase tracking-widest px-1">
-                  Permanent link to your product
-                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Short Subtitle / Specs</Label>
+                  <Label htmlFor="product-slug" className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center justify-between">
+                    <span>URL Slug <span className="text-rose-500">*</span></span>
+                    <span className="text-[10px] text-[#00a3ff] font-mono">/product/{watch("slug") || "..."}</span>
+                  </Label>
                   <Input
-                    placeholder="e.g. Smart • Foldable • 22km/h"
-                    {...register("shortDesc")}
-                    className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                    id="product-slug"
+                    placeholder="wireless-headphones"
+                    {...register("slug")}
+                    className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs placeholder:text-slate-500 focus:border-[#00a3ff] ${errors.slug ? "border-rose-500" : ""}`}
                   />
-                  <p className="text-xs text-rose-400 font-medium">
-                    {errors.shortDesc?.message}
-                  </p>
+                  {errors.slug && (
+                    <p className="text-xs text-rose-400 font-medium">{errors.slug.message}</p>
+                  )}
                 </div>
+
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">SKU (Stock Keeping Unit)</Label>
+                  <Label htmlFor="product-sku" className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                    SKU Code
+                  </Label>
                   <Input
-                    placeholder="PGX-TRD-01"
+                    id="product-sku"
+                    placeholder="WNC-BLK-01"
                     {...register("sku")}
-                    className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 font-mono"
+                    className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs placeholder:text-slate-500 focus:border-[#00a3ff]"
                   />
-                  <p className="text-xs text-rose-400 font-medium">
-                    {errors.sku?.message}
-                  </p>
+                  {errors.sku && (
+                    <p className="text-xs text-rose-400 font-medium">{errors.sku.message}</p>
+                  )}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Short Description</Label>
+                <Label htmlFor="product-short-desc" className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                  Short Summary / Highlight
+                </Label>
                 <Textarea
-                  placeholder="Quick overview of the product..."
-                  {...register("shortDesc")}
+                  id="product-short-desc"
+                  placeholder="Key highlight or 1-2 sentence quick summary shown on product card..."
                   rows={2}
-                  className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                  {...register("shortDesc")}
+                  className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
                 />
-                <p className="text-xs text-rose-400 font-medium">
-                  {errors.shortDesc?.message}
-                </p>
+                {errors.shortDesc && (
+                  <p className="text-xs text-rose-400 font-medium">{errors.shortDesc.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Full Description</Label>
+                <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                  Full Rich Description
+                </Label>
                 <Controller
                   name="description"
                   control={control}
@@ -264,178 +393,212 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                       value={field.value || ""}
                       onChange={field.onChange}
                       onUploadImage={async (file) => {
-                        const formData = new FormData();
-                        formData.append("file", file);
-                        const response = await instance.post(
-                          "/admin/upload",
-                          formData,
-                          {
-                            headers: { "Content-Type": "multipart/form-data" },
-                          }
-                        );
+                        const uploadFormData = new FormData();
+                        uploadFormData.append("file", file);
+                        const response = await instance.post("/admin/upload", uploadFormData, {
+                          headers: { "Content-Type": "multipart/form-data" },
+                        });
                         return resolveImageUrl(response.data.data.url);
                       }}
                     />
                   )}
                 />
-                <p className="text-xs text-rose-400 font-medium">
-                  {errors.description?.message}
-                </p>
+                {errors.description && (
+                  <p className="text-xs text-rose-400 font-medium">{errors.description.message}</p>
+                )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-[#0b1322] border-slate-800 shadow-sm overflow-hidden text-white">
-            <CardHeader className="border-b border-slate-800 bg-[#080e18]">
-              <CardTitle className="flex items-center gap-2 text-xl font-bold font-mono uppercase tracking-wider text-white">
-                <ImageIcon className="h-5 w-5 text-[#00a3ff]" />
-                Product Images
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
+          {/* Card: Media & Images */}
+          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <ImageIcon className="h-4 w-4 text-[#00a3ff]" />
+                <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                  Media & Gallery
+                </h2>
+              </div>
+              <span className="text-[10px] font-mono uppercase text-slate-400">
+                {watch("images")?.length || 0} / 8 uploaded
+              </span>
+            </div>
+            <div className="p-6">
               <ImageUpload
                 value={watch("images") || []}
-                onChange={(urls) => setValue("images", urls)}
+                onChange={(urls) => setValue("images", urls, { shouldValidate: true })}
                 onRemove={(val) => {
                   const current = getValues("images") || [];
                   setValue(
                     "images",
                     current.filter((u) => u !== val),
+                    { shouldValidate: true },
                   );
                 }}
-                maxFiles={5}
+                maxFiles={8}
               />
-              <p className="text-xs text-rose-400 font-medium">
-                {errors.images?.message}
-              </p>
-            </CardContent>
-          </Card>
+              {errors.images && (
+                <p className="text-xs text-rose-400 font-medium mt-2">{errors.images.message}</p>
+              )}
+            </div>
+          </div>
 
-          <Card className="bg-[#0b1322] border-slate-800 shadow-sm overflow-hidden text-white">
-            <CardHeader className="border-b border-slate-800 bg-[#080e18] flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-xl font-bold font-mono uppercase tracking-wider text-white">
-                <LayoutGrid className="h-5 w-5 text-[#00a3ff]" />
-                Variants (Options)
-              </CardTitle>
+          {/* Card: Variants (Options) */}
+          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <Layers className="h-4 w-4 text-[#00a3ff]" />
+                <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                  Product Variants (Optional)
+                </h2>
+              </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => append({ name: "", price: 0, stock: 0 })}
-                className="rounded-lg font-mono text-xs uppercase bg-[#080e18] border-slate-700 text-slate-200 hover:text-white hover:bg-slate-800"
+                onClick={() =>
+                  append({
+                    name: "",
+                    price: Number(watch("price")) || 0,
+                    comparePrice: watch("comparePrice") ? Number(watch("comparePrice")) : null,
+                    stock: 0,
+                  })
+                }
+                className="h-8 rounded-lg font-mono text-xs uppercase bg-[#080e18] border-slate-700 text-slate-200 hover:text-white hover:bg-slate-800"
               >
-                <Plus className="w-4 h-4 mr-2" /> Add Variant
+                <Plus className="w-3.5 h-3.5 mr-1 text-[#00a3ff]" /> Add Variant
               </Button>
-            </CardHeader>
-            <CardContent className="p-6">
+            </div>
+            <div className="p-6">
               {variants.length === 0 ? (
-                <div className="p-10 text-center border-2 border-dashed border-slate-800 rounded-2xl bg-[#080e18]/40">
-                  <p className="text-sm text-slate-500 font-mono uppercase tracking-widest">
-                    No variants added yet
+                <div className="p-8 text-center border-2 border-dashed border-slate-800/80 rounded-2xl bg-[#080e18]/40">
+                  <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-1">
+                    No variants added
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Use variants if this product has options like sizes (S, M, L) or weights (500g, 1kg).
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
+                  <div className="hidden md:grid grid-cols-12 gap-3 px-3 text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    <span className="col-span-5">Variant Title</span>
+                    <span className="col-span-3">Price ({CURRENCY})</span>
+                    <span className="col-span-3">Stock Units</span>
+                    <span className="col-span-1 text-right">Action</span>
+                  </div>
+
                   {variants.map((v, index) => (
                     <div
                       key={v.id}
-                      className="grid grid-cols-1 md:grid-cols-12 gap-4 p-5 items-end border border-slate-800 rounded-2xl bg-[#080e18]"
+                      className="grid grid-cols-1 md:grid-cols-12 gap-3 p-3.5 items-center border border-slate-800 rounded-xl bg-[#080e18]/70 hover:border-slate-700 transition-colors"
                     >
-                      <div className="md:col-span-5 space-y-2">
-                        <Label className="font-mono text-xs uppercase tracking-wider text-slate-400">
-                          Option Name (e.g. 500g)
-                        </Label>
+                      <div className="md:col-span-5">
                         <Input
+                          placeholder="e.g. 500g or XL"
                           {...register(`variants.${index}.name`)}
-                          className="h-10 rounded-lg bg-[#060b13] border-slate-700 text-white"
+                          className="h-9 rounded-lg bg-[#060b13] border-slate-700 text-white font-mono text-xs placeholder:text-slate-500"
                         />
+                        {errors.variants?.[index]?.name && (
+                          <p className="text-[10px] text-rose-400 mt-1">
+                            {errors.variants[index]?.name?.message}
+                          </p>
+                        )}
                       </div>
-                      <div className="md:col-span-3 space-y-2">
-                        <Label className="font-mono text-xs uppercase tracking-wider text-slate-400">
-                          Price
-                        </Label>
+
+                      <div className="md:col-span-3">
                         <Input
                           type="number"
+                          step="0.01"
+                          placeholder="Price"
                           {...register(`variants.${index}.price`)}
-                          className="h-10 rounded-lg bg-[#060b13] border-slate-700 text-white"
+                          className="h-9 rounded-lg bg-[#060b13] border-slate-700 text-white font-mono text-xs"
                         />
-                        <p className="text-xs text-rose-400 font-medium">
-                          {errors.variants?.[index]?.price?.message}
-                        </p>
+                        {errors.variants?.[index]?.price && (
+                          <p className="text-[10px] text-rose-400 mt-1">
+                            {errors.variants[index]?.price?.message}
+                          </p>
+                        )}
                       </div>
-                      <div className="md:col-span-3 space-y-2">
-                        <Label className="font-mono text-xs uppercase tracking-wider text-slate-400">
-                          Stock
-                        </Label>
+
+                      <div className="md:col-span-3">
                         <Input
                           type="number"
+                          placeholder="Stock"
                           {...register(`variants.${index}.stock`)}
-                          className="h-10 rounded-lg bg-[#060b13] border-slate-700 text-white"
+                          className="h-9 rounded-lg bg-[#060b13] border-slate-700 text-white font-mono text-xs"
                         />
-                        <p className="text-xs text-rose-400 font-medium">
-                          {errors.variants?.[index]?.stock?.message}
-                        </p>
+                        {errors.variants?.[index]?.stock && (
+                          <p className="text-[10px] text-rose-400 mt-1">
+                            {errors.variants[index]?.stock?.message}
+                          </p>
+                        )}
                       </div>
+
                       <div className="md:col-span-1 flex justify-end">
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 h-10 w-10 flex shrink-0"
+                          className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 h-8 w-8 rounded-lg"
                           onClick={() => remove(index)}
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
                   ))}
+
+                  <p className="text-[11px] font-mono text-slate-500 mt-2 px-1">
+                    Note: When variants are defined, total product inventory will match the combined sum of all variant stocks.
+                  </p>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-8">
-          <Card className="bg-[#0b1322] border-slate-800 shadow-sm overflow-hidden text-white">
-            <CardHeader className="border-b border-slate-800 bg-[#080e18]">
-              <CardTitle className="flex items-center gap-2 text-lg font-bold font-mono uppercase tracking-wider text-white">
-                <Settings className="h-4 w-4 text-[#00a3ff]" />
-                Visibility & Tags
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
+        {/* Sidebar Column (1 span) */}
+        <div className="space-y-6">
+          {/* Card: Status & Visibility */}
+          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
+              <Tag className="h-4 w-4 text-[#00a3ff]" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                Organization & Status
+              </h2>
+            </div>
+            <div className="p-6 space-y-5">
               <div className="space-y-2">
                 <Label className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center justify-between">
-                  Category <span className="text-rose-500">*</span>
+                  <span>Category <span className="text-rose-500">*</span></span>
+                  {isCategoriesLoading && (
+                    <span className="text-[10px] text-slate-500">loading...</span>
+                  )}
                 </Label>
                 <Combobox
-                  options={
-                    (categories as Category[] | undefined)?.map((cat) => ({
-                      value: cat.id,
-                      label: cat.name,
-                    })) || []
-                  }
+                  options={categoryOptions}
                   value={watch("categoryId")}
-                  onValueChange={(val) =>
-                    setValue("categoryId", val, { shouldValidate: true })
-                  }
+                  onValueChange={(val) => setValue("categoryId", val || "", { shouldValidate: true })}
                   placeholder="Select a category"
                   searchPlaceholder="Search category..."
-                  triggerClassName={`bg-[#080e18] border-slate-700 text-white ${errors.categoryId ? "border-rose-500" : ""}`}
+                  triggerClassName={`w-full h-11 bg-[#080e18] border-slate-700 text-white rounded-xl ${errors.categoryId ? "border-rose-500" : ""}`}
                 />
                 {errors.categoryId && (
-                  <p className="text-xs text-rose-400 font-medium">
-                    {errors.categoryId.message}
-                  </p>
+                  <p className="text-xs text-rose-400 font-medium">{errors.categoryId.message}</p>
                 )}
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-slate-800">
-                <div className="flex items-center justify-between">
-                  <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">
-                    Publish to Store
-                  </Label>
+              <div className="space-y-3 pt-3 border-t border-slate-800">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#080e18]/80 border border-slate-800">
+                  <div>
+                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                      Publish to Store
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Product is visible to buyers
+                    </p>
+                  </div>
                   <Controller
                     name="isActive"
                     control={control}
@@ -448,10 +611,16 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     )}
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">
-                    Featured Product
-                  </Label>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#080e18]/80 border border-slate-800">
+                  <div>
+                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                      Featured
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Show in featured showcases
+                    </p>
+                  </div>
                   <Controller
                     name="isFeatured"
                     control={control}
@@ -464,8 +633,16 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     )}
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Mark as Hot</Label>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#080e18]/80 border border-slate-800">
+                  <div>
+                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                      Hot / Trending
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Highlight with hot badge
+                    </p>
+                  </div>
                   <Controller
                     name="isHot"
                     control={control}
@@ -479,176 +656,182 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                   />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-[#0b1322] border-slate-800 shadow-sm overflow-hidden text-white">
-            <CardHeader className="border-b border-slate-800 bg-[#080e18]">
-              <CardTitle className="flex items-center gap-2 text-lg font-bold font-mono uppercase tracking-wider text-white">
-                <BadgeDollarSign className="h-4 w-4 text-[#00a3ff]" />
+          {/* Card: Pricing & Stock */}
+          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
+              <DollarSign className="h-4 w-4 text-[#00a3ff]" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
                 Pricing & Inventory
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="space-y-4 border-b pb-6 border-slate-800">
+              </h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="product-price" className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                  Sale Price ({CURRENCY}) <span className="text-rose-500">*</span>
+                </Label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 font-mono font-bold text-sm">
+                    {CURRENCY}
+                  </span>
+                  <Input
+                    id="product-price"
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    {...register("price")}
+                    className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono pl-9 ${errors.price ? "border-rose-500" : ""}`}
+                  />
+                </div>
+                {errors.price && (
+                  <p className="text-xs text-rose-400 font-medium">{errors.price.message}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Default Sale Price *</Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">
-                      €
-                    </span>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      {...register("price")}
-                      className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white pl-8"
-                    />
-                  </div>
-                  {errors.price && (
-                    <p className="text-xs text-rose-400 font-medium">
-                      {errors.price.message}
-                    </p>
+                  <Label htmlFor="product-compare-price" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                    Compare Price
+                  </Label>
+                  <Input
+                    id="product-compare-price"
+                    type="number"
+                    step="0.01"
+                    placeholder="Original"
+                    {...register("comparePrice")}
+                    className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="product-cost-price" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                    Cost Price
+                  </Label>
+                  <Input
+                    id="product-cost-price"
+                    type="number"
+                    step="0.01"
+                    placeholder="Your cost"
+                    {...register("costPrice")}
+                    className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800">
+                <div className="space-y-2">
+                  <Label htmlFor="product-stock" className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                    Total Stock <span className="text-rose-500">*</span>
+                  </Label>
+                  <Input
+                    id="product-stock"
+                    type="number"
+                    disabled={variants.length > 0}
+                    placeholder="0"
+                    {...register("stock")}
+                    className={`h-10 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs ${errors.stock ? "border-rose-500" : ""}`}
+                  />
+                  {errors.stock && (
+                    <p className="text-[10px] text-rose-400 font-medium">{errors.stock.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Compare at Price</Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">
-                      €
-                    </span>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      {...register("comparePrice")}
-                      className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white pl-8"
-                    />
-                  </div>
+                  <Label htmlFor="product-low-stock" className="font-mono text-xs uppercase tracking-wider text-amber-400">
+                    Low Stock Alert
+                  </Label>
+                  <Input
+                    id="product-low-stock"
+                    type="number"
+                    placeholder="5"
+                    {...register("lowStockAlert")}
+                    className="h-10 rounded-xl bg-amber-500/10 border-amber-500/20 text-amber-200 font-mono text-xs"
+                  />
                 </div>
               </div>
 
-              <div className="space-y-4 border-b pb-6 border-slate-800">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Cost per Item</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">
-                        €
-                      </span>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        {...register("costPrice")}
-                        className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white pl-8"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="font-mono text-xs uppercase tracking-wider text-slate-400">
-                      Weight (g/kg)
-                    </Label>
-                    <Input
-                      placeholder="500g"
-                      {...register("weight")}
-                      className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
-                    />
-                    {errors.weight && (
-                      <p className="text-xs text-rose-400 font-medium">
-                        {errors.weight.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
+              <div className="space-y-2 pt-2">
+                <Label htmlFor="product-weight" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                  Weight / Dimensions
+                </Label>
+                <Input
+                  id="product-weight"
+                  placeholder="e.g. 500g or 1.2kg"
+                  {...register("weight")}
+                  className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 font-mono text-xs"
+                />
               </div>
+            </div>
+          </div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">Total Stock</Label>
-                    <Input
-                      type="number"
-                      {...register("stock")}
-                      className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white"
-                    />
-                    {errors.stock && (
-                      <p className="text-xs text-rose-400 font-medium">
-                        {errors.stock.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="font-mono text-xs uppercase tracking-wider text-amber-400">
-                      Low Stock Alert
-                    </Label>
-                    <Input
-                      type="number"
-                      {...register("lowStockAlert")}
-                      className="h-11 rounded-xl border-amber-500/20 bg-amber-500/10 text-amber-200"
-                    />
-                    {errors.lowStockAlert && (
-                      <p className="text-xs text-rose-400 font-medium">
-                        {errors.lowStockAlert.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#0b1322] border-slate-800 shadow-sm overflow-hidden text-white">
-            <CardHeader className="border-b border-slate-800 bg-[#080e18]">
-              <CardTitle className="flex items-center gap-2 text-lg font-bold font-mono uppercase tracking-wider text-white">
-                <Info className="h-4 w-4 text-[#00a3ff]" />
+          {/* Card: Search Engine Optimization */}
+          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
+            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
+              <Globe className="h-4 w-4 text-[#00a3ff]" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
                 SEO Metadata
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
+              </h2>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                <Label htmlFor="meta-title" className="font-mono text-xs uppercase tracking-wider text-slate-400">
                   Meta Title
                 </Label>
                 <Input
-                  placeholder="Best Organic Honey in BD"
+                  id="meta-title"
+                  placeholder="SEO meta title"
                   {...register("metaTitle")}
-                  className="h-10 rounded-lg bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                  className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 text-xs"
                 />
               </div>
+
               <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                <Label htmlFor="meta-desc" className="font-mono text-xs uppercase tracking-wider text-slate-400">
                   Meta Description
                 </Label>
                 <Textarea
-                  placeholder="Buy 100% pure organic honey harvested from Sundarbans..."
-                  {...register("metaDesc")}
+                  id="meta-desc"
+                  placeholder="Search engine preview text..."
                   rows={3}
-                  className="rounded-lg bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                  {...register("metaDesc")}
+                  className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 text-xs"
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#080e18]/90 backdrop-blur-md border-t border-slate-800 flex justify-end gap-3 z-50 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.5)]">
-        <div className="container flex justify-end gap-3 px-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-            className="h-11 rounded-xl font-mono text-xs uppercase tracking-wider px-8 border-slate-700 bg-[#0b1322] text-slate-300 hover:bg-slate-800 hover:text-white"
-          >
-            Cancel
-          </Button>
+      {/* Sticky Bottom Actions Bar */}
+      <div className="fixed bottom-0 left-0 right-0 py-3.5 px-6 bg-[#080e18]/95 backdrop-blur-md border-t border-slate-800 flex items-center justify-between z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.6)]">
+        <Button
+          type="button"
+          variant="outline"
+          asChild
+          className="h-11 px-5 rounded-xl border-slate-700 bg-[#0b1322] text-slate-300 hover:bg-slate-800 hover:text-white font-mono text-xs uppercase tracking-wider"
+        >
+          <Link href="/admin/products">
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Products
+          </Link>
+        </Button>
+
+        <div className="flex items-center gap-3">
           <Button
             type="submit"
-            className="h-11 bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono uppercase tracking-wider text-xs rounded-xl px-10 shadow-[0_0_20px_rgba(0,163,255,0.3)]"
-            disabled={createProduct.isPending || updateProduct.isPending}
+            disabled={isSaving}
+            className="h-11 px-8 rounded-xl bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,163,255,0.35)] transition-all"
           >
-            {(createProduct.isPending || updateProduct.isPending) && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            {isSaving ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving Product...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                {isEditing ? "Update Product" : "Publish Product"}
+              </>
             )}
-            {isEditing ? "Update Product" : "Publish Product"}
           </Button>
         </div>
       </div>

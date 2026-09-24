@@ -60,7 +60,7 @@ export function ImageUpload({
     <div className="space-y-4 w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {value.map((item, index) => (
-          <div key={index} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 group transition-all hover:border-emerald-200 shadow-sm">
+          <div key={index} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-slate-800 group transition-all hover:border-[#00a3ff]/50 bg-[#080e18] shadow-sm">
             {previews[index] && (
               <Image
                 fill
@@ -73,12 +73,12 @@ export function ImageUpload({
             <button
               type="button"
               onClick={() => onRemove(item)}
-              className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-600 z-10"
+              className="absolute top-2 right-2 p-1.5 bg-rose-600/90 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-rose-500 z-10"
             >
               <X className="h-4 w-4" />
             </button>
             {typeof item !== 'string' && (
-              <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-emerald-500 text-[8px] text-white font-black uppercase rounded-full shadow-sm z-10">
+              <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-[#00a3ff] text-[8px] text-black font-mono font-bold uppercase rounded-full shadow-sm z-10">
                 New File
               </div>
             )}
@@ -90,18 +90,18 @@ export function ImageUpload({
             {...getRootProps()}
             className={`
               aspect-square rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all
-              ${isDragActive ? 'border-emerald-400 bg-emerald-50' : 'border-gray-200 hover:border-emerald-300 hover:bg-gray-50'}
+              ${isDragActive ? 'border-[#00a3ff] bg-[#00a3ff]/10' : 'border-slate-800 hover:border-[#00a3ff]/60 hover:bg-[#080e18]/80 bg-[#080e18]/40'}
             `}
           >
             <input {...getInputProps()} />
-            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-              <CloudUpload className="h-6 w-6 text-gray-400" />
+            <div className="w-10 h-10 bg-slate-800/80 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+              <CloudUpload className="h-5 w-5 text-slate-400" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Add Media</span>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Add Media</span>
           </div>
         )}
       </div>
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
+      <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">
         Allowed formats: JPG, PNG, WEBP. Max size 5MB per image.
       </p>
     </div>

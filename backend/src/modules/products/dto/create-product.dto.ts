@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -6,33 +6,66 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Min,
   ValidateNested,
 } from 'class-validator';
 
-class ProductImageInputDto {
+// Helper to convert empty strings or null to undefined
+const emptyStringToUndefined = ({ value }: { value: any }) => {
+  if (value === '' || value === null || value === undefined) {
+    return undefined;
+  }
+  return value;
+};
+
+// Helper to convert empty string to undefined, otherwise number
+const emptyStringToNumber = ({ value }: { value: any }) => {
+  if (value === '' || value === null || value === undefined) {
+    return undefined;
+  }
+  const parsed = Number(value);
+  return isNaN(parsed) ? undefined : parsed;
+};
+
+export class ProductImageDto {
   @IsString()
   url!: string;
+
+  @IsOptional()
+  @Transform(emptyStringToUndefined)
+  @IsString()
+  alt?: string;
+
+  @IsOptional()
+  @Transform(emptyStringToNumber)
+  @IsInt()
+  @Min(0)
+  sortOrder?: number;
 }
 
-class ProductVariantInputDto {
+export class ProductVariantDto {
   @IsString()
   name!: string;
 
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsNumber()
+  @Min(0)
   price!: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsNumber()
+  @Min(0)
   comparePrice?: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsInt()
+  @Min(0)
   stock?: number;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   sku?: string;
 
@@ -46,6 +79,7 @@ export class CreateProductDto {
   name!: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   namebn?: string;
 
@@ -53,42 +87,51 @@ export class CreateProductDto {
   slug!: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   description?: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   shortDesc?: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   sku?: string;
 
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsNumber()
+  @Min(0)
   price!: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsNumber()
+  @Min(0)
   comparePrice?: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsNumber()
+  @Min(0)
   costPrice?: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsInt()
+  @Min(0)
   stock?: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(emptyStringToNumber)
   @IsInt()
+  @Min(0)
   lowStockAlert?: number;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   weight?: string;
 
@@ -105,10 +148,12 @@ export class CreateProductDto {
   isHot?: boolean;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   metaTitle?: string;
 
   @IsOptional()
+  @Transform(emptyStringToUndefined)
   @IsString()
   metaDesc?: string;
 
@@ -118,12 +163,12 @@ export class CreateProductDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ProductImageInputDto)
-  images?: ProductImageInputDto[];
+  @Type(() => ProductImageDto)
+  images?: ProductImageDto[];
 
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ProductVariantInputDto)
-  variants?: ProductVariantInputDto[];
+  @Type(() => ProductVariantDto)
+  variants?: ProductVariantDto[];
 }

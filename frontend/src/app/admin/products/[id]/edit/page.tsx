@@ -20,20 +20,20 @@ export default function EditProductPage({
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Skeleton className="h-10 w-10 rounded-xl" />
+          <Skeleton className="h-10 w-10 rounded-xl bg-slate-800" />
           <div className="space-y-2">
-            <Skeleton className="h-8 w-48 rounded-lg" />
-            <Skeleton className="h-4 w-32 rounded-lg" />
+            <Skeleton className="h-8 w-48 rounded-lg bg-slate-800" />
+            <Skeleton className="h-4 w-32 rounded-lg bg-slate-800" />
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <Skeleton className="h-100 w-full " />
-            <Skeleton className="h-50 w-full " />
+            <Skeleton className="h-100 w-full bg-slate-800" />
+            <Skeleton className="h-50 w-full bg-slate-800" />
           </div>
           <div className="space-y-8">
-            <Skeleton className="h-75 w-full " />
-            <Skeleton className="h-50 w-full " />
+            <Skeleton className="h-75 w-full bg-slate-800" />
+            <Skeleton className="h-50 w-full bg-slate-800" />
           </div>
         </div>
       </div>
@@ -87,7 +87,11 @@ export default function EditProductPage({
         </div>
       </div>
 
-      <ProductForm initialData={product} productId={product.id} />
+      <ProductForm
+        key={`${product.id}-${product.updatedAt || ""}-${product.images?.length || 0}`}
+        initialData={product}
+        productId={product.id}
+      />
     </div>
   );
 }

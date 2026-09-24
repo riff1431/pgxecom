@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { api as instance } from "@/lib/api";
-import type { Product, ApiResponse, PaginatedResponse } from "@/types";
+import type { Product, ApiResponse } from "@/types";
 
 export interface ProductQueryParams {
   page?: number;
@@ -10,7 +10,8 @@ export interface ProductQueryParams {
   category?: string;
   search?: string;
   sort?: string;
-  isFeatured?: boolean;
+  featured?: boolean;
+  hot?: boolean;
 }
 
 const cleanParams = <T extends Record<string, any>>(params?: T): Partial<T> => {
@@ -87,11 +88,11 @@ export const useGetAdminProducts = (params?: ProductAdminQueryParams) => {
       const response = await instance.get<ApiResponse<Product[]>>("/admin/products", {
         params: cleanParams(params),
       });
-      
+
       const resData = response.data as any;
-      
+
       return {
-        data: resData.data || [],
+        data: (resData.data as Product[]) || [],
         meta: {
           total: resData.meta?.total || 0,
           page: resData.meta?.page || 1,

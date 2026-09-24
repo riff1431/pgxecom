@@ -26,6 +26,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const resp = exceptionResponse as any;
         message = resp.message || resp.error || 'An error occurred';
       }
+    } else if (
+      typeof exception === 'object' &&
+      exception !== null &&
+      'code' in exception &&
+      (exception as any).code === 'P2002'
+    ) {
+      status = HttpStatus.CONFLICT;
+      const target = (exception as any).meta?.target;
+      const field = Array.isArray(target) ? target.join(', ') : target || 'field';
+      message = `A record with this ${field} already exists. Please choose a different ${field}.`;
     } else {
        // Log non-http exceptions for debugging
        console.error(exception);

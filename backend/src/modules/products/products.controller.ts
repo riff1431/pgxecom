@@ -8,27 +8,14 @@ import {
   Post,
   Put,
   Query,
-  UploadedFiles,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './products.service';
-
-const storage = diskStorage({
-  destination: './uploads',
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
-  },
-});
 
 @Controller('products')
 export class ProductsController {
@@ -81,8 +68,8 @@ export class AdminProductsController {
     @Query('isActive') isActive?: string,
   ) {
     return this.productsService.adminFindAll({
-      page: page ? parseInt(page) : undefined,
-      limit: limit ? parseInt(limit) : undefined,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
       search,
       categoryId,
       isActive:
@@ -96,32 +83,13 @@ export class AdminProductsController {
   }
 
   @Post()
-  @UseInterceptors(FilesInterceptor('images', 5, { storage }))
-  create(
-    @Body() body: CreateProductDto,
-    @UploadedFiles() files: Express.Multer.File[],
-  ) {
-    const payload = (body as unknown as { data?: string }).data;
-    const data =
-      typeof payload === 'string'
-        ? (JSON.parse(payload) as CreateProductDto)
-        : body;
-    return this.productsService.create(data, files);
+  create(@Body() body: CreateProductDto) {
+    return this.productsService.create(body);
   }
 
   @Put(':id')
-  @UseInterceptors(FilesInterceptor('images', 5, { storage }))
-  update(
-    @Param('id') id: string,
-    @Body() body: UpdateProductDto,
-    @UploadedFiles() files: Express.Multer.File[],
-  ) {
-    const payload = (body as unknown as { data?: string }).data;
-    const data =
-      typeof payload === 'string'
-        ? (JSON.parse(payload) as UpdateProductDto)
-        : body;
-    return this.productsService.update(id, data, files);
+  update(@Param('id') id: string, @Body() body: UpdateProductDto) {
+    return this.productsService.update(id, body);
   }
 
   @Patch(':id/toggle')

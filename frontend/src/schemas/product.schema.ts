@@ -1,24 +1,24 @@
 import { z } from "zod";
 
 const requiredNumber = (fieldLabel: string) =>
-  z.preprocess(
-    (value) => {
-      if (value === "" || value === null || value === undefined)
-        return undefined;
-      const parsed = typeof value === "number" ? value : Number(value);
-      return Number.isNaN(parsed) ? value : parsed;
-    },
-    z.number({ message: `${fieldLabel} is required` }),
-  );
+  z.preprocess((value) => {
+    if (value === "" || value === null || value === undefined) return undefined;
+    const parsed = typeof value === "number" ? value : Number(value);
+    return Number.isNaN(parsed) ? value : parsed;
+  }, z.number({ message: `${fieldLabel} is required` }));
 
-const imageValueSchema = z.union([
-  z
-    .string({ message: "Image URL must be a string" })
-    .trim()
-    .min(1, "Image URL cannot be empty"),
+const optionalNumber = (fieldLabel: string) =>
+  z.preprocess((value) => {
+    if (value === "" || value === null || value === undefined) return undefined;
+    const parsed = typeof value === "number" ? value : Number(value);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }, z.number({ message: `${fieldLabel} must be a number` }).min(0, `${fieldLabel} cannot be negative`).optional().nullable());
+
+const imageItemSchema = z.union([
+  z.string().min(1, "Image URL cannot be empty"),
   z.custom<File>(
-    (value) => typeof File !== "undefined" && value instanceof File,
-    "Image must be a valid file",
+    (val) => typeof File !== "undefined" && val instanceof File,
+    "Must be a valid image file",
   ),
 ]);
 
@@ -27,30 +27,34 @@ export const createProductSchema = z
     name: z
       .string({ message: "Product name is required" })
       .trim()
-      .min(3, "Product name must be at least 3 characters")
+      .min(2, "Product name must be at least 2 characters")
       .max(200, "Product name cannot exceed 200 characters"),
     slug: z
-      .string({ message: "Slug must be a string" })
+      .string({ message: "Slug is required" })
       .trim()
       .min(1, "Slug is required")
       .max(160, "Slug cannot exceed 160 characters"),
     namebn: z
-      .string({ message: "Bengali name must be a string" })
+      .string()
       .trim()
       .max(200, "Bengali name cannot exceed 200 characters")
       .nullable()
-      .optional(),
-    description: z
-      .string({ message: "Description must be a string" })
-      .trim()
-      .max(5000, "Description cannot exceed 5000 characters")
-      .nullable()
-      .optional(),
+      .optional()
+      .or(z.literal("")),
     shortDesc: z
-      .string({ message: "Short description must be a string" })
+      .string()
       .trim()
-      .min(1, "Short description is required")
-      .max(300, "Short description cannot exceed 300 characters"),
+      .max(300, "Short description cannot exceed 300 characters")
+      .nullable()
+      .optional()
+      .or(z.literal("")),
+    description: z
+      .string()
+      .trim()
+      .max(10000, "Description cannot exceed 10000 characters")
+      .nullable()
+      .optional()
+      .or(z.literal("")),
     categoryId: z
       .string({ message: "Category is required" })
       .trim()
@@ -58,18 +62,8 @@ export const createProductSchema = z
     price: requiredNumber("Price").refine((value) => value >= 0, {
       message: "Price cannot be negative",
     }),
-    comparePrice: z.coerce
-      .number({ message: "Compare price must be a valid number" })
-      .min(0, "Compare price cannot be negative")
-      .optional()
-      .nullable()
-      .or(z.literal("")),
-    costPrice: z.coerce
-      .number({ message: "Cost price must be a valid number" })
-      .min(0, "Cost price cannot be negative")
-      .optional()
-      .nullable()
-      .or(z.literal("")),
+    comparePrice: optionalNumber("Compare at Price"),
+    costPrice: optionalNumber("Cost Price"),
     stock: requiredNumber("Stock")
       .refine((value) => Number.isInteger(value), {
         message: "Stock must be a whole number",
@@ -83,32 +77,43 @@ export const createProductSchema = z
       })
       .refine((value) => value >= 0, {
         message: "Low stock alert cannot be negative",
-      }),
+      })
+      .default(5),
     weight: z
-      .string({ message: "Weight must be a string" })
+      .string()
       .trim()
-      .min(1, "Weight is required")
-      .max(60, "Weight cannot exceed 60 characters"),
-    sku: z.string().nullable().optional(),
+      .max(60, "Weight cannot exceed 60 characters")
+      .nullable()
+      .optional()
+      .or(z.literal("")),
+    sku: z
+      .string()
+      .trim()
+      .max(80, "SKU cannot exceed 80 characters")
+      .nullable()
+      .optional()
+      .or(z.literal("")),
     isActive: z.boolean().default(true),
     isFeatured: z.boolean().default(false),
     isHot: z.boolean().default(false),
     metaTitle: z
-      .string({ message: "Meta title must be a string" })
+      .string()
       .trim()
-      .max(60, "Meta title cannot exceed 60 characters")
+      .max(120, "Meta title cannot exceed 120 characters")
       .nullable()
-      .optional(),
+      .optional()
+      .or(z.literal("")),
     metaDesc: z
-      .string({ message: "Meta description must be a string" })
+      .string()
       .trim()
-      .max(160, "Meta description cannot exceed 160 characters")
+      .max(250, "Meta description cannot exceed 250 characters")
       .nullable()
-      .optional(),
+      .optional()
+      .or(z.literal("")),
     images: z
-      .array(imageValueSchema, { message: "Images must be a valid list" })
-      .min(1, "At least 1 image is required")
-      .max(5, "You can upload up to 5 images"),
+      .array(imageItemSchema)
+      .max(8, "You can upload up to 8 images")
+      .default([]),
     variants: z
       .array(
         z.object({
@@ -117,33 +122,29 @@ export const createProductSchema = z
             .trim()
             .min(1, "Variant name is required")
             .max(120, "Variant name cannot exceed 120 characters"),
-          price: z.coerce
-            .number({ message: "Variant price must be a valid number" })
-            .min(0, "Variant price cannot be negative"),
-          comparePrice: z.coerce
-            .number({ message: "Variant compare price must be a valid number" })
-            .min(0, "Variant compare price cannot be negative")
-            .optional()
-            .nullable(),
-          stock: z.coerce
-            .number({ message: "Variant stock must be a valid number" })
-            .int("Variant stock must be a whole number")
-            .min(0, "Variant stock cannot be negative")
+          price: requiredNumber("Variant price").refine((val) => val >= 0, {
+            message: "Variant price cannot be negative",
+          }),
+          comparePrice: optionalNumber("Variant compare price"),
+          stock: requiredNumber("Variant stock")
+            .refine((val) => Number.isInteger(val), {
+              message: "Variant stock must be an integer",
+            })
+            .refine((val) => val >= 0, {
+              message: "Variant stock cannot be negative",
+            })
             .default(0),
         }),
       )
-      .max(20, "You can add up to 20 variants")
+      .max(30, "You can add up to 30 variants")
       .optional(),
   })
   .superRefine((values, ctx) => {
     const variants = values.variants ?? [];
-
-    if (variants.length === 0) {
-      return;
-    }
+    if (variants.length === 0) return;
 
     const totalVariantStock = variants.reduce(
-      (sum, variant) => sum + variant.stock,
+      (sum, variant) => sum + (Number(variant.stock) || 0),
       0,
     );
 
@@ -151,8 +152,7 @@ export const createProductSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["stock"],
-        message:
-          "When variants are added, product stock must equal the total stock of all variants.",
+        message: `Stock (${values.stock}) must equal the sum of variant stock (${totalVariantStock}).`,
       });
     }
   });

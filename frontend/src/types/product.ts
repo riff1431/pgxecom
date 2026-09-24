@@ -10,11 +10,15 @@ export interface Product {
   sku?: string;
   price: number;
   comparePrice?: number;
+  costPrice?: number;
   stock: number;
+  lowStockAlert?: number;
   weight?: string;
   isActive: boolean;
   isFeatured: boolean;
   isHot: boolean;
+  metaTitle?: string;
+  metaDesc?: string;
   categoryId: string;
   category: Category;
   images: ProductImage[];

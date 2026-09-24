@@ -211,12 +211,36 @@ export class CategoriesService {
   async create(data: CategoryInput) {
     await this.validateParent(data.parentId);
 
+    const existingSlug = await this.prisma.category.findUnique({
+      where: { slug: data.slug },
+      select: { id: true, name: true },
+    });
+
+    if (existingSlug) {
+      throw new BadRequestException(
+        `A category with slug "${data.slug}" already exists (${existingSlug.name}). Please use a unique slug.`,
+      );
+    }
+
     return this.prisma.category.create({ data });
   }
 
   async update(id: string, data: CategoryUpdateInput) {
     if (Object.prototype.hasOwnProperty.call(data, 'parentId')) {
       await this.validateParent(data.parentId, id);
+    }
+
+    if (data.slug) {
+      const existingSlug = await this.prisma.category.findUnique({
+        where: { slug: data.slug },
+        select: { id: true, name: true },
+      });
+
+      if (existingSlug && existingSlug.id !== id) {
+        throw new BadRequestException(
+          `A category with slug "${data.slug}" already exists (${existingSlug.name}). Please use a unique slug.`,
+        );
+      }
     }
 
     return this.prisma.category.update({ where: { id }, data });
