@@ -133,13 +133,13 @@ export default function AdminBlogPage() {
         onAction={handleCreate}
       />
 
-      <div className="bg-[#0b1322] rounded-xl shadow-sm border border-slate-800 mt-4 overflow-hidden text-slate-100">
-        <div className="p-4 border-b border-slate-800/80 flex flex-wrap gap-4 items-center bg-[#080e18]">
+      <div className="bg-card rounded-xl shadow-xs border border-border mt-4 overflow-hidden text-card-foreground">
+        <div className="p-4 border-b border-border flex flex-wrap gap-4 items-center bg-muted/20">
           <div className="relative flex-1 min-w-60">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search blog title, excerpt, or tag..."
-              className="pl-10 h-11 rounded-xl border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
+              className="pl-10 h-11 rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary"
               value={params.search}
               onChange={(event) => setParams({ search: event.target.value })}
             />
@@ -149,7 +149,7 @@ export default function AdminBlogPage() {
             <Button
               onClick={clearFilters}
               variant="outline"
-              className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-mono text-xs"
+              className="border-border bg-background text-foreground hover:bg-muted font-mono text-xs"
             >
               <FilterX className="h-4 w-4 mr-2" /> Clear
             </Button>
@@ -159,7 +159,7 @@ export default function AdminBlogPage() {
         {isLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 8 }).map((_, index) => (
-              <Skeleton key={index} className="w-full h-14 bg-slate-800/60" />
+              <Skeleton key={index} className="w-full h-14 bg-muted" />
             ))}
           </div>
         ) : (
@@ -175,13 +175,13 @@ export default function AdminBlogPage() {
 
             {blogsData?.data?.length === 0 && (
               <div className="py-20 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 border border-slate-800 mb-4">
-                  <Search className="h-8 w-8 text-slate-500" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted border border-border mb-4">
+                  <Search className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-bold text-white font-mono">
+                <h3 className="text-lg font-bold text-foreground font-mono">
                   No blogs found
                 </h3>
-                <p className="text-slate-400 text-xs mt-1">
+                <p className="text-muted-foreground text-xs mt-1">
                   Try adjusting search or write a new post.
                 </p>
               </div>
@@ -190,7 +190,7 @@ export default function AdminBlogPage() {
         )}
 
         {blogsData?.meta && blogsData.meta.totalPage > 1 && (
-          <div className="p-4 border-t border-slate-800/80 bg-[#080e18]">
+          <div className="p-4 border-t border-border bg-muted/20">
             <AppPagination
               currentPage={params.page}
               totalPages={blogsData.meta.totalPage}

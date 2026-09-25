@@ -96,22 +96,22 @@ function KpiCard({
   icon: React.ComponentType<{ className?: string }>;
 }) {
   return (
-    <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
+    <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-bold">
               {title}
             </p>
-            <p className="text-2xl font-black font-mono text-white mt-1">{value}</p>
-            <p className="text-[11px] text-slate-400 mt-1">{subtitle}</p>
+            <p className="text-2xl font-black font-mono text-foreground mt-1">{value}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{subtitle}</p>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-[#00a3ff]">
+          <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
             <Icon className="h-5 w-5" />
           </div>
         </div>
         {change ? (
-          <p className="text-xs font-mono font-bold text-emerald-400 mt-3">
+          <p className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 mt-3">
             {change}
           </p>
         ) : null}

@@ -126,12 +126,12 @@ export function CouponDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl rounded-2xl bg-[#0b1322] border-slate-800 text-white">
+      <DialogContent className="sm:max-w-3xl rounded-xl bg-card border-border text-card-foreground">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-white font-mono uppercase tracking-wider">
+          <DialogTitle className="text-xl font-bold text-foreground font-mono uppercase tracking-wider">
             {coupon ? "Edit Coupon" : "Create Coupon"}
           </DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-muted-foreground">
             Configure coupon rules, availability, and usage limits.
           </DialogDescription>
         </DialogHeader>
@@ -139,21 +139,21 @@ export function CouponDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Coupon Code</Label>
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Coupon Code</Label>
               <Input
                 placeholder="WELCOME10"
                 {...register("code", {
                   required: "Coupon code is required",
                 })}
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 font-mono"
+                className="rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground font-mono focus:border-primary"
               />
               {errors.code && (
-                <p className="text-xs text-rose-400">{errors.code.message}</p>
+                <p className="text-xs text-destructive">{errors.code.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Discount Type</Label>
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Discount Type</Label>
               <Select
                 value={discountType}
                 onValueChange={(value) =>
@@ -163,10 +163,10 @@ export function CouponDialog({
                   )
                 }
               >
-                <SelectTrigger className="rounded-xl w-full bg-[#080e18] border-slate-700 text-white font-mono text-xs">
+                <SelectTrigger className="rounded-lg w-full bg-background border-border text-foreground font-mono text-xs">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#0b1322] border-slate-800 text-white">
+                <SelectContent className="bg-card border-border text-foreground">
                   <SelectItem value="PERCENTAGE">Percentage</SelectItem>
                   <SelectItem value="FIXED_AMOUNT">Fixed Amount</SelectItem>
                 </SelectContent>
@@ -175,18 +175,18 @@ export function CouponDialog({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Description</Label>
+            <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Description</Label>
             <Textarea
               placeholder="Coupon campaign description"
               {...register("description")}
-              className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+              className="rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
               rows={3}
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">
                 {discountType === "PERCENTAGE"
                   ? "Discount Value (%)"
                   : "Discount Value"}
@@ -200,75 +200,75 @@ export function CouponDialog({
                   valueAsNumber: true,
                   min: { value: 0, message: "Must be positive" },
                 })}
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white"
+                className="rounded-lg bg-background border-border text-foreground focus:border-primary"
               />
               {errors.discountValue && (
-                <p className="text-xs text-rose-400">
+                <p className="text-xs text-destructive">
                   {errors.discountValue.message}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Minimum Order Amount</Label>
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Minimum Order Amount</Label>
               <Input
                 type="number"
                 step="0.01"
                 placeholder="500"
                 {...register("minOrderAmount", { valueAsNumber: true })}
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white"
+                className="rounded-lg bg-background border-border text-foreground focus:border-primary"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Maximum Discount</Label>
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Maximum Discount</Label>
               <Input
                 type="number"
                 step="0.01"
                 placeholder="200"
                 {...register("maxDiscount", { valueAsNumber: true })}
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white"
+                className="rounded-lg bg-background border-border text-foreground focus:border-primary"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Usage Limit</Label>
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Usage Limit</Label>
               <Input
                 type="number"
                 step="1"
                 placeholder="100"
                 {...register("usageLimit", { valueAsNumber: true })}
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white"
+                className="rounded-lg bg-background border-border text-foreground focus:border-primary"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Starts At</Label>
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Starts At</Label>
               <Input
                 type="datetime-local"
                 {...register("startsAt")}
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white"
+                className="rounded-lg bg-background border-border text-foreground focus:border-primary"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Expires At</Label>
+              <Label className="text-foreground font-mono text-xs uppercase tracking-wider">Expires At</Label>
               <Input
                 type="datetime-local"
                 {...register("expiresAt")}
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white"
+                className="rounded-lg bg-background border-border text-foreground focus:border-primary"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between rounded-2xl border border-slate-800 bg-[#080e18] p-4">
+          <div className="flex items-center justify-between rounded-xl border border-border bg-muted/20 p-4">
             <div>
-              <p className="font-semibold text-white font-mono text-sm uppercase">Enable coupon</p>
-              <p className="text-sm text-slate-400">
+              <p className="font-semibold text-foreground font-mono text-sm uppercase">Enable coupon</p>
+              <p className="text-sm text-muted-foreground">
                 Disabled coupons cannot be used at checkout.
               </p>
             </div>
@@ -283,14 +283,14 @@ export function CouponDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="rounded-xl bg-[#080e18] border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="rounded-lg bg-background border-border text-foreground hover:bg-muted"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="rounded-xl bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono uppercase tracking-wider text-xs"
+              className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold font-mono uppercase tracking-wider text-xs shadow-xs"
             >
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."

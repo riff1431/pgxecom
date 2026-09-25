@@ -122,22 +122,22 @@ export default function AdminCustomersPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono uppercase">
+          <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight font-mono uppercase">
             Customers
           </h1>
-          <p className="text-slate-400 font-medium text-xs mt-1">
+          <p className="text-muted-foreground font-medium text-xs mt-1">
             Manage customer accounts, status, and communication.
           </p>
         </div>
       </div>
 
-      <div className="bg-[#0b1322] rounded-xl shadow-sm border border-slate-800 mt-4 overflow-hidden text-slate-100">
-        <div className="p-4 border-b border-slate-800/80 flex flex-wrap gap-4 items-center bg-[#080e18]">
+      <div className="bg-card rounded-xl shadow-xs border border-border mt-4 overflow-hidden text-card-foreground">
+        <div className="p-4 border-b border-border flex flex-wrap gap-4 items-center bg-muted/30">
           <div className="relative flex-1 min-w-60">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by name, email, phone..."
-              className="pl-10 h-11 rounded-xl border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
+              className="pl-10 h-11 rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary"
               value={params.search}
               onChange={(e) => setParams({ search: e.target.value })}
             />
@@ -149,14 +149,14 @@ export default function AdminCustomersPage() {
             onValueChange={(val) => setParams({ status: val || "all" })}
             placeholder="All Status"
             searchPlaceholder="Search status..."
-            triggerClassName="w-[180px] h-11 rounded-xl"
+            triggerClassName="w-[180px] h-11 rounded-lg bg-background border-border text-foreground"
           />
 
           {(params.search || params.status !== "all") && (
             <Button
               onClick={clearFilters}
               variant="outline"
-              className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-mono text-xs"
+              className="border-border bg-background text-foreground hover:bg-muted font-mono text-xs"
             >
               <FilterX className="h-4 w-4 mr-2" /> Clear
             </Button>
@@ -166,7 +166,7 @@ export default function AdminCustomersPage() {
         {isLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="w-full h-14 bg-slate-800/60" />
+              <Skeleton key={i} className="w-full h-14" />
             ))}
           </div>
         ) : (
@@ -193,7 +193,7 @@ export default function AdminCustomersPage() {
         )}
 
         {customerData?.meta && customerData.meta.totalPage > 1 && (
-          <div className="p-4 border-t border-slate-800/80 bg-[#080e18]">
+          <div className="p-4 border-t border-border bg-muted/20">
             <AppPagination
               currentPage={params.page}
               totalPages={customerData.meta.totalPage}

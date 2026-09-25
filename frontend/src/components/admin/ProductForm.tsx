@@ -308,65 +308,65 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
         {/* Main Column (2 spans) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Basic Information */}
-          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
-            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
-              <Info className="h-4 w-4 text-[#00a3ff]" />
-              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+          <div className="bg-card border border-border rounded-xl overflow-hidden shadow-xs">
+            <div className="px-6 py-4 border-b border-border bg-muted/30 flex items-center gap-2.5">
+              <Info className="h-4 w-4 text-primary" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                 Basic Information
               </h2>
             </div>
             <div className="p-6 space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="product-name" className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center justify-between">
-                  <span>Product Title <span className="text-rose-500">*</span></span>
-                  <span className="text-[10px] text-slate-500 font-normal lowercase">required</span>
+                <Label htmlFor="product-name" className="font-mono text-xs uppercase tracking-wider text-foreground flex items-center justify-between">
+                  <span>Product Title <span className="text-destructive">*</span></span>
+                  <span className="text-[10px] text-muted-foreground font-normal lowercase">required</span>
                 </Label>
                 <Input
                   id="product-name"
                   placeholder="e.g. Wireless Noise-Cancelling Headphones"
                   {...register("name")}
-                  className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 focus:border-[#00a3ff] ${errors.name ? "border-rose-500" : ""}`}
+                  className={`h-11 rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary ${errors.name ? "border-destructive" : ""}`}
                 />
                 {errors.name && (
-                  <p className="text-xs text-rose-400 font-medium">{errors.name.message}</p>
+                  <p className="text-xs text-destructive font-medium">{errors.name.message}</p>
                 )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="product-slug" className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center justify-between">
-                    <span>URL Slug <span className="text-rose-500">*</span></span>
-                    <span className="text-[10px] text-[#00a3ff] font-mono">/product/{watch("slug") || "..."}</span>
+                  <Label htmlFor="product-slug" className="font-mono text-xs uppercase tracking-wider text-foreground flex items-center justify-between">
+                    <span>URL Slug <span className="text-destructive">*</span></span>
+                    <span className="text-[10px] text-primary font-mono">/product/{watch("slug") || "..."}</span>
                   </Label>
                   <Input
                     id="product-slug"
                     placeholder="wireless-headphones"
                     {...register("slug")}
-                    className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs placeholder:text-slate-500 focus:border-[#00a3ff] ${errors.slug ? "border-rose-500" : ""}`}
+                    className={`h-11 rounded-lg bg-background border-border text-foreground font-mono text-xs placeholder:text-muted-foreground focus:border-primary ${errors.slug ? "border-destructive" : ""}`}
                   />
                   {errors.slug && (
-                    <p className="text-xs text-rose-400 font-medium">{errors.slug.message}</p>
+                    <p className="text-xs text-destructive font-medium">{errors.slug.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="product-sku" className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                  <Label htmlFor="product-sku" className="font-mono text-xs uppercase tracking-wider text-foreground">
                     SKU Code
                   </Label>
                   <Input
                     id="product-sku"
                     placeholder="WNC-BLK-01"
                     {...register("sku")}
-                    className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs placeholder:text-slate-500 focus:border-[#00a3ff]"
+                    className="h-11 rounded-lg bg-background border-border text-foreground font-mono text-xs placeholder:text-muted-foreground focus:border-primary"
                   />
                   {errors.sku && (
-                    <p className="text-xs text-rose-400 font-medium">{errors.sku.message}</p>
+                    <p className="text-xs text-destructive font-medium">{errors.sku.message}</p>
                   )}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="product-short-desc" className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                <Label htmlFor="product-short-desc" className="font-mono text-xs uppercase tracking-wider text-foreground">
                   Short Summary / Highlight
                 </Label>
                 <Textarea
@@ -374,15 +374,15 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                   placeholder="Key highlight or 1-2 sentence quick summary shown on product card..."
                   rows={2}
                   {...register("shortDesc")}
-                  className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
+                  className="rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
                 />
                 {errors.shortDesc && (
-                  <p className="text-xs text-rose-400 font-medium">{errors.shortDesc.message}</p>
+                  <p className="text-xs text-destructive font-medium">{errors.shortDesc.message}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-300">
+                <Label className="font-mono text-xs uppercase tracking-wider text-foreground">
                   Full Rich Description
                 </Label>
                 <Controller
@@ -404,22 +404,22 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                   )}
                 />
                 {errors.description && (
-                  <p className="text-xs text-rose-400 font-medium">{errors.description.message}</p>
+                  <p className="text-xs text-destructive font-medium">{errors.description.message}</p>
                 )}
               </div>
             </div>
           </div>
 
           {/* Card: Media & Images */}
-          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
-            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center justify-between">
+          <div className="bg-card border border-border rounded-xl overflow-hidden shadow-xs">
+            <div className="px-6 py-4 border-b border-border bg-muted/30 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <ImageIcon className="h-4 w-4 text-[#00a3ff]" />
-                <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                <ImageIcon className="h-4 w-4 text-primary" />
+                <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                   Media & Gallery
                 </h2>
               </div>
-              <span className="text-[10px] font-mono uppercase text-slate-400">
+              <span className="text-[10px] font-mono uppercase text-muted-foreground">
                 {watch("images")?.length || 0} / 8 uploaded
               </span>
             </div>
@@ -438,17 +438,17 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                 maxFiles={8}
               />
               {errors.images && (
-                <p className="text-xs text-rose-400 font-medium mt-2">{errors.images.message}</p>
+                <p className="text-xs text-destructive font-medium mt-2">{errors.images.message}</p>
               )}
             </div>
           </div>
 
           {/* Card: Variants (Options) */}
-          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
-            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center justify-between">
+          <div className="bg-card border border-border rounded-xl overflow-hidden shadow-xs">
+            <div className="px-6 py-4 border-b border-border bg-muted/30 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <Layers className="h-4 w-4 text-[#00a3ff]" />
-                <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                <Layers className="h-4 w-4 text-primary" />
+                <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                   Product Variants (Optional)
                 </h2>
               </div>
@@ -464,24 +464,24 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     stock: 0,
                   })
                 }
-                className="h-8 rounded-lg font-mono text-xs uppercase bg-[#080e18] border-slate-700 text-slate-200 hover:text-white hover:bg-slate-800"
+                className="h-8 rounded-lg font-mono text-xs uppercase bg-background border-border text-foreground hover:bg-muted"
               >
-                <Plus className="w-3.5 h-3.5 mr-1 text-[#00a3ff]" /> Add Variant
+                <Plus className="w-3.5 h-3.5 mr-1 text-primary" /> Add Variant
               </Button>
             </div>
             <div className="p-6">
               {variants.length === 0 ? (
-                <div className="p-8 text-center border-2 border-dashed border-slate-800/80 rounded-2xl bg-[#080e18]/40">
-                  <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-1">
+                <div className="p-8 text-center border-2 border-dashed border-border rounded-xl bg-muted/20">
+                  <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mb-1">
                     No variants added
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     Use variants if this product has options like sizes (S, M, L) or weights (500g, 1kg).
                   </p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="hidden md:grid grid-cols-12 gap-3 px-3 text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                  <div className="hidden md:grid grid-cols-12 gap-3 px-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
                     <span className="col-span-5">Variant Title</span>
                     <span className="col-span-3">Price ({CURRENCY})</span>
                     <span className="col-span-3">Stock Units</span>
@@ -491,16 +491,16 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                   {variants.map((v, index) => (
                     <div
                       key={v.id}
-                      className="grid grid-cols-1 md:grid-cols-12 gap-3 p-3.5 items-center border border-slate-800 rounded-xl bg-[#080e18]/70 hover:border-slate-700 transition-colors"
+                      className="grid grid-cols-1 md:grid-cols-12 gap-3 p-3.5 items-center border border-border rounded-lg bg-background hover:border-primary/40 transition-colors"
                     >
                       <div className="md:col-span-5">
                         <Input
                           placeholder="e.g. 500g or XL"
                           {...register(`variants.${index}.name`)}
-                          className="h-9 rounded-lg bg-[#060b13] border-slate-700 text-white font-mono text-xs placeholder:text-slate-500"
+                          className="h-9 rounded-lg bg-background border-border text-foreground font-mono text-xs placeholder:text-muted-foreground"
                         />
                         {errors.variants?.[index]?.name && (
-                          <p className="text-[10px] text-rose-400 mt-1">
+                          <p className="text-[10px] text-destructive mt-1">
                             {errors.variants[index]?.name?.message}
                           </p>
                         )}
@@ -512,10 +512,10 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                           step="0.01"
                           placeholder="Price"
                           {...register(`variants.${index}.price`)}
-                          className="h-9 rounded-lg bg-[#060b13] border-slate-700 text-white font-mono text-xs"
+                          className="h-9 rounded-lg bg-background border-border text-foreground font-mono text-xs"
                         />
                         {errors.variants?.[index]?.price && (
-                          <p className="text-[10px] text-rose-400 mt-1">
+                          <p className="text-[10px] text-destructive mt-1">
                             {errors.variants[index]?.price?.message}
                           </p>
                         )}
@@ -526,10 +526,10 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                           type="number"
                           placeholder="Stock"
                           {...register(`variants.${index}.stock`)}
-                          className="h-9 rounded-lg bg-[#060b13] border-slate-700 text-white font-mono text-xs"
+                          className="h-9 rounded-lg bg-background border-border text-foreground font-mono text-xs"
                         />
                         {errors.variants?.[index]?.stock && (
-                          <p className="text-[10px] text-rose-400 mt-1">
+                          <p className="text-[10px] text-destructive mt-1">
                             {errors.variants[index]?.stock?.message}
                           </p>
                         )}
@@ -540,7 +540,7 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 h-8 w-8 rounded-lg"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8 rounded-lg"
                           onClick={() => remove(index)}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -549,7 +549,7 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     </div>
                   ))}
 
-                  <p className="text-[11px] font-mono text-slate-500 mt-2 px-1">
+                  <p className="text-[11px] font-mono text-muted-foreground mt-2 px-1">
                     Note: When variants are defined, total product inventory will match the combined sum of all variant stocks.
                   </p>
                 </div>
@@ -561,19 +561,19 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
         {/* Sidebar Column (1 span) */}
         <div className="space-y-6">
           {/* Card: Status & Visibility */}
-          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
-            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
-              <Tag className="h-4 w-4 text-[#00a3ff]" />
-              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+          <div className="bg-card border border-border rounded-xl overflow-hidden shadow-xs">
+            <div className="px-6 py-4 border-b border-border bg-muted/30 flex items-center gap-2.5">
+              <Tag className="h-4 w-4 text-primary" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                 Organization & Status
               </h2>
             </div>
             <div className="p-6 space-y-5">
               <div className="space-y-2">
-                <Label className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center justify-between">
-                  <span>Category <span className="text-rose-500">*</span></span>
+                <Label className="font-mono text-xs uppercase tracking-wider text-foreground flex items-center justify-between">
+                  <span>Category <span className="text-destructive">*</span></span>
                   {isCategoriesLoading && (
-                    <span className="text-[10px] text-slate-500">loading...</span>
+                    <span className="text-[10px] text-muted-foreground">loading...</span>
                   )}
                 </Label>
                 <Combobox
@@ -582,20 +582,20 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                   onValueChange={(val) => setValue("categoryId", val || "", { shouldValidate: true })}
                   placeholder="Select a category"
                   searchPlaceholder="Search category..."
-                  triggerClassName={`w-full h-11 bg-[#080e18] border-slate-700 text-white rounded-xl ${errors.categoryId ? "border-rose-500" : ""}`}
+                  triggerClassName={`w-full h-11 bg-background border-border text-foreground rounded-lg ${errors.categoryId ? "border-destructive" : ""}`}
                 />
                 {errors.categoryId && (
-                  <p className="text-xs text-rose-400 font-medium">{errors.categoryId.message}</p>
+                  <p className="text-xs text-destructive font-medium">{errors.categoryId.message}</p>
                 )}
               </div>
 
-              <div className="space-y-3 pt-3 border-t border-slate-800">
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#080e18]/80 border border-slate-800">
+              <div className="space-y-3 pt-3 border-t border-border">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border">
                   <div>
-                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                       Publish to Store
                     </p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-muted-foreground">
                       Product is visible to buyers
                     </p>
                   </div>
@@ -606,18 +606,17 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="data-[state=checked]:bg-[#00a3ff]"
                       />
                     )}
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#080e18]/80 border border-slate-800">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border">
                   <div>
-                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                       Featured
                     </p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-muted-foreground">
                       Show in featured showcases
                     </p>
                   </div>
@@ -628,18 +627,17 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="data-[state=checked]:bg-[#00a3ff]"
                       />
                     )}
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#080e18]/80 border border-slate-800">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border">
                   <div>
-                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+                    <p className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                       Hot / Trending
                     </p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-muted-foreground">
                       Highlight with hot badge
                     </p>
                   </div>
@@ -650,7 +648,6 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="data-[state=checked]:bg-[#00a3ff]"
                       />
                     )}
                   />
@@ -660,20 +657,20 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
           </div>
 
           {/* Card: Pricing & Stock */}
-          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
-            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
-              <DollarSign className="h-4 w-4 text-[#00a3ff]" />
-              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+          <div className="bg-card border border-border rounded-xl overflow-hidden shadow-xs">
+            <div className="px-6 py-4 border-b border-border bg-muted/30 flex items-center gap-2.5">
+              <DollarSign className="h-4 w-4 text-primary" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                 Pricing & Inventory
               </h2>
             </div>
             <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="product-price" className="font-mono text-xs uppercase tracking-wider text-slate-300">
-                  Sale Price ({CURRENCY}) <span className="text-rose-500">*</span>
+                <Label htmlFor="product-price" className="font-mono text-xs uppercase tracking-wider text-foreground">
+                  Sale Price ({CURRENCY}) <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 font-mono font-bold text-sm">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground font-mono font-bold text-sm">
                     {CURRENCY}
                   </span>
                   <Input
@@ -682,17 +679,17 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     step="0.01"
                     placeholder="0.00"
                     {...register("price")}
-                    className={`h-11 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono pl-9 ${errors.price ? "border-rose-500" : ""}`}
+                    className={`h-11 rounded-lg bg-background border-border text-foreground font-mono pl-9 ${errors.price ? "border-destructive" : ""}`}
                   />
                 </div>
                 {errors.price && (
-                  <p className="text-xs text-rose-400 font-medium">{errors.price.message}</p>
+                  <p className="text-xs text-destructive font-medium">{errors.price.message}</p>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="product-compare-price" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                  <Label htmlFor="product-compare-price" className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                     Compare Price
                   </Label>
                   <Input
@@ -701,11 +698,11 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     step="0.01"
                     placeholder="Original"
                     {...register("comparePrice")}
-                    className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs"
+                    className="h-10 rounded-lg bg-background border-border text-foreground font-mono text-xs"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="product-cost-price" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                  <Label htmlFor="product-cost-price" className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                     Cost Price
                   </Label>
                   <Input
@@ -714,15 +711,15 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     step="0.01"
                     placeholder="Your cost"
                     {...register("costPrice")}
-                    className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs"
+                    className="h-10 rounded-lg bg-background border-border text-foreground font-mono text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800">
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
                 <div className="space-y-2">
-                  <Label htmlFor="product-stock" className="font-mono text-xs uppercase tracking-wider text-slate-300">
-                    Total Stock <span className="text-rose-500">*</span>
+                  <Label htmlFor="product-stock" className="font-mono text-xs uppercase tracking-wider text-foreground">
+                    Total Stock <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="product-stock"
@@ -730,15 +727,15 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     disabled={variants.length > 0}
                     placeholder="0"
                     {...register("stock")}
-                    className={`h-10 rounded-xl bg-[#080e18] border-slate-700 text-white font-mono text-xs ${errors.stock ? "border-rose-500" : ""}`}
+                    className={`h-10 rounded-lg bg-background border-border text-foreground font-mono text-xs ${errors.stock ? "border-destructive" : ""}`}
                   />
                   {errors.stock && (
-                    <p className="text-[10px] text-rose-400 font-medium">{errors.stock.message}</p>
+                    <p className="text-[10px] text-destructive font-medium">{errors.stock.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="product-low-stock" className="font-mono text-xs uppercase tracking-wider text-amber-400">
+                  <Label htmlFor="product-low-stock" className="font-mono text-xs uppercase tracking-wider text-amber-500">
                     Low Stock Alert
                   </Label>
                   <Input
@@ -746,48 +743,48 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                     type="number"
                     placeholder="5"
                     {...register("lowStockAlert")}
-                    className="h-10 rounded-xl bg-amber-500/10 border-amber-500/20 text-amber-200 font-mono text-xs"
+                    className="h-10 rounded-lg bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-300 font-mono text-xs"
                   />
                 </div>
               </div>
 
               <div className="space-y-2 pt-2">
-                <Label htmlFor="product-weight" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                <Label htmlFor="product-weight" className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                   Weight / Dimensions
                 </Label>
                 <Input
                   id="product-weight"
                   placeholder="e.g. 500g or 1.2kg"
                   {...register("weight")}
-                  className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 font-mono text-xs"
+                  className="h-10 rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground font-mono text-xs"
                 />
               </div>
             </div>
           </div>
 
           {/* Card: Search Engine Optimization */}
-          <div className="bg-[#0b1322] border border-slate-800 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
-            <div className="px-6 py-4 border-b border-slate-800 bg-[#080e18] flex items-center gap-2.5">
-              <Globe className="h-4 w-4 text-[#00a3ff]" />
-              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-white">
+          <div className="bg-card border border-border rounded-xl overflow-hidden shadow-xs">
+            <div className="px-6 py-4 border-b border-border bg-muted/30 flex items-center gap-2.5">
+              <Globe className="h-4 w-4 text-primary" />
+              <h2 className="font-mono text-xs uppercase tracking-wider font-bold text-foreground">
                 SEO Metadata
               </h2>
             </div>
             <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="meta-title" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                <Label htmlFor="meta-title" className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                   Meta Title
                 </Label>
                 <Input
                   id="meta-title"
                   placeholder="SEO meta title"
                   {...register("metaTitle")}
-                  className="h-10 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 text-xs"
+                  className="h-10 rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground text-xs"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="meta-desc" className="font-mono text-xs uppercase tracking-wider text-slate-400">
+                <Label htmlFor="meta-desc" className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                   Meta Description
                 </Label>
                 <Textarea
@@ -795,7 +792,7 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
                   placeholder="Search engine preview text..."
                   rows={3}
                   {...register("metaDesc")}
-                  className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 text-xs"
+                  className="rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground text-xs"
                 />
               </div>
             </div>
@@ -804,12 +801,12 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
       </div>
 
       {/* Sticky Bottom Actions Bar */}
-      <div className="fixed bottom-0 left-0 right-0 py-3.5 px-6 bg-[#080e18]/95 backdrop-blur-md border-t border-slate-800 flex items-center justify-between z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.6)]">
+      <div className="fixed bottom-0 left-0 right-0 py-3.5 px-6 bg-card/95 backdrop-blur-md border-t border-border flex items-center justify-between z-40 shadow-lg">
         <Button
           type="button"
           variant="outline"
           asChild
-          className="h-11 px-5 rounded-xl border-slate-700 bg-[#0b1322] text-slate-300 hover:bg-slate-800 hover:text-white font-mono text-xs uppercase tracking-wider"
+          className="h-11 px-5 rounded-lg border-border bg-background text-foreground hover:bg-muted font-mono text-xs uppercase tracking-wider"
         >
           <Link href="/admin/products">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Products
@@ -820,7 +817,7 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
           <Button
             type="submit"
             disabled={isSaving}
-            className="h-11 px-8 rounded-xl bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,163,255,0.35)] transition-all"
+            className="h-11 px-8 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold font-mono text-xs uppercase tracking-wider shadow-xs transition-all"
           >
             {isSaving ? (
               <>

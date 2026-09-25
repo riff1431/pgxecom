@@ -166,12 +166,12 @@ export default function AdminShippingPage() {
         onAction={openCreate}
       />
 
-      <div className="bg-[#0b1322] rounded-xl shadow-sm border border-slate-800 overflow-hidden text-slate-100">
-        <div className="p-4 border-b border-slate-800/80 flex items-center gap-3 bg-[#080e18]">
+      <div className="bg-card rounded-xl shadow-xs border border-border overflow-hidden text-card-foreground">
+        <div className="p-4 border-b border-border flex items-center gap-3 bg-muted/20">
           <div className="relative flex-1 min-w-56">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              className="pl-10 h-11 rounded-xl border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
+              className="pl-10 h-11 rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary"
               placeholder="Search by name or slug..."
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -182,29 +182,29 @@ export default function AdminShippingPage() {
         {isLoading ? (
           <div className="p-4 space-y-2">
             {Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-12 w-full bg-slate-800/60" />
+              <Skeleton key={index} className="h-12 w-full bg-muted" />
             ))}
           </div>
         ) : (
           <AdminTable>
             <TableHeader>
-              <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
-                <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Zone</TableHead>
-                <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Slug</TableHead>
-                <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Delivery Cost</TableHead>
-                <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Status</TableHead>
-                <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Actions</TableHead>
+              <TableRow className="hover:bg-transparent bg-muted/40 border-b border-border">
+                <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Zone</TableHead>
+                <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Slug</TableHead>
+                <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Delivery Cost</TableHead>
+                <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Status</TableHead>
+                <TableHead className="text-right font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredZones.map((zone) => (
                 <TableRow
                   key={zone.id}
-                  className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+                  className="group hover:bg-muted/40 border-b border-border transition-colors"
                 >
-                  <TableCell className="font-bold text-white leading-tight">{zone.name}</TableCell>
-                  <TableCell className="font-mono text-xs text-slate-400">{zone.slug}</TableCell>
-                  <TableCell className="font-mono font-bold text-[#00a3ff]">€{zone.cost}</TableCell>
+                  <TableCell className="font-bold text-foreground leading-tight">{zone.name}</TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">{zone.slug}</TableCell>
+                  <TableCell className="font-mono font-bold text-primary">€{zone.cost}</TableCell>
                   <TableCell>
                     <AdminStatusToggle
                       checked={zone.isActive}
@@ -220,14 +220,14 @@ export default function AdminShippingPage() {
                         variant="outline"
                         size="icon"
                         onClick={() => openEdit(zone)}
-                        className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
+                        className="border-border bg-background hover:bg-muted text-foreground h-8 w-8 rounded-lg"
                       >
                         <PencilLine className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="outline"
                         size="icon"
-                        className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8 rounded-lg"
+                        className="border-red-500/30 bg-red-500/10 text-red-600 hover:bg-red-500/20 hover:text-red-700 h-8 w-8 rounded-lg"
                         onClick={() => setDeleteZone(zone)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -241,7 +241,7 @@ export default function AdminShippingPage() {
                 <TableRow>
                   <TableCell
                     colSpan={5}
-                    className="text-center py-14 text-slate-400 font-mono text-xs"
+                    className="text-center py-14 text-muted-foreground font-mono text-xs"
                   >
                     No shipping zones found.
                   </TableCell>
@@ -253,21 +253,22 @@ export default function AdminShippingPage() {
       </div>
 
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="sm:max-w-lg rounded-xl">
+        <DialogContent className="sm:max-w-lg rounded-xl bg-card border-border text-foreground">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-foreground font-mono uppercase tracking-wider font-bold">
               {editingZone ? "Edit Shipping Zone" : "Create Shipping Zone"}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-muted-foreground">
               Set delivery zone name, slug, cost, and active status.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="zone-name">Zone name</Label>
+              <Label htmlFor="zone-name" className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Zone name</Label>
               <Input
                 id="zone-name"
+                className="bg-background border-border text-foreground"
                 value={form.name}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, name: e.target.value }))
@@ -276,9 +277,10 @@ export default function AdminShippingPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="zone-slug">Slug</Label>
+              <Label htmlFor="zone-slug" className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Slug</Label>
               <Input
                 id="zone-slug"
+                className="bg-background border-border text-foreground font-mono"
                 value={form.slug}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, slug: e.target.value }))
@@ -287,12 +289,13 @@ export default function AdminShippingPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="zone-cost">Delivery cost</Label>
+              <Label htmlFor="zone-cost" className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Delivery cost (€)</Label>
               <Input
                 id="zone-cost"
                 type="number"
                 min="0"
                 step="0.01"
+                className="bg-background border-border text-foreground font-mono"
                 value={form.cost}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, cost: e.target.value }))
@@ -300,30 +303,30 @@ export default function AdminShippingPage() {
                 placeholder="60"
               />
             </div>
-            <label className="flex items-center gap-3 text-sm font-medium text-gray-700">
+            <label className="flex items-center gap-3 text-sm font-medium text-foreground cursor-pointer">
               <input
                 type="checkbox"
                 checked={form.isActive}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, isActive: e.target.checked }))
                 }
-                className="h-4 w-4 rounded border-gray-300 text-emerald-600"
+                className="h-4 w-4 rounded border-border text-primary accent-primary"
               />
-              Active
+              Active Zone
             </label>
           </div>
 
           <DialogFooter>
-            <Button onClick={() => setFormOpen(false)}>Cancel</Button>
+            <Button variant="outline" className="border-border bg-background hover:bg-muted text-foreground" onClick={() => setFormOpen(false)}>Cancel</Button>
             <Button
               onClick={handleSave}
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-mono uppercase tracking-wider text-xs font-bold"
             >
               <Save className="h-4 w-4 mr-2" />
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."
-                : "Save"}
+                : "Save Zone"}
             </Button>
           </DialogFooter>
         </DialogContent>

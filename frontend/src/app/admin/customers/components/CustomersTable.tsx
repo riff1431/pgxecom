@@ -32,31 +32,31 @@ export function CustomersTable({
   return (
     <AdminTable>
       <TableHeader>
-        <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Customer</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Contact</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Orders</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Status</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Joined</TableHead>
-          <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Actions</TableHead>
+        <TableRow className="hover:bg-transparent bg-muted/40 border-b border-border">
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Customer</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Contact</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Orders</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Status</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Joined</TableHead>
+          <TableHead className="text-right font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {customers.map((customer) => (
           <TableRow
             key={customer.id}
-            className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+            className="group hover:bg-muted/30 border-b border-border transition-colors"
           >
             <TableCell>
-              <p className="font-bold text-white leading-tight">{customer.name}</p>
-              <p className="text-xs text-slate-400 truncate max-w-48">
+              <p className="font-bold text-foreground leading-tight">{customer.name}</p>
+              <p className="text-xs text-muted-foreground truncate max-w-48">
                 {customer.email}
               </p>
             </TableCell>
-            <TableCell className="text-sm font-mono text-slate-300">
+            <TableCell className="text-sm font-mono text-muted-foreground">
               {customer.phone || "No phone"}
             </TableCell>
-            <TableCell className="text-sm font-bold font-mono text-white">
+            <TableCell className="text-sm font-bold font-mono text-foreground">
               {customer._count.orders}
             </TableCell>
             <TableCell>
@@ -68,23 +68,23 @@ export function CustomersTable({
                 inactiveLabel="Banned"
               />
             </TableCell>
-            <TableCell className="text-sm font-mono text-slate-400">
+            <TableCell className="text-sm font-mono text-muted-foreground">
               {new Date(customer.createdAt).toLocaleDateString()}
             </TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  className="inline-flex items-center justify-center border border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg cursor-pointer transition-colors"
+                  className="inline-flex items-center justify-center border border-border bg-background hover:bg-muted text-foreground h-8 w-8 rounded-lg cursor-pointer transition-colors"
                 >
                   <MoreHorizontal className="h-4 w-4" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-[#0b1322] border-slate-800 text-slate-200">
-                  <DropdownMenuItem className="p-0 focus:bg-slate-800">
+                <DropdownMenuContent align="end" className="bg-card border-border text-foreground">
+                  <DropdownMenuItem className="p-0 focus:bg-muted">
                     <Link
                       href={`/admin/customers/${customer.id}`}
-                      className="flex items-center w-full px-2 py-1.5 text-xs font-medium text-slate-200 hover:text-white"
+                      className="flex items-center w-full px-2 py-1.5 text-xs font-medium text-foreground hover:text-primary"
                     >
-                      <Eye className="h-4 w-4 mr-2 text-[#00a3ff]" /> View Details
+                      <Eye className="h-4 w-4 mr-2 text-primary" /> View Details
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

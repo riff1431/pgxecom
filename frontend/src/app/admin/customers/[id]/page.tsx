@@ -190,16 +190,16 @@ export default function AdminCustomerDetailPage({
   if (isCustomerLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-10 w-64 bg-slate-800" />
-        <Skeleton className="h-35 w-full bg-slate-800" />
-        <Skeleton className="h-95 w-full bg-slate-800" />
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-35 w-full" />
+        <Skeleton className="h-95 w-full" />
       </div>
     );
   }
 
   if (!customer) {
     return (
-      <div className="p-8 text-center text-slate-400 font-medium">
+      <div className="p-8 text-center text-muted-foreground font-medium">
         Customer not found
       </div>
     );
@@ -209,62 +209,62 @@ export default function AdminCustomerDetailPage({
     <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-3">
-          <Button asChild variant="outline" className="bg-[#0b1322] border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800">
+          <Button asChild variant="outline" className="border-border text-foreground hover:bg-muted">
             <Link href="/admin/customers">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-white font-mono uppercase tracking-wider">
+            <h1 className="text-2xl font-bold text-foreground font-mono uppercase tracking-wider">
               {customer.name}
             </h1>
-            <p className="text-sm text-slate-400">{customer.email}</p>
+            <p className="text-sm text-muted-foreground">{customer.email}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <Dialog open={mailDialogOpen} onOpenChange={setMailDialogOpen}>
-            <DialogTrigger className="inline-flex items-center justify-center font-mono uppercase tracking-wider text-xs px-4 py-2.5 rounded-lg bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold shadow-[0_0_15px_rgba(0,163,255,0.3)] transition-all">
+            <DialogTrigger className="inline-flex items-center justify-center font-mono uppercase tracking-wider text-xs px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xs transition-all">
               <Mail className="h-4 w-4 mr-2" /> Mail Customer
             </DialogTrigger>
-            <DialogContent className="sm:max-w-140 rounded-2xl bg-[#0b1322] border-slate-800 text-white">
+            <DialogContent className="sm:max-w-140 rounded-xl bg-card border-border text-card-foreground">
               <DialogHeader>
-                <DialogTitle className="text-white font-mono uppercase">Send Email to {customer.name}</DialogTitle>
-                <DialogDescription className="text-slate-400">
+                <DialogTitle className="text-foreground font-mono uppercase">Send Email to {customer.name}</DialogTitle>
+                <DialogDescription className="text-muted-foreground">
                   Send a direct message to this customer from the admin dashboard.
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4 py-2">
                 <div className="space-y-2">
-                  <Label htmlFor="mail-subject" className="text-slate-300">Subject</Label>
+                  <Label htmlFor="mail-subject" className="text-foreground">Subject</Label>
                   <Input
                     id="mail-subject"
                     value={mailSubject}
                     onChange={(e) => setMailSubject(e.target.value)}
                     placeholder="Order update regarding your account"
-                    className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                    className="rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="mail-message" className="text-slate-300">Message</Label>
+                  <Label htmlFor="mail-message" className="text-foreground">Message</Label>
                   <Textarea
                     id="mail-message"
                     value={mailMessage}
                     onChange={(e) => setMailMessage(e.target.value)}
                     placeholder="Write your message here..."
                     rows={8}
-                    className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                    className="rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
                   />
                 </div>
               </div>
 
               <DialogFooter>
-                <Button variant="outline" className="border-slate-700 bg-slate-800 text-slate-300 hover:text-white" onClick={() => setMailDialogOpen(false)}>Cancel</Button>
+                <Button variant="outline" className="border-border text-foreground hover:bg-muted" onClick={() => setMailDialogOpen(false)}>Cancel</Button>
                 <Button
                   onClick={handleSendMail}
                   disabled={mailMutation.isPending}
-                  className="bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono uppercase tracking-wider text-xs"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold font-mono uppercase tracking-wider text-xs shadow-xs"
                 >
                   {mailMutation.isPending ? "Sending..." : "Send Email"}
                 </Button>
@@ -276,73 +276,73 @@ export default function AdminCustomerDetailPage({
             onClick={handleToggleBan}
             disabled={banMutation.isPending || unbanMutation.isPending}
             variant="outline"
-            className="border-slate-800 bg-[#0b1322] text-slate-200 hover:bg-slate-800 hover:text-white"
+            className="border-border bg-card text-foreground hover:bg-muted"
           >
             {customer.isBanned ? (
               <>
-                <ShieldCheck className="h-4 w-4 mr-2 text-emerald-400" /> Unban Customer
+                <ShieldCheck className="h-4 w-4 mr-2 text-emerald-500" /> Unban Customer
               </>
             ) : (
               <>
-                <Ban className="h-4 w-4 mr-2 text-rose-400" /> Ban Customer
+                <Ban className="h-4 w-4 mr-2 text-destructive" /> Ban Customer
               </>
             )}
           </Button>
         </div>
       </div>
 
-      <div className="bg-[#0b1322] border border-slate-800 rounded-xl shadow-sm p-5">
+      <div className="bg-card border border-border rounded-xl shadow-xs p-5">
         <div className="flex items-center gap-2 mb-4">
-          <UserRound className="h-4 w-4 text-[#00a3ff]" />
-          <h2 className="font-semibold text-white font-mono uppercase tracking-wider">Customer Overview</h2>
+          <UserRound className="h-4 w-4 text-primary" />
+          <h2 className="font-semibold text-foreground font-mono uppercase tracking-wider">Customer Overview</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
           <div>
-            <p className="text-slate-400">Phone</p>
-            <p className="font-medium text-white">
+            <p className="text-muted-foreground">Phone</p>
+            <p className="font-medium text-foreground">
               {customer.phone || "No phone"}
             </p>
           </div>
           <div>
-            <p className="text-slate-400">Account Status</p>
+            <p className="text-muted-foreground">Account Status</p>
             <Badge
               className={
                 customer.isBanned
-                  ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-                  : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                  ? "bg-destructive/10 text-destructive border border-destructive/20"
+                  : "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
               }
             >
               {customer.isBanned ? "Banned" : "Active"}
             </Badge>
           </div>
           <div>
-            <p className="text-slate-400">Total Orders</p>
-            <p className="font-medium text-white">
+            <p className="text-muted-foreground">Total Orders</p>
+            <p className="font-medium text-foreground">
               {customer._count.orders}
             </p>
           </div>
           <div>
-            <p className="text-slate-400">Joined</p>
-            <p className="font-medium text-white">
+            <p className="text-muted-foreground">Joined</p>
+            <p className="font-medium text-foreground">
               {new Date(customer.createdAt).toLocaleDateString()}
             </p>
           </div>
         </div>
         {customer.isBanned && customer.banReason && (
-          <div className="mt-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-sm text-rose-400">
+          <div className="mt-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-sm text-destructive">
             <span className="font-semibold">Ban reason:</span>{" "}
             {customer.banReason}
           </div>
         )}
       </div>
 
-      <div className="bg-[#0b1322] rounded-xl shadow-sm border border-slate-800">
-        <div className="p-4 border-b border-slate-800 flex flex-wrap gap-4 items-center bg-[#080e18]">
+      <div className="bg-card rounded-xl shadow-xs border border-border">
+        <div className="p-4 border-b border-border flex flex-wrap gap-4 items-center bg-muted/30">
           <div className="relative flex-1 min-w-60">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search order number..."
-              className="pl-10 h-11 rounded-xl bg-[#060b13] border-slate-700 text-white placeholder:text-slate-500 focus:border-[#00a3ff]"
+              className="pl-10 h-11 rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
               value={orderParams.orderSearch}
               onChange={(e) => setOrderParams({ orderSearch: e.target.value })}
             />
@@ -356,58 +356,58 @@ export default function AdminCustomerDetailPage({
             }
             placeholder="All Status"
             searchPlaceholder="Search status..."
-            triggerClassName="w-[180px] h-11 rounded-xl bg-[#060b13] border-slate-700 text-white"
+            triggerClassName="w-[180px] h-11 rounded-lg bg-background border-border text-foreground"
           />
         </div>
 
         {isOrdersLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="w-full h-14 bg-slate-800" />
+              <Skeleton key={i} className="w-full h-14" />
             ))}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#080e18] border-b border-slate-800">
+              <thead className="bg-muted/40 border-b border-border">
                 <tr>
-                  <th className="text-left px-4 py-3 font-medium text-slate-400">
+                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">
                     Order
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-slate-400">
+                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">
                     Date
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-slate-400">
+                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">
                     Items
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-slate-400">
+                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">
                     Total
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-slate-400">
+                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">
                     Status
                   </th>
-                  <th className="text-right px-4 py-3 font-medium text-slate-400">
+                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">
                     Action
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-border">
                 {(customerOrdersData?.data || []).map((order) => {
                   const statusConfig = ORDER_STATUSES[order.status] || {
                     label: order.status,
-                    color: "bg-slate-800 text-slate-300",
+                    color: "bg-muted text-muted-foreground",
                   };
 
                   return (
-                    <tr key={order.id} className="hover:bg-[#070d18]/50 transition-colors">
-                      <td className="px-4 py-3 font-mono font-medium text-[#00a3ff]">
+                    <tr key={order.id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-mono font-medium text-primary">
                         #{order.orderNumber}
                       </td>
-                      <td className="px-4 py-3 text-slate-400">
+                      <td className="px-4 py-3 text-muted-foreground">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="px-4 py-3 text-slate-300">{order.items?.length || 0}</td>
-                      <td className="px-4 py-3 font-medium text-white">
+                      <td className="px-4 py-3 text-foreground">{order.items?.length || 0}</td>
+                      <td className="px-4 py-3 font-medium text-foreground">
                         {CURRENCY}
                         {order.total}
                       </td>
@@ -419,7 +419,7 @@ export default function AdminCustomerDetailPage({
                       <td className="px-4 py-3 text-right">
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          className="text-sm text-[#00a3ff] hover:underline font-mono"
+                          className="text-sm text-primary hover:underline font-mono"
                         >
                           View
                         </Link>
@@ -431,7 +431,7 @@ export default function AdminCustomerDetailPage({
             </table>
 
             {customerOrdersData?.data?.length === 0 && (
-              <div className="py-16 text-center text-slate-500">
+              <div className="py-16 text-center text-muted-foreground">
                 No orders found for this customer.
               </div>
             )}
@@ -439,7 +439,7 @@ export default function AdminCustomerDetailPage({
         )}
 
         {customerOrdersData?.meta && customerOrdersData.meta.totalPage > 1 && (
-          <div className="p-4 border-t border-slate-800 bg-[#080e18]">
+          <div className="p-4 border-t border-border bg-muted/20">
             <AppPagination
               currentPage={orderParams.orderPage}
               totalPages={customerOrdersData.meta.totalPage}

@@ -158,53 +158,53 @@ export function CategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-125 bg-[#0b1322] border-slate-800 text-white rounded-2xl">
+      <DialogContent className="sm:max-w-125 bg-card border-border text-card-foreground rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-white font-mono uppercase tracking-wider">
+          <DialogTitle className="text-xl font-bold text-foreground font-mono uppercase tracking-wider">
             {category ? "Edit Category" : "Add New Category"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-4">
           <div className="space-y-2 text-left">
-            <Label htmlFor="name" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
+            <Label htmlFor="name" className="text-foreground font-mono text-xs uppercase tracking-wider">
               Name
             </Label>
             <Input
               id="name"
               placeholder="Electronics"
-              className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+              className="h-11 rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
               {...register("name")}
             />
             {errors.name && (
-              <p className="text-xs text-rose-400 font-medium">
+              <p className="text-xs text-destructive font-medium">
                 {errors.name.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="slug" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
+            <Label htmlFor="slug" className="text-foreground font-mono text-xs uppercase tracking-wider">
               Slug
             </Label>
             <Input
               id="slug"
               placeholder="electronics"
-              className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500 font-mono text-xs"
+              className="h-11 rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground font-mono text-xs focus:border-primary"
               {...register("slug")}
             />
-            <div className="text-[10px] text-slate-500 font-mono uppercase tracking-wider mt-1">
+            <div className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider mt-1">
               Used in URL: /category/electronics
             </div>
             {errors.slug && (
-              <p className="text-xs text-rose-400 font-medium">
+              <p className="text-xs text-destructive font-medium">
                 {errors.slug.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="parent-category" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
+            <Label htmlFor="parent-category" className="text-foreground font-mono text-xs uppercase tracking-wider">
               Parent Category
             </Label>
             <Cascader
@@ -214,45 +214,45 @@ export function CategoryDialog({
                 setValue("parentPath", path, { shouldDirty: true })
               }
               placeholder="Optional: select parent category"
-              className="w-full h-11 rounded-xl bg-[#080e18] border-slate-700 text-white"
+              className="w-full h-11 rounded-lg bg-background border-border text-foreground"
               allowClear
               changeOnSelect
               expandTrigger="hover"
             />
-            <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider mt-1">
+            <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider mt-1">
               Leave empty to keep this category at root level.
             </p>
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="description" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
+            <Label htmlFor="description" className="text-foreground font-mono text-xs uppercase tracking-wider">
               Description
             </Label>
             <Textarea
               id="description"
               placeholder="Brief category description..."
-              className="min-h-24 rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+              className="min-h-24 rounded-lg bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
               {...register("description")}
             />
             {errors.description && (
-              <p className="text-xs text-rose-400 font-medium">
+              <p className="text-xs text-destructive font-medium">
                 {errors.description.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2 text-left">
-            <Label htmlFor="sortOrder" className="text-slate-300 font-mono text-xs uppercase tracking-wider">
+            <Label htmlFor="sortOrder" className="text-foreground font-mono text-xs uppercase tracking-wider">
               Sort Order
             </Label>
             <Input
               id="sortOrder"
               type="number"
-              className="h-11 rounded-xl bg-[#080e18] border-slate-700 text-white"
+              className="h-11 rounded-lg bg-background border-border text-foreground"
               {...register("sortOrder")}
             />
             {errors.sortOrder && (
-              <p className="text-xs text-rose-400 font-medium">
+              <p className="text-xs text-destructive font-medium">
                 {errors.sortOrder.message}
               </p>
             )}
@@ -262,14 +262,14 @@ export function CategoryDialog({
             <Button
               type="button"
               variant="outline"
-              className="flex-1 h-11 rounded-xl bg-[#080e18] border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="flex-1 h-11 rounded-lg bg-background border-border text-foreground hover:bg-muted"
               onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 h-11 bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono uppercase tracking-wider text-xs rounded-xl"
+              className="flex-1 h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold font-mono uppercase tracking-wider text-xs rounded-lg shadow-xs"
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               {createMutation.isPending || updateMutation.isPending ? (

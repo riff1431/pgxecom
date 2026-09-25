@@ -45,18 +45,18 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
     <div className="relative">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
-            <TableHead className="w-20 font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
+          <TableRow className="hover:bg-transparent bg-muted/40 border-b border-border">
+            <TableHead className="w-20 font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">
               Preview
             </TableHead>
-            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
+            <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">
               Product Details
             </TableHead>
-            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Category</TableHead>
-            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Pricing</TableHead>
-            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Inventory</TableHead>
-            <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Status</TableHead>
-            <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
+            <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Category</TableHead>
+            <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Pricing</TableHead>
+            <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Inventory</TableHead>
+            <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Status</TableHead>
+            <TableHead className="text-right font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">
               Actions
             </TableHead>
           </TableRow>
@@ -65,10 +65,10 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
           {products.map((product) => (
             <TableRow
               key={product.id}
-              className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+              className="group hover:bg-muted/40 border-b border-border transition-colors"
             >
               <TableCell>
-                <div className="relative w-12 h-12 rounded-xl bg-slate-900 overflow-hidden border border-slate-800 group-hover:border-[#00a3ff]/40 transition-colors">
+                <div className="relative w-12 h-12 rounded-xl bg-muted overflow-hidden border border-border group-hover:border-primary/40 transition-colors">
                   {product.images?.[0]?.url ? (
                     <Image
                       src={
@@ -82,7 +82,7 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
                       unoptimized
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full text-slate-500">
+                    <div className="flex items-center justify-center w-full h-full text-muted-foreground">
                       <Package className="h-6 w-6" />
                     </div>
                   )}
@@ -90,10 +90,10 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
               </TableCell>
               <TableCell>
                 <div className="flex flex-col">
-                  <span className="font-bold text-white leading-tight group-hover:text-[#00a3ff] transition-colors">
+                  <span className="font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
                     {product.name}
                   </span>
-                  <span className="text-[10px] uppercase tracking-wider font-mono font-semibold text-slate-400 mt-0.5">
+                  <span className="text-[10px] uppercase tracking-wider font-mono font-semibold text-muted-foreground mt-0.5">
                     SKU: {product.sku || "NO-SKU"}
                   </span>
                 </div>
@@ -101,19 +101,19 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
               <TableCell>
                 <Badge
                   variant="outline"
-                  className="rounded-lg bg-slate-900 border-slate-700 text-slate-300 font-mono text-[11px] px-2 py-0.5"
+                  className="rounded-lg bg-background border-border text-foreground font-mono text-[11px] px-2 py-0.5"
                 >
                   {product.category?.name || "Uncategorized"}
                 </Badge>
               </TableCell>
               <TableCell>
                 <div className="flex flex-col font-bold">
-                  <span className="text-white font-mono">
+                  <span className="text-foreground font-mono">
                     {CURRENCY}
                     {product.price}
                   </span>
                   {product.comparePrice && (
-                    <span className="text-xs text-red-400 line-through opacity-70 font-mono">
+                    <span className="text-xs text-red-500 line-through opacity-70 font-mono">
                       {CURRENCY}
                       {product.comparePrice}
                     </span>
@@ -123,10 +123,10 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
               <TableCell>
                 <div className="flex items-center gap-2">
                   <div
-                    className={`w-2 h-2 rounded-full ${product.stock > 0 ? "bg-[#00a3ff]" : "bg-red-500"}`}
+                    className={`w-2 h-2 rounded-full ${product.stock > 0 ? "bg-primary" : "bg-red-500"}`}
                   />
                   <span
-                    className={`text-sm font-semibold font-mono ${product.stock > 0 ? "text-slate-300" : "text-red-400"}`}
+                    className={`text-sm font-semibold font-mono ${product.stock > 0 ? "text-foreground" : "text-red-500"}`}
                   >
                     {product.stock} in stock
                   </span>
@@ -146,7 +146,7 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
+                    className="border-border bg-background hover:bg-muted text-foreground h-8 w-8 rounded-lg"
                     asChild
                   >
                     <Link href={`/admin/products/${product.id}/edit`}>
@@ -156,7 +156,7 @@ export function ProductsTable({ products, handleDelete }: ProductsTableProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8 rounded-lg"
+                    className="border-red-500/30 bg-red-500/10 text-red-600 hover:bg-red-500/20 hover:text-red-700 h-8 w-8 rounded-lg"
                     onClick={() => handleDelete(product.id)}
                   >
                     <Trash2 className="h-4 w-4" />

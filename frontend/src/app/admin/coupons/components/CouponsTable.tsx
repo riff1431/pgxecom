@@ -35,35 +35,35 @@ export function CouponsTable({
   return (
     <AdminTable>
       <TableHeader>
-        <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Code</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Type</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Usage</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Valid Until</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Status</TableHead>
-          <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Actions</TableHead>
+        <TableRow className="hover:bg-transparent bg-muted/40 border-b border-border">
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Code</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Type</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Usage</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Valid Until</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Status</TableHead>
+          <TableHead className="text-right font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {coupons.map((coupon) => (
           <TableRow
             key={coupon.id}
-            className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+            className="group hover:bg-muted/30 border-b border-border transition-colors"
           >
             <TableCell>
-              <p className="font-bold font-mono text-white tracking-wide">{coupon.code}</p>
-              <p className="text-xs text-slate-400 line-clamp-1">
+              <p className="font-bold font-mono text-foreground tracking-wide">{coupon.code}</p>
+              <p className="text-xs text-muted-foreground line-clamp-1">
                 {coupon.description || "No description"}
               </p>
             </TableCell>
-            <TableCell className="text-sm font-bold font-mono text-[#00a3ff]">
+            <TableCell className="text-sm font-bold font-mono text-primary">
               {formatDiscount(coupon)}
             </TableCell>
-            <TableCell className="text-sm font-mono text-slate-300">
+            <TableCell className="text-sm font-mono text-foreground">
               {coupon.usedCount}
               {coupon.usageLimit ? ` / ${coupon.usageLimit}` : ""}
             </TableCell>
-            <TableCell className="text-sm font-mono text-slate-400">
+            <TableCell className="text-sm font-mono text-muted-foreground">
               {coupon.expiresAt
                 ? new Date(coupon.expiresAt).toLocaleDateString()
                 : "No expiry"}
@@ -83,7 +83,7 @@ export function CouponsTable({
                   variant="outline"
                   size="icon"
                   onClick={() => onEdit(coupon)}
-                  className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
+                  className="border-border bg-background hover:bg-muted text-foreground h-8 w-8 rounded-lg"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>

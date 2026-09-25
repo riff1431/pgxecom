@@ -135,21 +135,21 @@ export function SmtpSettingsTab() {
   return (
     <div className="space-y-6">
       {/* Top Banner / Status */}
-      <div className="bg-[#080e18] border border-slate-800 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-card border border-border rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-card-foreground shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-[#00a3ff]/10 border border-[#00a3ff]/20 flex items-center justify-center text-[#00a3ff]">
+          <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
             <Mail className="h-5 w-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+              <h3 className="text-sm font-bold text-foreground uppercase tracking-wider font-mono">
                 Email (SMTP) Engine
               </h3>
               <span
                 className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase border ${
                   smtpData?.source === "database"
-                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                    : "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                    ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+                    : "bg-amber-500/10 text-amber-600 border-amber-500/30"
                 }`}
               >
                 Source: {smtpData?.source === "database" ? "Database" : "Env Fallback"}
@@ -157,14 +157,14 @@ export function SmtpSettingsTab() {
               <span
                 className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase border ${
                   isEnabled
-                    ? "bg-blue-500/10 text-blue-400 border-blue-500/30"
-                    : "bg-rose-500/10 text-rose-400 border-rose-500/30"
+                    ? "bg-primary/10 text-primary border-primary/30"
+                    : "bg-rose-500/10 text-rose-600 border-rose-500/30"
                 }`}
               >
                 {isEnabled ? "Enabled" : "Disabled"}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Configure transactional email delivery for order receipts, password resets, and notifications.
             </p>
           </div>
@@ -177,16 +177,16 @@ export function SmtpSettingsTab() {
               size="sm"
               onClick={handleImportEnv}
               disabled={importEnvMutation.isPending}
-              className="border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-xs font-mono font-bold text-slate-200"
+              className="border-border bg-background hover:bg-muted text-xs font-mono font-bold text-foreground"
             >
-              <Sparkles className="h-3.5 w-3.5 mr-1.5 text-amber-400" />
+              <Sparkles className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
               Import from .env
             </Button>
           )}
           <Button
             onClick={handleSave}
             disabled={updateMutation.isPending}
-            className="bg-[#00a3ff] hover:bg-[#0091e6] text-slate-950 font-bold font-mono text-xs uppercase px-4"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold font-mono text-xs uppercase px-4 shadow-xs"
           >
             {updateMutation.isPending ? "Saving..." : "Save SMTP Settings"}
           </Button>
@@ -196,14 +196,14 @@ export function SmtpSettingsTab() {
       {/* Main Settings Form */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Form: Connection Details */}
-        <div className="lg:col-span-2 bg-[#080e18] border border-slate-800 rounded-xl p-5 space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-            <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-[#00a3ff]" />
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-5 space-y-5 text-card-foreground shadow-xs">
+          <div className="flex items-center justify-between border-b border-border pb-3">
+            <h4 className="text-xs font-mono font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-primary" />
               Connection & Credentials
             </h4>
             <div className="flex items-center gap-2">
-              <Label htmlFor="smtp-enabled-switch" className="text-xs font-mono text-slate-400">
+              <Label htmlFor="smtp-enabled-switch" className="text-xs font-mono text-muted-foreground">
                 Active Email Sending
               </Label>
               <Switch
@@ -216,19 +216,19 @@ export function SmtpSettingsTab() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2 space-y-1.5">
-              <Label className="text-xs font-mono uppercase text-slate-400 font-semibold">
+              <Label className="text-xs font-mono uppercase text-foreground/80 font-semibold">
                 SMTP Host
               </Label>
               <Input
                 placeholder="smtp.gmail.com or mail.domain.com"
                 value={host}
                 onChange={(e) => setHost(e.target.value)}
-                className="border-slate-800 bg-slate-900/90 text-white placeholder:text-slate-600 focus:border-[#00a3ff] text-xs font-mono"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary text-xs font-mono"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-mono uppercase text-slate-400 font-semibold">
+              <Label className="text-xs font-mono uppercase text-foreground/80 font-semibold">
                 Port
               </Label>
               <Input
@@ -236,7 +236,7 @@ export function SmtpSettingsTab() {
                 placeholder="587"
                 value={port}
                 onChange={(e) => handlePortChange(Number(e.target.value))}
-                className="border-slate-800 bg-slate-900/90 text-white placeholder:text-slate-600 focus:border-[#00a3ff] text-xs font-mono"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary text-xs font-mono"
               />
             </div>
           </div>
@@ -248,31 +248,31 @@ export function SmtpSettingsTab() {
                 checked={secure}
                 onCheckedChange={setSecure}
               />
-              <Label htmlFor="secure-toggle" className="text-xs font-mono text-slate-300 cursor-pointer">
+              <Label htmlFor="secure-toggle" className="text-xs font-mono text-foreground cursor-pointer">
                 SSL / TLS (Secure) — usually ON for port 465, OFF for 587
               </Label>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-800/80">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-border">
             <div className="space-y-1.5">
-              <Label className="text-xs font-mono uppercase text-slate-400 font-semibold">
+              <Label className="text-xs font-mono uppercase text-foreground/80 font-semibold">
                 Username / Auth Account
               </Label>
               <Input
                 placeholder="apikey or user@example.com"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="border-slate-800 bg-slate-900/90 text-white placeholder:text-slate-600 focus:border-[#00a3ff] text-xs font-mono"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary text-xs font-mono"
               />
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label className="text-xs font-mono uppercase text-slate-400 font-semibold">
+                <Label className="text-xs font-mono uppercase text-foreground/80 font-semibold">
                   Password / App Password
                 </Label>
-                <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                <span className="text-[10px] font-mono text-emerald-600 flex items-center gap-1">
                   <ShieldCheck className="h-3 w-3" />
                   AES-256-GCM Encrypted
                 </span>
@@ -283,12 +283,12 @@ export function SmtpSettingsTab() {
                   placeholder={smtpData?.hasPassword ? "••••••••••••" : "Enter SMTP Password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="border-slate-800 bg-slate-900/90 text-white placeholder:text-slate-600 focus:border-[#00a3ff] text-xs font-mono pr-9"
+                  className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary text-xs font-mono pr-9"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -296,46 +296,46 @@ export function SmtpSettingsTab() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-800/80">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-border">
             <div className="space-y-1.5">
-              <Label className="text-xs font-mono uppercase text-slate-400 font-semibold">
+              <Label className="text-xs font-mono uppercase text-foreground/80 font-semibold">
                 From Display Name
               </Label>
               <Input
                 placeholder="PGX Store"
                 value={fromName}
                 onChange={(e) => setFromName(e.target.value)}
-                className="border-slate-800 bg-slate-900/90 text-white placeholder:text-slate-600 focus:border-[#00a3ff] text-xs"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary text-xs"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-mono uppercase text-slate-400 font-semibold">
+              <Label className="text-xs font-mono uppercase text-foreground/80 font-semibold">
                 From Email Address
               </Label>
               <Input
                 placeholder="noreply@domain.com"
                 value={fromEmail}
                 onChange={(e) => setFromEmail(e.target.value)}
-                className="border-slate-800 bg-slate-900/90 text-white placeholder:text-slate-600 focus:border-[#00a3ff] text-xs font-mono"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary text-xs font-mono"
               />
             </div>
           </div>
         </div>
 
         {/* Right Side: Test Email Panel */}
-        <div className="bg-[#080e18] border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+        <div className="bg-card border border-border rounded-xl p-5 space-y-4 flex flex-col justify-between text-card-foreground shadow-xs">
           <div className="space-y-3">
-            <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-              <Send className="h-4 w-4 text-[#00a3ff]" />
+            <h4 className="text-xs font-mono font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+              <Send className="h-4 w-4 text-primary" />
               Send Live Test Email
             </h4>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted-foreground">
               Verify your SMTP server configuration and TLS handshake by sending a live test message.
             </p>
 
             <div className="space-y-1.5 pt-2">
-              <Label className="text-xs font-mono uppercase text-slate-400 font-semibold">
+              <Label className="text-xs font-mono uppercase text-foreground/80 font-semibold">
                 Recipient Email
               </Label>
               <Input
@@ -343,32 +343,32 @@ export function SmtpSettingsTab() {
                 placeholder="admin@example.com"
                 value={testEmail}
                 onChange={(e) => setTestEmail(e.target.value)}
-                className="border-slate-800 bg-slate-900/90 text-white placeholder:text-slate-600 focus:border-[#00a3ff] text-xs font-mono"
+                className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-primary text-xs font-mono"
               />
             </div>
           </div>
 
-          <div className="space-y-3 pt-4 border-t border-slate-800/80">
+          <div className="space-y-3 pt-4 border-t border-border">
             <Button
               onClick={handleSendTestEmail}
               disabled={isTesting || !isEnabled}
-              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 font-mono text-xs font-bold uppercase border border-slate-700 hover:border-[#00a3ff]"
+              className="w-full bg-background hover:bg-muted text-foreground font-mono text-xs font-bold uppercase border border-border hover:border-primary"
             >
               {isTesting ? (
                 <>
-                  <RefreshCw className="h-3.5 w-3.5 animate-spin mr-2 text-[#00a3ff]" />
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin mr-2 text-primary" />
                   Verifying Connection...
                 </>
               ) : (
                 <>
-                  <Send className="h-3.5 w-3.5 mr-2 text-[#00a3ff]" />
+                  <Send className="h-3.5 w-3.5 mr-2 text-primary" />
                   Send Test Email
                 </>
               )}
             </Button>
 
             {!isEnabled && (
-              <p className="text-[11px] text-rose-400 font-mono flex items-center gap-1.5">
+              <p className="text-[11px] text-rose-500 font-mono flex items-center gap-1.5">
                 <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
                 Enable email sending first to send test emails.
               </p>

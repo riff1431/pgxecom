@@ -31,14 +31,14 @@ export function AnalyticsChartsSections({
   return (
     <>
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Revenue & Orders Trend</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Revenue & Orders Trend</CardTitle>
           </CardHeader>
           <CardContent className="h-88">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={overview?.revenueTrend || []}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
                 <YAxis
@@ -52,8 +52,8 @@ export function AnalyticsChartsSections({
                   yAxisId="left"
                   type="monotone"
                   dataKey="revenue"
-                  fill="#10b98122"
-                  stroke="#10b981"
+                  fill="#00a3ff22"
+                  stroke="#00a3ff"
                   name="Revenue"
                 />
                 <Bar
@@ -77,21 +77,21 @@ export function AnalyticsChartsSections({
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Current vs Previous Revenue</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Current vs Previous Revenue</CardTitle>
           </CardHeader>
           <CardContent className="h-88">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={overview?.revenueComparisonTrend || []}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip />
                 <Legend />
                 <Bar
                   dataKey="currentRevenue"
-                  fill="#10b981"
+                  fill="#00a3ff"
                   name="Current"
                   radius={[4, 4, 0, 0]}
                 />
@@ -123,14 +123,14 @@ export function AnalyticsChartsSections({
       </section>
 
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Weekday Performance</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Weekday Performance</CardTitle>
           </CardHeader>
           <CardContent className="h-80 pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={overview?.weekdayPerformance || []}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="day" />
                 <YAxis />
                 <Tooltip />
@@ -143,7 +143,7 @@ export function AnalyticsChartsSections({
                 />
                 <Bar
                   dataKey="revenue"
-                  fill="#10b981"
+                  fill="#00a3ff"
                   name="Revenue"
                   radius={[4, 4, 0, 0]}
                 />
@@ -152,14 +152,14 @@ export function AnalyticsChartsSections({
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Hourly Performance</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Hourly Performance</CardTitle>
           </CardHeader>
           <CardContent className="h-80 pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={overview?.hourlyPerformance || []}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="hour" tick={{ fontSize: 10 }} interval={1} />
                 <YAxis />
                 <Tooltip />
@@ -173,8 +173,8 @@ export function AnalyticsChartsSections({
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#f59e0b"
-                  fill="#f59e0b22"
+                  stroke="#00a3ff"
+                  fill="#00a3ff22"
                   name="Revenue"
                 />
               </AreaChart>
@@ -184,9 +184,9 @@ export function AnalyticsChartsSections({
       </section>
 
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Top Products by Revenue</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Top Products by Revenue</CardTitle>
           </CardHeader>
           <CardContent className="h-80 pt-4">
             <ResponsiveContainer width="100%" height="100%">
@@ -195,7 +195,7 @@ export function AnalyticsChartsSections({
                 layout="vertical"
                 margin={{ left: 10, right: 20 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis type="number" />
                 <YAxis
                   type="category"
@@ -204,20 +204,20 @@ export function AnalyticsChartsSections({
                   tick={{ fontSize: 11 }}
                 />
                 <Tooltip />
-                <Bar dataKey="revenue" fill="#10b981" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="revenue" fill="#00a3ff" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Top Categories by Revenue</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Top Categories by Revenue</CardTitle>
           </CardHeader>
           <CardContent className="h-80 pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={overview?.topCategories || []}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="categoryName" tick={{ fontSize: 11 }} />
                 <YAxis />
                 <Tooltip />
@@ -229,14 +229,14 @@ export function AnalyticsChartsSections({
       </section>
 
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Customer Growth Trend</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Customer Growth Trend</CardTitle>
           </CardHeader>
           <CardContent className="h-80 pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={overview?.customerGrowthTrend || []}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis />
                 <Tooltip />
@@ -250,7 +250,7 @@ export function AnalyticsChartsSections({
                 <Line
                   type="monotone"
                   dataKey="cumulativeCustomers"
-                  stroke="#10b981"
+                  stroke="#00a3ff"
                   name="Cumulative"
                   dot={false}
                 />
@@ -259,14 +259,14 @@ export function AnalyticsChartsSections({
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-          <CardHeader className="border-b border-slate-800/80">
-            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Order Value Distribution</CardTitle>
+        <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Order Value Distribution</CardTitle>
           </CardHeader>
           <CardContent className="h-80 pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={overview?.orderValueDistribution || []}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="bucket" />
                 <YAxis />
                 <Tooltip />
@@ -277,16 +277,16 @@ export function AnalyticsChartsSections({
         </Card>
       </section>
 
-      <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-        <CardHeader className="border-b border-slate-800/80">
-          <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">Low Stock Alerts</CardTitle>
+      <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+        <CardHeader className="border-b border-border">
+          <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">Low Stock Alerts</CardTitle>
         </CardHeader>
         <CardContent className="pt-4">
           {overview?.lowStockProducts.length ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-800/80 text-left font-mono text-xs uppercase tracking-wider text-slate-400">
+                  <tr className="border-b border-border text-left font-mono text-xs uppercase tracking-wider text-muted-foreground">
                     <th className="py-2.5">Product</th>
                     <th className="py-2.5">Category</th>
                     <th className="py-2.5">Stock</th>
@@ -294,7 +294,7 @@ export function AnalyticsChartsSections({
                 </thead>
                 <tbody>
                   {overview.lowStockProducts.map((item) => (
-                    <tr key={item.id} className="border-b border-slate-800/60 last:border-0 hover:bg-slate-800/40 transition-colors">
+                    <tr key={item.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                       <td className="py-2.5 pr-2">
                         <div className="flex items-center gap-2.5">
                           {item.image ? (
@@ -307,16 +307,16 @@ export function AnalyticsChartsSections({
                               unoptimized
                             />
                           ) : null}
-                          <span className="font-bold text-white">
+                          <span className="font-bold text-foreground">
                             {item.name}
                           </span>
                         </div>
                       </td>
-                      <td className="py-2.5 text-slate-400 font-mono text-xs">
+                      <td className="py-2.5 text-muted-foreground font-mono text-xs">
                         {item.category?.name || "-"}
                       </td>
                       <td className="py-2.5">
-                        <span className="inline-flex rounded-md bg-red-500/20 border border-red-500/30 px-2 py-0.5 text-[11px] font-mono font-bold text-red-400">
+                        <span className="inline-flex rounded-md bg-destructive/10 border border-destructive/20 px-2 py-0.5 text-[11px] font-mono font-bold text-destructive">
                           {item.stock}
                         </span>
                       </td>
@@ -326,7 +326,7 @@ export function AnalyticsChartsSections({
               </table>
             </div>
           ) : (
-            <p className="text-sm text-slate-400 font-mono py-4">
+            <p className="text-sm text-muted-foreground font-mono py-4">
               No low stock products in alert threshold.
             </p>
           )}
@@ -344,13 +344,13 @@ function PieCard({
   data: Array<{ label: string; value: number }>;
 }) {
   return (
-    <Card className="rounded-2xl border-slate-800 bg-[#0b1322] text-slate-100 shadow-sm">
-      <CardHeader className="border-b border-slate-800/80">
-        <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-white">{title}</CardTitle>
+    <Card className="rounded-xl border-border bg-card text-card-foreground shadow-xs">
+      <CardHeader className="border-b border-border">
+        <CardTitle className="font-mono text-sm uppercase tracking-wider font-bold text-card-foreground">{title}</CardTitle>
       </CardHeader>
       <CardContent className="h-80 pt-4">
         {data.length === 0 ? (
-          <p className="text-sm text-slate-400 font-mono py-6">No data in selected period.</p>
+          <p className="text-sm text-muted-foreground font-mono py-6">No data in selected period.</p>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

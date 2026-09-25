@@ -129,41 +129,41 @@ export function BlogDialog({ open, onOpenChange, blog }: BlogDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-5xl rounded-2xl max-h-[90vh] overflow-y-auto bg-[#0b1322] border-slate-800 text-white">
+      <DialogContent className="sm:max-w-5xl rounded-2xl max-h-[90vh] overflow-y-auto bg-card border-border text-foreground">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-white font-mono uppercase tracking-wider">
+          <DialogTitle className="text-xl font-bold text-foreground font-mono uppercase tracking-wider">
             {blog ? "Edit Blog" : "Write Blog"}
           </DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-muted-foreground">
             Write and publish blog content with rich text, links, and images.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Title</Label>
+            <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Title</Label>
             <Input
               placeholder="Write your blog title"
               {...register("title", { required: "Title is required" })}
-              className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+              className="rounded-xl bg-background border-border text-foreground placeholder:text-muted-foreground"
             />
             {errors.title && (
-              <p className="text-xs text-rose-400">{errors.title.message}</p>
+              <p className="text-xs text-rose-500">{errors.title.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Excerpt</Label>
+            <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Excerpt</Label>
             <Textarea
               placeholder="Short summary for blog cards"
               rows={3}
-              className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+              className="rounded-xl bg-background border-border text-foreground placeholder:text-muted-foreground"
               {...register("excerpt")}
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Cover Image</Label>
+            <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Cover Image</Label>
             <div className="flex flex-wrap items-center gap-3">
               <Input
                 type="file"
@@ -173,14 +173,14 @@ export function BlogDialog({ open, onOpenChange, blog }: BlogDialogProps) {
                   if (!file) return;
                   await uploadCover(file);
                 }}
-                className="max-w-sm bg-[#080e18] border-slate-700 text-white"
+                className="max-w-sm bg-background border-border text-foreground"
               />
 
               {coverImage && (
                 <Button
                   type="button"
                   variant="outline"
-                  className="bg-[#080e18] border-slate-700 text-slate-300 hover:text-white"
+                  className="bg-background border-border text-foreground hover:bg-muted"
                   onClick={() =>
                     setValue("coverImage", "", { shouldDirty: true })
                   }
@@ -194,13 +194,13 @@ export function BlogDialog({ open, onOpenChange, blog }: BlogDialogProps) {
               <img
                 src={resolveImageUrl(coverImage)}
                 alt="Blog cover"
-                className="w-56 h-32 object-cover rounded-xl border border-slate-700"
+                className="w-56 h-32 object-cover rounded-xl border border-border"
               />
             )}
           </div>
 
           <div className="space-y-2">
-            <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Content</Label>
+            <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Content</Label>
             <BlogEditor
               value={content}
               onChange={(nextValue) =>
@@ -212,19 +212,19 @@ export function BlogDialog({ open, onOpenChange, blog }: BlogDialogProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Author Name</Label>
+              <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Author Name</Label>
               <Input
                 placeholder="Admin name"
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                className="rounded-xl bg-background border-border text-foreground placeholder:text-muted-foreground"
                 {...register("authorName")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Tags (comma separated)</Label>
+              <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Tags (comma separated)</Label>
               <Input
                 placeholder="health, nutrition, bangla"
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                className="rounded-xl bg-background border-border text-foreground placeholder:text-muted-foreground"
                 {...register("tagsInput")}
               />
             </div>
@@ -232,28 +232,28 @@ export function BlogDialog({ open, onOpenChange, blog }: BlogDialogProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Meta Title</Label>
+              <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Meta Title</Label>
               <Input
                 placeholder="SEO meta title"
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                className="rounded-xl bg-background border-border text-foreground placeholder:text-muted-foreground"
                 {...register("metaTitle")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-300 font-mono text-xs uppercase tracking-wider">Meta Description</Label>
+              <Label className="text-foreground/80 font-mono text-xs uppercase tracking-wider">Meta Description</Label>
               <Input
                 placeholder="SEO meta description"
-                className="rounded-xl bg-[#080e18] border-slate-700 text-white placeholder:text-slate-500"
+                className="rounded-xl bg-background border-border text-foreground placeholder:text-muted-foreground"
                 {...register("metaDesc")}
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between rounded-2xl border border-slate-800 bg-[#080e18] p-4">
+          <div className="flex items-center justify-between rounded-2xl border border-border bg-muted/20 p-4">
             <div>
-              <p className="font-semibold text-white font-mono text-sm uppercase">Active / Published</p>
-              <p className="text-sm text-slate-400">
+              <p className="font-semibold text-foreground font-mono text-sm uppercase">Active / Published</p>
+              <p className="text-sm text-muted-foreground">
                 Inactive blogs stay hidden on storefront.
               </p>
             </div>
@@ -268,7 +268,7 @@ export function BlogDialog({ open, onOpenChange, blog }: BlogDialogProps) {
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="rounded-xl bg-[#080e18] border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="rounded-xl bg-background border-border text-foreground hover:bg-muted"
             >
               Cancel
             </Button>
@@ -279,7 +279,7 @@ export function BlogDialog({ open, onOpenChange, blog }: BlogDialogProps) {
                 updateMutation.isPending ||
                 uploadImageMutation.isPending
               }
-              className="rounded-xl bg-[#00a3ff] hover:bg-[#008fe0] text-black font-semibold font-mono uppercase tracking-wider text-xs"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold font-mono uppercase tracking-wider text-xs shadow-xs"
             >
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."

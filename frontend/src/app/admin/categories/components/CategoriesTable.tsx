@@ -50,20 +50,20 @@ export function CategoriesTable({ categories, onEdit }: CategoriesTableProps) {
       <div className="relative">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
-              <TableHead className="w-20 font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
+            <TableRow className="hover:bg-transparent bg-muted/40 border-b border-border">
+              <TableHead className="w-20 font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">
                 Preview
               </TableHead>
-              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
+              <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">
                 Category Details
               </TableHead>
-              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Slug</TableHead>
-              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Parent</TableHead>
-              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
+              <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Slug</TableHead>
+              <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Parent</TableHead>
+              <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">
                 Products
               </TableHead>
-              <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Sort</TableHead>
-              <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">
+              <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Sort</TableHead>
+              <TableHead className="text-right font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">
                 Actions
               </TableHead>
             </TableRow>
@@ -72,16 +72,16 @@ export function CategoriesTable({ categories, onEdit }: CategoriesTableProps) {
             {categories.map((cat) => (
               <TableRow
                 key={cat.id}
-                className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+                className="group hover:bg-muted/30 border-b border-border transition-colors"
               >
                 <TableCell>
-                  <div className="relative w-12 h-12 rounded-xl bg-slate-900 overflow-hidden border border-slate-800 group-hover:border-[#00a3ff]/40 transition-colors flex items-center justify-center text-xs font-black text-[#00a3ff] uppercase font-mono">
+                  <div className="relative w-12 h-12 rounded-lg bg-primary/10 overflow-hidden border border-primary/20 group-hover:border-primary/40 transition-colors flex items-center justify-center text-xs font-black text-primary uppercase font-mono">
                     {cat.name.substring(0, 2)}
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="font-bold text-white leading-tight">
+                    <span className="font-bold text-foreground leading-tight">
                       {cat.name}
                     </span>
                   </div>
@@ -89,26 +89,26 @@ export function CategoriesTable({ categories, onEdit }: CategoriesTableProps) {
                 <TableCell>
                   <Badge
                     variant="outline"
-                    className="rounded-lg bg-slate-900 border-slate-700 text-slate-300 font-mono text-[11px] px-2 py-0.5"
+                    className="rounded-lg bg-muted/50 border-border text-foreground font-mono text-[11px] px-2 py-0.5"
                   >
                     {cat.slug}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm font-semibold text-slate-300">
+                  <span className="text-sm font-semibold text-foreground">
                     {cat.parent?.name || "Root"}
                   </span>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#00a3ff]" />
-                    <span className="text-sm font-semibold text-slate-300">
+                    <div className="w-2 h-2 rounded-full bg-primary" />
+                    <span className="text-sm font-semibold text-foreground">
                       {cat._count?.products || 0} products
                     </span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm font-mono text-slate-400">
+                  <span className="text-sm font-mono text-muted-foreground">
                     {cat.sortOrder}
                   </span>
                 </TableCell>
@@ -117,7 +117,7 @@ export function CategoriesTable({ categories, onEdit }: CategoriesTableProps) {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
+                      className="border-border bg-background hover:bg-muted text-foreground h-8 w-8 rounded-lg"
                       onClick={() => onEdit(cat)}
                     >
                       <Edit className="h-4 w-4" />
@@ -125,7 +125,7 @@ export function CategoriesTable({ categories, onEdit }: CategoriesTableProps) {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 h-8 w-8 rounded-lg"
+                      className="border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/20 h-8 w-8 rounded-lg"
                       onClick={() => setDeleteId(cat.id)}
                     >
                       <Trash2 className="h-4 w-4" />

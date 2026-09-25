@@ -16,54 +16,54 @@ export function OrdersTable({ orders }: { orders: any[] }) {
   return (
     <Table>
       <TableHeader>
-        <TableRow className="hover:bg-transparent bg-[#080e18] border-slate-800/80">
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Order</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Date</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Customer</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Total</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Payment</TableHead>
-          <TableHead className="font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Status</TableHead>
-          <TableHead className="text-right font-mono font-bold text-slate-400 text-xs uppercase tracking-wider">Actions</TableHead>
+        <TableRow className="hover:bg-transparent bg-muted/40 border-b border-border">
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Order</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Date</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Customer</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Total</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Payment</TableHead>
+          <TableHead className="font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Status</TableHead>
+          <TableHead className="text-right font-mono font-bold text-muted-foreground text-xs uppercase tracking-wider">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {orders.map((order: any) => {
           const statusConfig = ORDER_STATUSES[order.status] || {
             label: order.status,
-            color: "bg-slate-800 text-slate-300",
+            color: "bg-muted text-muted-foreground",
           };
           return (
             <TableRow
               key={order.id}
-              className="group hover:bg-slate-800/40 border-slate-800/60 transition-colors"
+              className="group hover:bg-muted/30 border-b border-border transition-colors"
             >
               <TableCell>
                 <Link
                   href={`/admin/orders/${order.id}`}
-                  className="font-mono font-bold text-sm text-white hover:text-[#00a3ff] transition-colors"
+                  className="font-mono font-bold text-sm text-primary hover:underline transition-colors"
                 >
                   #{order.orderNumber}
                 </Link>
               </TableCell>
-              <TableCell className="text-sm font-mono text-slate-400">
+              <TableCell className="text-sm font-mono text-muted-foreground">
                 {new Date(order.createdAt).toLocaleDateString()}
               </TableCell>
               <TableCell>
-                <p className="text-sm font-semibold text-slate-200">
+                <p className="text-sm font-semibold text-foreground">
                   {order.guestName || order.user?.name}
                 </p>
-                <p className="text-xs text-slate-400 truncate max-w-37.5">
+                <p className="text-xs text-muted-foreground truncate max-w-37.5">
                   {order.guestEmail || order.user?.email || "No email"}
                 </p>
               </TableCell>
-              <TableCell className="text-sm font-bold font-mono text-white">
+              <TableCell className="text-sm font-bold font-mono text-foreground">
                 {CURRENCY}
                 {order.total}
               </TableCell>
               <TableCell>
                 <Badge
                   variant="outline"
-                  className="text-xs uppercase bg-slate-900 border-slate-700 text-slate-300 font-mono"
+                  className="text-xs uppercase bg-muted/50 border-border text-foreground font-mono"
                 >
                   {order.paymentMethod.replace(/_/g, " ")}
                 </Badge>
@@ -77,7 +77,7 @@ export function OrdersTable({ orders }: { orders: any[] }) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-200 h-8 w-8 rounded-lg"
+                  className="border-border bg-background hover:bg-muted text-foreground h-8 w-8 rounded-lg"
                   asChild
                 >
                   <Link href={`/admin/orders/${order.id}`}>
