@@ -56,8 +56,7 @@ export default function RootLayout({
             <AuthProvider>
               <WalletProvider>
                 {children}
-                {/* <GlobalApiLoader /> */}
-                <Toaster position="top-right" richColors />
+                <Toaster position="top-right" />
               </WalletProvider>
             </AuthProvider>
           </QueryProvider>

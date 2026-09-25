@@ -32,22 +32,24 @@ export function AdminDeleteDialog({
 }: AdminDeleteDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="rounded-xl bg-[#0b1322] border border-slate-800 text-white">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-xl font-bold text-white font-mono uppercase tracking-wider">
+      <AlertDialogContent className="rounded-2xl bg-card border border-border shadow-xl text-card-foreground max-w-md p-6">
+        <AlertDialogHeader className="text-left space-y-2">
+          <AlertDialogTitle className="text-lg font-bold text-foreground tracking-tight font-sans">
             {title}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-slate-400">
+          <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="gap-2">
-          <AlertDialogCancel className="bg-[#080e18] border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">Cancel</AlertDialogCancel>
+        <AlertDialogFooter className="mt-4 -mx-6 -mb-6 p-4 bg-muted/30 border-t border-border/80 flex items-center justify-end gap-2.5 rounded-b-2xl">
+          <AlertDialogCancel className="h-9 px-4 rounded-lg bg-background hover:bg-muted text-foreground border border-border font-medium text-xs shadow-xs transition-colors">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="bg-rose-600 hover:bg-rose-700 text-white font-mono uppercase text-xs"
+            className="h-9 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
           >
             {isDeleting ? "Deleting..." : confirmLabel}
           </AlertDialogAction>
