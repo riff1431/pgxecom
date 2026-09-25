@@ -1,5 +1,6 @@
 import { Edit, FilterX, Search, Trash2 } from "lucide-react";
 
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 import { AdminTable } from "@/components/admin/AdminTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -130,9 +131,12 @@ export function SettingsTableSection({
               <TableRow>
                 <TableCell
                   colSpan={4}
-                  className="text-center py-14 text-slate-400 font-mono text-xs"
+                  className="p-0 border-none"
                 >
-                  No settings found.
+                  <AdminEmptyState
+                    title="No settings found"
+                    description="Try adjusting your search terms or filter groups."
+                  />
                 </TableCell>
               </TableRow>
             )}

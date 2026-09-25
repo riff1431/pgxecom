@@ -18,6 +18,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useDebounceValue } from "usehooks-ts";
 import { CustomersTable } from "./components/CustomersTable";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 
 export default function AdminCustomersPage() {
   const queryClient = useQueryClient();
@@ -177,17 +178,10 @@ export default function AdminCustomersPage() {
               actionLoadingId={actionLoadingId}
             />
             {customerData?.data?.length === 0 && (
-              <div className="py-20 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 border border-slate-800 mb-4">
-                  <Search className="h-8 w-8 text-slate-500" />
-                </div>
-                <h3 className="text-lg font-bold text-white font-mono">
-                  No customers found
-                </h3>
-                <p className="text-slate-400 text-xs mt-1">
-                  Try adjusting your filters or search terms.
-                </p>
-              </div>
+              <AdminEmptyState
+                title="No customers found"
+                description="Try adjusting your filters or search terms."
+              />
             )}
           </>
         )}

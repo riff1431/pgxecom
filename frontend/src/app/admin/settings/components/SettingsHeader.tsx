@@ -16,8 +16,8 @@ export function SettingsHeader({
   return (
     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono uppercase">Settings</h1>
-        <p className="text-slate-400 font-medium text-xs mt-1">
+        <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight font-mono uppercase">Settings</h1>
+        <p className="text-muted-foreground font-medium text-xs mt-1">
           Configure storefront identity, contacts and social links.
         </p>
       </div>
@@ -26,14 +26,14 @@ export function SettingsHeader({
         <Button
           onClick={onAddSetting}
           variant="outline"
-          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-mono text-xs uppercase"
+          className="border-border bg-background text-foreground hover:bg-muted font-mono text-xs uppercase"
         >
           <Plus className="h-4 w-4 mr-2" /> Add Setting
         </Button>
         <Button
           onClick={onSaveSettings}
           disabled={isSaving}
-          className="bg-[#00a3ff] hover:bg-[#0091e6] text-slate-950 font-bold font-mono text-xs uppercase px-5 h-10 rounded-xl shadow-lg shadow-[#00a3ff]/20 transition-all cursor-pointer"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold font-mono text-xs uppercase px-5 h-10 rounded-xl shadow-xs transition-all cursor-pointer"
         >
           <Save className="h-4 w-4 mr-2" />
           {isSaving ? "Saving..." : "Save Settings"}

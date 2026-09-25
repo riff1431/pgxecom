@@ -15,6 +15,7 @@ import {
 import { CURRENCY, ORDER_STATUSES } from "@/lib/constants";
 import { ArrowUpRight, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 
 interface RecentOrdersTableProps {
   orders: any[];
@@ -83,9 +84,12 @@ export function RecentOrdersTable({
                 <TableRow className="border-border hover:bg-transparent">
                   <TableCell
                     colSpan={4}
-                    className="h-64 text-center text-muted-foreground font-mono text-xs"
+                    className="p-0 border-none"
                   >
-                    No orders found.
+                    <AdminEmptyState
+                      title="No recent orders"
+                      description="When orders are placed, they will appear in this feed."
+                    />
                   </TableCell>
                 </TableRow>
               ) : (

@@ -12,6 +12,7 @@ import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { useEffect, useRef } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { OrdersTable } from "./components/OrdersTable";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 
 export default function AdminOrdersPage() {
   const [params, setParams] = useQueryStates(
@@ -128,17 +129,10 @@ export default function AdminOrdersPage() {
           <>
             <OrdersTable orders={adminOrdersData?.data || []} />
             {adminOrdersData?.data?.length === 0 && (
-              <div className="py-20 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted border border-border mb-4">
-                  <Search className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-lg font-bold text-foreground font-mono">
-                  No orders found
-                </h3>
-                <p className="text-muted-foreground text-xs mt-1">
-                  Try adjusting your filters or search terms.
-                </p>
-              </div>
+              <AdminEmptyState
+                title="No orders found"
+                description="Try adjusting your filters or search terms."
+              />
             )}
           </>
         )}

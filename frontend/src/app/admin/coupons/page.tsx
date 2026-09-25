@@ -19,6 +19,7 @@ import { useDebounceValue } from "usehooks-ts";
 
 import { CouponDialog } from "./components/CouponDialog";
 import { CouponsTable } from "./components/CouponsTable";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 
 export default function AdminCouponsPage() {
   const queryClient = useQueryClient();
@@ -182,17 +183,10 @@ export default function AdminCouponsPage() {
             />
 
             {couponsData?.data?.length === 0 && (
-              <div className="py-20 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 border border-slate-800 mb-4">
-                  <Search className="h-8 w-8 text-slate-500" />
-                </div>
-                <h3 className="text-lg font-bold text-white font-mono">
-                  No coupons found
-                </h3>
-                <p className="text-slate-400 text-xs mt-1">
-                  Try adjusting your filters or create a new coupon.
-                </p>
-              </div>
+              <AdminEmptyState
+                title="No coupons found"
+                description="Try adjusting your filters or create a new coupon."
+              />
             )}
           </>
         )}

@@ -175,10 +175,10 @@ export default function AdminSettingsPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono uppercase">
+          <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight font-mono uppercase">
             Storefront Settings
           </h1>
-          <p className="text-slate-400 font-medium text-xs mt-1">
+          <p className="text-muted-foreground font-medium text-xs mt-1">
             Configure store branding, general details, logos, social links, and SEO metadata.
           </p>
         </div>

@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { CategoriesTable } from "./components/CategoriesTable";
 import { CategoryDialog } from "./components/CategoryDialog";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 
 export default function AdminCategoriesPage() {
   const [params, setParams] = useQueryStates(
@@ -106,11 +107,10 @@ export default function AdminCategoriesPage() {
         )}
 
         {!isLoading && categories.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">
-              No categories found
-            </p>
-          </div>
+          <AdminEmptyState
+            title="No categories found"
+            description="Try adjusting your search terms or create a new category."
+          />
         )}
       </div>
 

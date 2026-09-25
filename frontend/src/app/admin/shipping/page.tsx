@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { AdminDeleteDialog } from "@/components/admin/AdminDeleteDialog";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminStatusToggle } from "@/components/admin/AdminStatusToggle";
 import { AdminTable } from "@/components/admin/AdminTable";
@@ -241,9 +242,12 @@ export default function AdminShippingPage() {
                 <TableRow>
                   <TableCell
                     colSpan={5}
-                    className="text-center py-14 text-muted-foreground font-mono text-xs"
+                    className="p-0 border-none"
                   >
-                    No shipping zones found.
+                    <AdminEmptyState
+                      title="No shipping zones found"
+                      description="Try adjusting your search terms or create a new delivery zone."
+                    />
                   </TableCell>
                 </TableRow>
               ) : null}

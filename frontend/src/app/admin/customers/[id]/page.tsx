@@ -39,6 +39,7 @@ import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { use, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useDebounceValue } from "usehooks-ts";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 
 export default function AdminCustomerDetailPage({
   params,
@@ -431,9 +432,10 @@ export default function AdminCustomerDetailPage({
             </table>
 
             {customerOrdersData?.data?.length === 0 && (
-              <div className="py-16 text-center text-muted-foreground">
-                No orders found for this customer.
-              </div>
+              <AdminEmptyState
+                title="No orders found for this customer"
+                description="When this customer places an order, it will appear here."
+              />
             )}
           </div>
         )}

@@ -16,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useDebounceValue } from "usehooks-ts";
 import { ProductsTable } from "./components";
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState";
 
 export default function AdminProductsPage() {
   const [params, setParams] = useQueryStates(
@@ -175,17 +176,10 @@ export default function AdminProductsPage() {
               handleDelete={(id: string) => setDeleteId(id)}
             />
             {adminProducts?.data.length === 0 && (
-              <div className="py-20 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted border border-border mb-4">
-                  <Search className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-lg font-bold text-foreground font-mono">
-                  No products found
-                </h3>
-                <p className="text-muted-foreground text-xs mt-1">
-                  Try adjusting your filters or search terms.
-                </p>
-              </div>
+              <AdminEmptyState
+                title="No products found"
+                description="Try adjusting your filters or search terms."
+              />
             )}
           </>
         )}
