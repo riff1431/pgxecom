@@ -85,25 +85,28 @@ function WalletPageContent() {
   };
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-4xl mx-auto text-left">
       {/* Page Header */}
       <div>
-        <div className="flex items-center gap-2 text-[#00a3ff] font-mono text-xs font-bold uppercase tracking-widest mb-1.5">
-          <Wallet2Icon />
+        <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold uppercase tracking-widest mb-1.5">
+          <Wallet2Icon className="w-4 h-4" />
           <span>PGX Wallet</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white font-mono">
+        <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-foreground font-heading">
           Wallet &amp; Deposits
         </h1>
+        <p className="text-xs text-muted-foreground mt-1 font-mono">
+          Pre-load funds to pay quickly for drops, gear and training subscriptions.
+        </p>
       </div>
 
       {/* Status Banners */}
       {statusParam === "success" && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-3">
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 shrink-0" />
           <div className="text-xs sm:text-sm">
             <p className="font-bold">Payment Succeeded!</p>
-            <p className="text-emerald-300/80">
+            <p className="text-emerald-700/80 dark:text-emerald-300/80">
               Your Stripe payment {sessionIdParam ? `(ID: ${sessionIdParam.slice(0, 14)}...)` : ""} was confirmed. Your updated balance is reflected below.
             </p>
           </div>
@@ -111,28 +114,28 @@ function WalletPageContent() {
       )}
 
       {statusParam === "cancelled" && (
-        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center gap-3">
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center gap-3">
           <XCircle className="w-5 h-5 shrink-0" />
           <div className="text-xs sm:text-sm">
             <p className="font-bold">Checkout Cancelled</p>
-            <p className="text-amber-300/80">You can try topping up again whenever you are ready.</p>
+            <p className="text-amber-700/80 dark:text-amber-300/80">You can try topping up again whenever you are ready.</p>
           </div>
         </div>
       )}
 
       {/* Balance Card */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-[#0c1626] to-[#080d17] p-6 sm:p-8 shadow-xl">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#00a3ff]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-linear-to-br from-card to-muted/60 p-6 sm:p-8 shadow-sm">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold block mb-1">
+            <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground font-bold block mb-1">
               Available Credits
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-black text-white font-mono tracking-tight">
+              <span className="text-4xl sm:text-5xl font-black text-foreground font-mono tracking-tight">
                 {isLoading ? "..." : `€${balance.toFixed(2)}`}
               </span>
-              <span className="text-xs font-bold text-[#00a3ff] uppercase tracking-wider font-mono">
+              <span className="text-xs font-bold text-primary uppercase tracking-wider font-mono">
                 EUR
               </span>
             </div>
@@ -140,29 +143,29 @@ function WalletPageContent() {
 
           <button
             onClick={() => refresh()}
-            className="self-start sm:self-center px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-xs font-bold text-slate-200 border border-slate-700 transition-all flex items-center gap-2"
+            className="self-start sm:self-center px-4 py-2 rounded-xl bg-secondary hover:bg-secondary/80 text-xs font-bold text-secondary-foreground border border-border transition-all flex items-center gap-2 cursor-pointer shadow-xs"
           >
-            <Coins className="w-4 h-4 text-amber-400" />
+            <Coins className="w-4 h-4 text-amber-500" />
             Refresh Balance
           </button>
         </div>
       </div>
 
       {/* Deposit Section */}
-      <div className="rounded-2xl border border-slate-800 bg-[#0b1322] p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex items-center gap-3 pb-4 border-b border-slate-800/80">
-          <div className="w-10 h-10 rounded-xl bg-[#00a3ff]/15 border border-[#00a3ff]/20 flex items-center justify-center text-[#00a3ff]">
+      <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 space-y-6 shadow-sm">
+        <div className="flex items-center gap-3 pb-4 border-b border-border">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
             <CreditCard className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white tracking-wide">Instant Stripe Deposit</h2>
-            <p className="text-xs text-slate-400">All transactions processed in Euros (€). Minimum top-up is €1.</p>
+            <h2 className="text-lg font-bold text-foreground tracking-wide font-heading">Instant Stripe Deposit</h2>
+            <p className="text-xs text-muted-foreground">All transactions processed in Euros (€). Minimum top-up is €1.</p>
           </div>
         </div>
 
         {/* Quick Amount Buttons */}
         <div className="space-y-2.5">
-          <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+          <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-mono">
             1. Select Top-Up Amount
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -176,10 +179,11 @@ function WalletPageContent() {
                     setSelectedAmount(amt);
                     setCustomAmount("");
                   }}
-                  className={`py-3 px-4 rounded-xl border text-base font-mono font-bold transition-all ${isSelected
-                    ? "border-[#00a3ff] bg-[#00a3ff]/15 text-[#00a3ff] shadow-md shadow-[#00a3ff]/20"
-                    : "border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700 hover:text-white"
-                    }`}
+                  className={`py-3 px-4 rounded-xl border text-base font-mono font-bold transition-all cursor-pointer ${
+                    isSelected
+                      ? "border-primary bg-primary/10 text-primary shadow-xs ring-1 ring-primary/30"
+                      : "border-border bg-muted/40 text-foreground hover:border-primary/40 hover:bg-muted"
+                  }`}
                 >
                   €{amt}
                 </button>
@@ -190,18 +194,18 @@ function WalletPageContent() {
 
         {/* Custom Amount Field */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+          <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-mono">
             Or Enter Custom Amount (€)
           </label>
           <div className="relative max-w-xs">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">€</span>
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">€</span>
             <input
               type="number"
               min="1"
               step="5"
               value={customAmount}
               onChange={(e) => setCustomAmount(e.target.value)}
-              className="w-full bg-slate-900/90 border border-slate-700 rounded-xl py-2.5 pl-8 pr-4 text-white font-mono font-bold focus:outline-none focus:border-[#00a3ff]"
+              className="w-full bg-muted/40 border border-border rounded-xl py-2.5 pl-8 pr-4 text-foreground font-mono font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40"
               placeholder="e.g. 99"
             />
           </div>
@@ -209,17 +213,17 @@ function WalletPageContent() {
 
         {/* Features & Security */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-          <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-            <div className="text-xs text-slate-400 space-y-0.5">
-              <p className="font-bold text-slate-200">Strictly Compliant &amp; Secure</p>
+          <div className="p-4 rounded-xl bg-muted/30 border border-border flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+            <div className="text-xs text-muted-foreground space-y-0.5">
+              <p className="font-bold text-foreground">Strictly Compliant &amp; Secure</p>
               <p>Stripe checkout is hosted directly on Stripe's PCI-compliant servers. We never store or touch your card details.</p>
             </div>
           </div>
-          <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-start gap-3">
-            <Wallet className="w-5 h-5 text-[#00a3ff] shrink-0 mt-0.5" />
-            <div className="text-xs text-slate-400 space-y-0.5">
-              <p className="font-bold text-slate-200">Universal Ecosystem Access</p>
+          <div className="p-4 rounded-xl bg-muted/30 border border-border flex items-start gap-3">
+            <Wallet className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+            <div className="text-xs text-muted-foreground space-y-0.5">
+              <p className="font-bold text-foreground">Universal Ecosystem Access</p>
               <p>Wallet balance is shared with your account profile across all PGX apps and services seamlessly.</p>
             </div>
           </div>
@@ -229,7 +233,7 @@ function WalletPageContent() {
         <button
           onClick={handleTopUp}
           disabled={submitting || effectiveAmount < 1}
-          className="w-full sm:w-auto min-w-[260px] py-4 px-6 rounded-xl bg-[#00a3ff] hover:bg-[#008fdf] text-white font-black uppercase tracking-wider text-xs shadow-lg shadow-[#00a3ff]/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto min-w-[260px] py-3.5 px-6 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider text-xs shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? (
             <>

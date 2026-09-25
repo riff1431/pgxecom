@@ -12,60 +12,60 @@ export default function OrdersListPage() {
 
   return (
     <div className="space-y-6 text-left">
-      <header className="pb-4 border-b border-slate-800">
-        <span className="text-[10px] font-mono uppercase tracking-widest text-[#00a3ff] font-bold block mb-1">
+      <header className="pb-4 border-b border-border">
+        <span className="text-[10px] font-mono uppercase tracking-widest text-primary font-bold block mb-1">
           History & Invoices
         </span>
-        <h1 className="text-2xl sm:text-3xl font-mono font-black text-white uppercase tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-heading font-black text-foreground uppercase tracking-tight">
           Order History
         </h1>
-        <p className="text-xs text-slate-400 mt-1 font-mono">
+        <p className="text-xs text-muted-foreground mt-1 font-mono">
           Review past equipment orders, track shipments, and access invoices.
         </p>
       </header>
 
       {isLoading ? (
         <div className="space-y-3">
-           {Array.from({length: 4}).map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl bg-slate-900/80" />)}
+           {Array.from({length: 4}).map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl bg-muted/60" />)}
         </div>
       ) : orders.length === 0 ? (
-        <div className="py-16 text-center bg-[#080d16] rounded-2xl border border-dashed border-slate-800">
-          <p className="text-slate-400 font-medium">You haven't placed any orders yet.</p>
+        <div className="py-16 text-center bg-card rounded-2xl border border-dashed border-border">
+          <p className="text-muted-foreground font-medium">You haven&apos;t placed any orders yet.</p>
           <Link
             href="/products"
-            className="inline-block mt-3 text-xs font-mono font-bold text-[#00a3ff] uppercase tracking-wider hover:underline"
+            className="inline-block mt-3 text-xs font-mono font-bold text-primary uppercase tracking-wider hover:underline"
           >
             Explore Catalog &rarr;
           </Link>
         </div>
       ) : (
-        <div className="overflow-x-auto border border-slate-800 rounded-xl bg-[#080d16] shadow-sm">
+        <div className="overflow-x-auto border border-border rounded-xl bg-card shadow-xs">
           <table className="w-full text-left">
-            <thead className="bg-slate-900/80 border-b border-slate-800">
+            <thead className="bg-muted/50 border-b border-border">
               <tr>
-                <th className="font-mono uppercase tracking-wider text-xs p-4 text-slate-400 font-bold">Order #</th>
-                <th className="font-mono uppercase tracking-wider text-xs p-4 text-slate-400 font-bold">Date</th>
-                <th className="font-mono uppercase tracking-wider text-xs p-4 text-slate-400 font-bold">Status</th>
-                <th className="font-mono uppercase tracking-wider text-xs p-4 text-slate-400 font-bold text-right">Total</th>
+                <th className="font-mono uppercase tracking-wider text-xs p-4 text-muted-foreground font-bold">Order #</th>
+                <th className="font-mono uppercase tracking-wider text-xs p-4 text-muted-foreground font-bold">Date</th>
+                <th className="font-mono uppercase tracking-wider text-xs p-4 text-muted-foreground font-bold">Status</th>
+                <th className="font-mono uppercase tracking-wider text-xs p-4 text-muted-foreground font-bold text-right">Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/80">
+            <tbody className="divide-y divide-border">
               {orders.map((order) => {
-                 const statusConfig = ORDER_STATUSES[order.status] || { label: order.status, color: "bg-slate-800 text-slate-300" };
+                 const statusConfig = ORDER_STATUSES[order.status] || { label: order.status, color: "bg-secondary text-secondary-foreground" };
                  return (
-                  <tr key={order.id} className="hover:bg-slate-900/50 transition-colors">
+                  <tr key={order.id} className="hover:bg-muted/40 transition-colors">
                     <td className="p-4 font-mono font-bold text-sm">
-                      <Link href={`/my-account/orders/${order.id}`} className="text-[#00a3ff] hover:text-cyan-300 hover:underline">
+                      <Link href={`/my-account/orders/${order.id}`} className="text-primary hover:underline">
                         #{order.orderNumber}
                       </Link>
                     </td>
-                    <td className="p-4 text-sm text-slate-400 font-mono">{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td className="p-4 text-sm text-muted-foreground font-mono">{new Date(order.createdAt).toLocaleDateString()}</td>
                     <td className="p-4">
                        <Badge className={`${statusConfig.color} font-mono text-[10px] font-bold uppercase tracking-wider border-0`}>{statusConfig.label}</Badge>
                     </td>
-                    <td className="p-4 text-sm font-mono font-bold text-white text-right">
+                    <td className="p-4 text-sm font-mono font-bold text-foreground text-right">
                       {CURRENCY}{Number(order.total).toLocaleString()} 
-                      <div className="text-[10px] text-slate-500 font-normal font-sans">{order.items?.length || 0} items</div>
+                      <div className="text-[10px] text-muted-foreground font-normal font-sans">{order.items?.length || 0} items</div>
                     </td>
                   </tr>
                  );
