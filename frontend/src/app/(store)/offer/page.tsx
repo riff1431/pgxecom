@@ -1,10 +1,8 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { ProductCard } from "@/components/storefront/product/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
-import { CURRENCY } from "@/lib/constants";
-import { resolveImageUrl } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Tag } from "lucide-react";
 import Link from "next/link";
@@ -60,51 +58,7 @@ export default function OffersPage() {
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {products.map((product: any) => (
-              <Card
-                key={product.id}
-                className="group overflow-hidden border-border rounded-xl hover:shadow-md hover:border-primary/40 transition-all flex flex-col bg-card"
-              >
-                <div className="relative bg-muted/40 aspect-square flex items-center justify-center p-4">
-                  <div className="absolute top-2.5 left-2.5 bg-primary text-primary-foreground text-[10px] font-black uppercase px-2 py-0.5 rounded shadow-xs z-10">
-                    SALE
-                  </div>
-                  <Link
-                    href={`/product/${product.slug}`}
-                    className="block w-full h-full"
-                  >
-                    <img
-                      src={resolveImageUrl(product.images?.[0]?.url)}
-                      alt={product.name}
-                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 mix-blend-multiply"
-                    />
-                  </Link>
-                </div>
-                <CardContent className="p-5 flex flex-col justify-between flex-1">
-                  <div>
-                    <h3 className="font-mono font-bold text-card-foreground line-clamp-2 hover:text-primary transition-colors mb-2 text-sm uppercase">
-                      <Link href={`/product/${product.slug}`}>
-                        {product.name}
-                      </Link>
-                    </h3>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="font-mono font-black text-foreground text-lg">
-                        {CURRENCY}
-                        {Number(product.price).toFixed(2)}
-                      </span>
-                      <span className="text-xs text-muted-foreground line-through font-mono">
-                        {CURRENCY}
-                        {Number(product.comparePrice).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                  <Link
-                    href={`/product/${product.slug}`}
-                    className="w-full h-9 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground text-secondary-foreground text-xs font-bold uppercase tracking-wider flex items-center justify-center transition-colors mt-auto"
-                  >
-                    View Details
-                  </Link>
-                </CardContent>
-              </Card>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         )}
