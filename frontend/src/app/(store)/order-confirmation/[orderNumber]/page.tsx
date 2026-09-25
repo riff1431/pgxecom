@@ -10,7 +10,7 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ or
   const { orderNumber } = use(params);
 
   return (
-    <div className="min-h-[75vh] flex items-center justify-center py-16 px-4 bg-white">
+    <div className="min-h-[75vh] flex items-center justify-center py-16 px-4 bg-background">
       <div className="max-w-xl w-full text-center">
         <div className="flex justify-center mb-6">
           <Link href="/" className="inline-flex items-center">
@@ -26,12 +26,12 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ or
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 12, stiffness: 200 }}
-          className="w-20 h-20 bg-slate-900 border border-slate-800 text-[#00a3ff] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl"
+          className="w-20 h-20 bg-primary/10 border border-primary/25 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xs"
         >
           <CheckCircle2 className="w-10 h-10" />
         </motion.div>
 
-        <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#00a3ff]">
+        <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-primary">
           Order Processed
         </span>
 
@@ -39,7 +39,7 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ or
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-slate-900 font-mono mt-1 mb-4"
+          className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-foreground font-mono mt-1 mb-4"
         >
           Order Confirmed!
         </motion.h1>
@@ -48,24 +48,24 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ or
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-sm sm:text-base text-slate-600 mb-8 max-w-md mx-auto"
+          className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md mx-auto"
         >
-          Thank you for choosing PGX. Your order <span className="font-bold font-mono text-slate-950">#{orderNumber}</span> has been confirmed and scheduled for dispatch.
+          Thank you for choosing PGX. Your order <span className="font-bold font-mono text-foreground">#{orderNumber}</span> has been confirmed and scheduled for dispatch.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="group bg-[#f8fafc] border border-slate-200/90 rounded-2xl p-6 mb-10 text-left shadow-sm hover:shadow-md transition-shadow"
+          className="group bg-card border border-border rounded-2xl p-6 mb-10 text-left shadow-xs hover:shadow-sm transition-shadow"
         >
           <div className="flex items-start gap-4">
-            <div className="mt-0.5 bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-[#00a3ff] shrink-0">
+            <div className="mt-0.5 bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary shrink-0">
               <Package className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-mono font-bold uppercase text-xs tracking-wider text-slate-900">What Happens Next?</h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+              <h3 className="font-mono font-bold uppercase text-xs tracking-wider text-foreground">What Happens Next?</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
                 We are preparing your package for courier dispatch. You will receive real-time courier tracking details via email.
               </p>
             </div>
@@ -75,17 +75,17 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ or
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/shop"
-            className="w-full sm:w-auto h-12 px-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold text-xs uppercase tracking-wider flex items-center justify-center transition-colors"
+            className="w-full sm:w-auto h-12 px-8 rounded-lg bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold text-xs uppercase tracking-wider flex items-center justify-center transition-colors"
           >
             <ShoppingBag className="mr-2 h-4 w-4" />
             Continue Shopping
           </Link>
           <Link
             href={`/orders/track?orderNumber=${orderNumber}`}
-            className="w-full sm:w-auto h-12 px-8 rounded-lg bg-[#060b13] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-colors"
+            className="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-colors"
           >
             Track My Order
-            <ArrowRight className="ml-2 h-4 w-4 text-[#00a3ff]" />
+            <ArrowRight className="ml-2 h-4 w-4 text-primary-foreground" />
           </Link>
         </div>
       </div>

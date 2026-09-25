@@ -18,7 +18,7 @@ export function ShopFilters({
   return (
     <aside className="w-full md:w-64 shrink-0 space-y-6">
       <div>
-        <h3 className="font-semibold text-lg mb-4 text-gray-900 font-sans">
+        <h3 className="font-semibold text-lg mb-4 text-foreground font-sans">
           Categories
         </h3>
         <ul className="space-y-1">
@@ -27,8 +27,8 @@ export function ShopFilters({
               onClick={() => setActiveCategory("")}
               className={`text-sm w-full text-left px-3 py-2 rounded-lg transition-all font-medium ${
                 activeCategory === ""
-                  ? "bg-slate-900 text-white font-bold"
-                  : "text-slate-600 hover:bg-slate-100"
+                  ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               All Products

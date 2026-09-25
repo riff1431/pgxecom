@@ -24,50 +24,50 @@ function AccountLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <StoreSettingsProvider>
-      <div className="min-h-screen flex flex-col bg-[#060b13] text-slate-100">
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Navbar />
 
         <main className="flex-1 container mx-auto px-4 py-10 max-w-6xl">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Account Sidebar */}
             <aside className="w-full md:w-64 shrink-0">
-              <div className="bg-[#0b1322] rounded-2xl border border-slate-800 p-5 space-y-2 sticky top-24 shadow-xl">
-                <div className="px-2 mb-6 pb-4 border-b border-slate-800/80 flex items-center gap-3">
+              <div className="bg-card rounded-2xl border border-border p-5 space-y-2 sticky top-24 shadow-xs">
+                <div className="px-2 mb-6 pb-4 border-b border-border flex items-center gap-3">
                   <div className="min-w-0 flex-1">
-                    <span className="text-[9px] font-mono uppercase tracking-widest text-[#00a3ff] font-bold block truncate">
+                    <span className="text-[9px] font-mono uppercase tracking-widest text-primary font-bold block truncate">
                       PGX Athlete Hub
                     </span>
-                    <h2 className="font-mono font-black text-base text-white uppercase tracking-wide truncate">
+                    <h2 className="font-mono font-black text-base text-foreground uppercase tracking-wide truncate">
                       My Account
                     </h2>
-                    <p className="text-[11px] text-slate-400 truncate font-mono">
+                    <p className="text-[11px] text-muted-foreground truncate font-mono">
                       {user?.email}
                     </p>
                   </div>
                 </div>
-                <nav className="space-y-1.5">
+                <nav className="space-y-1">
                   {menuItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
                       <Link
                         key={item.name}
                         href={item.href}
-                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all ${isActive
-                          ? "bg-[#00a3ff] text-white shadow-lg shadow-[#00a3ff]/20 font-black"
-                          : "text-slate-400 hover:bg-slate-800/60 hover:text-white"
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold tracking-wide transition-all ${isActive
+                          ? "bg-primary text-primary-foreground shadow-xs font-bold"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
                           }`}
                       >
                         <item.icon
-                          className={`h-4 w-4 ${isActive ? "text-white" : "text-slate-400"}`}
+                          className={`h-4 w-4 ${isActive ? "text-primary-foreground" : "text-muted-foreground"}`}
                         />
                         {item.name}
                       </Link>
                     );
                   })}
-                  <div className="pt-3 mt-3 border-t border-slate-800/80">
+                  <div className="pt-3 mt-3 border-t border-border">
                     <button
                       onClick={logout}
-                      className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                      className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-destructive hover:bg-destructive/10 transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Logout
@@ -79,7 +79,7 @@ function AccountLayout({ children }: { children: React.ReactNode }) {
 
             {/* Account Main Content */}
             <div className="flex-1 min-w-0">
-              <div className="bg-[#0b1322] rounded-2xl border border-slate-800 p-6 sm:p-8 min-h-125 shadow-xl">
+              <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 min-h-125 shadow-xs">
                 {children}
               </div>
             </div>

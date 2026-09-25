@@ -45,7 +45,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
                 variant={currentPage === page ? "default" : "outline"}
                 size="sm"
                 onClick={() => onPageChange(page)}
-                className={`w-9 h-9 rounded-xl font-bold ${currentPage === page ? "bg-[#060b13] hover:bg-slate-800 text-white border-transparent" : "border-slate-200"}`}
+                className={`w-9 h-9 rounded-xl font-bold ${currentPage === page ? "bg-primary hover:bg-primary/90 text-primary-foreground border-transparent shadow-xs" : "border-border hover:bg-muted"}`}
               >
                 {page}
               </Button>

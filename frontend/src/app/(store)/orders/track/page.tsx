@@ -41,46 +41,46 @@ function TrackOrderContent() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl min-h-screen">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+        <h1 className="text-4xl font-bold text-foreground mb-4 tracking-tight font-mono">
           Track Your Order
         </h1>
-        <p className="text-gray-600 max-w-md mx-auto">
+        <p className="text-muted-foreground max-w-md mx-auto">
           See exactly where your package is and get real-time status updates.
         </p>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200/50 border border-gray-100 p-8 mb-10 transition-all">
+      <div className="bg-card rounded-2xl shadow-xs border border-border p-8 mb-10 transition-all">
         <form onSubmit={handleSearch} className="grid md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-bold text-gray-700 ml-1">
+            <label className="text-sm font-bold text-foreground ml-1">
               Order Number
             </label>
             <Input
               placeholder="e.g. ORD-2026..."
               value={orderNumber}
               onChange={(e) => setOrderNumber(e.target.value)}
-              className="h-14 rounded-2xl border-gray-200 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50/50"
+              className="h-12 rounded-xl border-border focus:ring-primary focus:border-primary bg-muted/30"
               required
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-bold text-gray-700 ml-1">
+            <label className="text-sm font-bold text-foreground ml-1">
               Phone Number
             </label>
             <Input
               placeholder="Enter your phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="h-14 rounded-2xl border-gray-200 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50/50"
+              className="h-12 rounded-xl border-border focus:ring-primary focus:border-primary bg-muted/30"
               required
             />
           </div>
           <div className="flex items-end">
             <Button
               type="submit"
-              className="w-full h-14 bg-[#060b13] hover:bg-slate-800 text-white rounded-2xl shadow-lg text-sm font-bold uppercase tracking-wider transition-all"
+              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-xs text-sm font-bold uppercase tracking-wider transition-all"
             >
-              <Search className="w-4 h-4 mr-2 text-[#00a3ff]" />
+              <Search className="w-4 h-4 mr-2" />
               Track Package
             </Button>
           </div>
@@ -89,20 +89,20 @@ function TrackOrderContent() {
 
       {isLoading && isSearched && (
         <div className="text-center py-20 animate-pulse">
-          <div className="h-16 w-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <div className="h-8 w-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+          <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <p className="text-gray-500 font-medium">Locating your package...</p>
+          <p className="text-muted-foreground font-medium">Locating your package...</p>
         </div>
       )}
 
       {error && isSearched && !isLoading && (
-        <div className="bg-red-50 border-2 border-red-100 text-red-700 p-8  text-center animate-in zoom-in-95 duration-300">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
+        <div className="bg-destructive/10 border border-destructive/20 text-destructive p-8 rounded-2xl text-center animate-in zoom-in-95 duration-300">
+          <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4 text-destructive">
             <Search className="w-8 h-8" />
           </div>
           <p className="text-xl font-bold">No Order Found</p>
-          <p className="text-sm mt-2 max-w-xs mx-auto text-red-600/80">
+          <p className="text-sm mt-2 max-w-xs mx-auto text-destructive/80">
             We couldn't find an order with that number and phone combination.
             Please double-check your inputs.
           </p>
@@ -112,23 +112,23 @@ function TrackOrderContent() {
       {order && (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           {/* Status Tracker */}
-          <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 md:p-12 shadow-sm">
+          <div className="bg-card rounded-2xl border border-border p-8 md:p-12 shadow-xs">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
               <div>
-                <p className="text-xs font-black uppercase tracking-widest text-emerald-600 mb-1">
+                <p className="text-xs font-black uppercase tracking-widest text-primary mb-1 font-mono">
                   Status Overview
                 </p>
-                <h2 className="text-3xl font-bold text-gray-900">
+                <h2 className="text-3xl font-bold text-foreground">
                   {order.status === "DELIVERED"
                     ? "Successfully Delivered"
                     : "In Progress"}
                 </h2>
               </div>
-              <div className="bg-gray-50 px-6 py-3 rounded-2xl border border-gray-100">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
+              <div className="bg-muted/40 px-6 py-3 rounded-xl border border-border">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1 font-mono">
                   Order Date
                 </p>
-                <p className="font-bold text-gray-900">
+                <p className="font-bold text-foreground">
                   {format(new Date(order.createdAt), "PPP")}
                 </p>
               </div>
