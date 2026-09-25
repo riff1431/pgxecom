@@ -27,10 +27,10 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <header className="flex items-end justify-between">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight font-mono uppercase">
+          <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight font-mono uppercase">
             Executive Summary
           </h1>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-1 font-mono">
+          <p className="text-muted-foreground font-bold uppercase tracking-widest text-[10px] mt-1 font-mono">
             Real-time business performance & operations
           </p>
         </div>

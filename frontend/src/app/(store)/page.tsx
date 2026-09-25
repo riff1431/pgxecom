@@ -186,7 +186,7 @@ export default function HomePage() {
       : SCREENSHOT_POPULAR_ESSENTIALS;
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-background min-h-screen">
       {/* 1. Hero Section */}
       <HeroSection />
 
@@ -194,20 +194,20 @@ export default function HomePage() {
       <QuickCategoriesBar />
 
       {/* 3. Featured Fitness Equipment Section */}
-      <section className="py-12 bg-white border-b border-slate-100">
+      <section className="py-12 bg-background border-b border-border/80">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-slate-900 font-mono">
+              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground font-mono">
                 Featured Fitness Equipment
               </h2>
-              <p className="text-slate-500 text-sm mt-0.5">
+              <p className="text-muted-foreground text-sm mt-0.5">
                 Top-rated equipment for your home, gym or office.
               </p>
             </div>
             <Link
               href="/shop?category=strength-equipment"
-              className="text-xs sm:text-sm font-bold text-[#00a3ff] hover:underline uppercase tracking-wider"
+              className="text-xs sm:text-sm font-bold text-primary hover:underline uppercase tracking-wider"
             >
               View All Equipment →
             </Link>
@@ -222,20 +222,20 @@ export default function HomePage() {
       </section>
 
       {/* 4. Popular Categories / Everyday Essentials Section */}
-      <section className="py-12 bg-white border-b border-slate-100">
+      <section className="py-12 bg-background border-b border-border/80">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-slate-900 font-mono">
+              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground font-mono">
                 Popular Categories
               </h2>
-              <p className="text-slate-500 text-sm mt-0.5">
+              <p className="text-muted-foreground text-sm mt-0.5">
                 Everyday essentials for your lifestyle.
               </p>
             </div>
             <Link
               href="/shop"
-              className="text-xs sm:text-sm font-bold text-[#00a3ff] hover:underline uppercase tracking-wider"
+              className="text-xs sm:text-sm font-bold text-primary hover:underline uppercase tracking-wider"
             >
               View All Products →
             </Link>

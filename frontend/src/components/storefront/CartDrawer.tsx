@@ -17,11 +17,11 @@ export function CartDrawer() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
-      <SheetContent className="w-full sm:max-w-lg flex flex-col pb-2">
+      <SheetContent className="w-full sm:max-w-lg flex flex-col pb-2 bg-background border-border">
         <SheetHeader className="pb-4">
           <SheetTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <ShoppingBag className="h-5 w-5 text-emerald-600" />
+            <span className="flex items-center gap-2 text-foreground font-bold">
+              <ShoppingBag className="h-5 w-5 text-primary" />
               Cart ({totalItems})
             </span>
             {items.length > 0 && (
@@ -29,7 +29,7 @@ export function CartDrawer() {
                 variant="ghost"
                 size="sm"
                 onClick={clearCart}
-                className="text-red-500 hover:text-red-600 hover:bg-red-50 text-xs"
+                className="text-destructive hover:text-destructive hover:bg-destructive/10 text-xs"
               >
                 Clear All
               </Button>
@@ -39,14 +39,14 @@ export function CartDrawer() {
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
-            <ShoppingBag className="h-16 w-16 text-gray-200 mb-4" />
-            <h3 className="font-medium text-gray-700 mb-1">Your cart is empty</h3>
-            <p className="text-sm text-gray-500 mb-6">
+            <ShoppingBag className="h-16 w-16 text-muted-foreground/30 mb-4" />
+            <h3 className="font-semibold text-foreground mb-1">Your cart is empty</h3>
+            <p className="text-sm text-muted-foreground mb-6">
               Add some products to get started
             </p>
             <Link
               href="/shop"
-              className={buttonVariants({ className: "bg-emerald-600 hover:bg-emerald-700" })}
+              className={buttonVariants({ variant: "default" })}
               onClick={closeCart}
             >
               Start Shopping
@@ -59,9 +59,9 @@ export function CartDrawer() {
                 {items.map((item) => (
                   <div
                     key={`${item.productId}-${item.variantId || ""}`}
-                    className="flex gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100"
+                    className="flex gap-3 p-3 rounded-xl bg-muted/40 border border-border"
                   >
-                    <div className="w-16 h-16 bg-gray-100 border border-gray-100 rounded-lg shrink-0 flex items-center justify-center text-gray-400 text-xs overflow-hidden">
+                    <div className="w-16 h-16 bg-muted border border-border rounded-lg shrink-0 flex items-center justify-center text-muted-foreground text-xs overflow-hidden">
                       {item.image ? (
                         <img
                           src={item.image}
@@ -74,15 +74,15 @@ export function CartDrawer() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm text-gray-800 truncate">
+                      <h4 className="font-semibold text-sm text-foreground truncate">
                         {item.name}
                       </h4>
                       {item.variantName && (
-                        <p className="text-xs text-gray-500">{item.variantName}</p>
+                        <p className="text-xs text-muted-foreground">{item.variantName}</p>
                       )}
                       <div className="flex items-center justify-between mt-2">
                         {/* Quantity */}
-                        <div className="flex items-center gap-1 border rounded-lg">
+                        <div className="flex items-center gap-1 border border-border rounded-lg bg-background">
                           <button
                             onClick={() =>
                               updateQuantity(
@@ -92,11 +92,11 @@ export function CartDrawer() {
                               )
                             }
                             disabled={item.quantity <= 1}
-                            className="p-1 hover:bg-gray-100 rounded-l-lg disabled:opacity-30"
+                            className="p-1 hover:bg-muted rounded-l-lg disabled:opacity-30 transition-colors"
                           >
-                            <Minus className="h-3 w-3" />
+                            <Minus className="h-3 w-3 text-muted-foreground" />
                           </button>
-                          <span className="text-sm font-medium w-8 text-center">
+                          <span className="text-sm font-semibold w-8 text-center text-foreground">
                             {item.quantity}
                           </span>
                           <button
@@ -107,14 +107,14 @@ export function CartDrawer() {
                                 item.variantId
                               )
                             }
-                            className="p-1 hover:bg-gray-100 rounded-r-lg"
+                            className="p-1 hover:bg-muted rounded-r-lg transition-colors"
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="h-3 w-3 text-muted-foreground" />
                           </button>
                         </div>
 
                         {/* Price */}
-                        <span className="font-semibold text-sm text-emerald-700">
+                        <span className="font-bold text-sm text-primary">
                           {CURRENCY}{item.price * item.quantity}
                         </span>
                       </div>
@@ -123,7 +123,7 @@ export function CartDrawer() {
                     {/* Remove */}
                     <button
                       onClick={() => removeItem(item.productId, item.variantId)}
-                      className="p-1 h-fit text-gray-400 hover:text-red-500 transition-colors"
+                      className="p-1 h-fit text-muted-foreground hover:text-destructive transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -132,14 +132,14 @@ export function CartDrawer() {
               </div>
             </ScrollArea>
 
-            <div className="pt-4 px-6 border-t space-y-3">
+            <div className="pt-4 px-6 border-t border-border space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal</span>
-                <span className="font-semibold">
+                <span className="text-muted-foreground">Subtotal</span>
+                <span className="font-bold text-foreground">
                   {CURRENCY}{subtotal.toFixed(0)}
                 </span>
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Shipping calculated at checkout
               </p>
 
@@ -153,7 +153,7 @@ export function CartDrawer() {
                 </Link>
                 <Link
                   href="/checkout"
-                  className={buttonVariants({ className: "w-full bg-emerald-600 hover:bg-emerald-700" })}
+                  className={buttonVariants({ variant: "default", className: "w-full font-bold" })}
                   onClick={closeCart}
                 >
                   Checkout

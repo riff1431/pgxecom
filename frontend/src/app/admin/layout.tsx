@@ -77,13 +77,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   const isSettingsActive = pathname.startsWith("/admin/settings");
 
   return (
-    <div className="dark min-h-screen bg-[#060b13] text-slate-100 flex">
-      <SidebarProvider className="bg-[#060b13] text-slate-100 min-h-screen w-full">
+    <div className="min-h-screen bg-muted/30 text-foreground flex">
+      <SidebarProvider className="bg-muted/30 text-foreground min-h-screen w-full">
         <Sidebar
-          className="border-r border-slate-800/80 bg-[#070d18] text-slate-200"
+          className="border-r border-border bg-card text-card-foreground shadow-xs"
         >
           {/* Logo Header */}
-          <SidebarHeader className="h-20 flex items-center justify-center border-b border-slate-800/80 px-6 bg-[#070d18]">
+          <SidebarHeader className="h-20 flex items-center justify-center border-b border-border px-6 bg-card">
             <Link
               href="/admin"
               className="flex items-center justify-center w-full py-2 hover:opacity-90 transition-opacity"
@@ -91,19 +91,19 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               <img
                 src={logoUrl}
                 alt="PGX Admin Logo"
-                className="h-10 w-auto max-h-12 max-w-[160px] object-contain shrink-0 drop-shadow-[0_2px_12px_rgba(0,163,255,0.15)]"
+                className="h-10 w-auto max-h-12 max-w-[160px] object-contain shrink-0"
               />
             </Link>
           </SidebarHeader>
 
           {/* Navigation Menu */}
-          <SidebarContent className="bg-[#070d18] px-3 py-4">
+          <SidebarContent className="bg-card px-3 py-4">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#00a3ff] px-3 mb-2">
+              <SidebarGroupLabel className="text-[11px] font-mono font-bold uppercase tracking-widest text-primary px-3 mb-2">
                 Administration
               </SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu className="space-y-1.5">
+                <SidebarMenu className="space-y-1">
                   {menuItems.map((item) => {
                     const isActive =
                       pathname === item.href ||
@@ -117,20 +117,20 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                           tooltip={item.label}
                           className={`w-full h-10 rounded-xl px-3.5 text-xs font-semibold tracking-wide transition-all ${
                             isActive
-                              ? "bg-gradient-to-r from-[#00a3ff]/20 to-[#00a3ff]/10 text-white font-bold border border-[#00a3ff]/40 shadow-[0_0_15px_rgba(0,163,255,0.2)] hover:bg-[#00a3ff]/25 hover:text-white"
-                              : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent"
+                              ? "bg-primary/10 text-primary font-bold border border-primary/25 shadow-xs hover:bg-primary/15"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent"
                           }`}
                         >
                           <item.icon
                             className={`w-4 h-4 transition-colors shrink-0 ${
                               isActive
-                                ? "text-[#00a3ff] stroke-[2.2]"
-                                : "text-slate-400 group-hover:text-slate-200"
+                                ? "text-primary stroke-[2.2]"
+                                : "text-muted-foreground group-hover:text-foreground"
                             }`}
                           />
                           <span className="flex-1 truncate text-left">{item.label}</span>
                           {isActive && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#00a3ff] shadow-[0_0_6px_#00a3ff] shrink-0" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                           )}
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -145,27 +145,27 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       tooltip="Settings"
                       className={`w-full h-10 rounded-xl px-3.5 text-xs font-semibold tracking-wide transition-all ${
                         isSettingsActive
-                          ? "bg-gradient-to-r from-[#00a3ff]/20 to-[#00a3ff]/10 text-white font-bold border border-[#00a3ff]/40 shadow-[0_0_15px_rgba(0,163,255,0.2)]"
-                          : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent"
+                          ? "bg-primary/10 text-primary font-bold border border-primary/25 shadow-xs"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent"
                       }`}
                     >
                       <Settings
                         className={`w-4 h-4 transition-colors shrink-0 ${
                           isSettingsActive
-                            ? "text-[#00a3ff] stroke-[2.2]"
-                            : "text-slate-400 group-hover:text-slate-200"
+                            ? "text-primary stroke-[2.2]"
+                            : "text-muted-foreground group-hover:text-foreground"
                         }`}
                       />
                       <span className="flex-1 truncate text-left">Settings</span>
                       <ChevronDown
-                        className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
-                          settingsOpen ? "rotate-180 text-white" : ""
+                        className={`w-3.5 h-3.5 text-muted-foreground transition-transform duration-200 ${
+                          settingsOpen ? "rotate-180 text-foreground" : ""
                         }`}
                       />
                     </SidebarMenuButton>
 
                     {settingsOpen && (
-                      <SidebarMenuSub className="mt-1 space-y-1 border-l-2 border-slate-800/80 ml-5 pl-2.5">
+                      <SidebarMenuSub className="mt-1 space-y-1 border-l-2 border-border ml-5 pl-2.5">
                         {settingsSubmenu.map((sub) => {
                           const isSubActive =
                             sub.href === "/admin/settings"
@@ -179,13 +179,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                                 isActive={isSubActive}
                                 className={`w-full h-8 rounded-lg px-2.5 text-xs font-medium transition-all flex items-center gap-2 ${
                                   isSubActive
-                                    ? "bg-[#00a3ff]/15 text-[#00a3ff] font-bold border border-[#00a3ff]/30 shadow-[0_0_10px_rgba(0,163,255,0.15)]"
-                                    : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-transparent"
+                                    ? "bg-primary/15 text-primary font-bold border border-primary/30"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent"
                                 }`}
                               >
                                 <sub.icon
                                   className={`w-3.5 h-3.5 shrink-0 ${
-                                    isSubActive ? "text-[#00a3ff]" : "text-slate-400"
+                                    isSubActive ? "text-primary" : "text-muted-foreground"
                                   }`}
                                 />
                                 <span className="truncate">{sub.label}</span>
@@ -202,20 +202,20 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </SidebarContent>
 
           {/* Footer Navigation */}
-          <SidebarFooter className="border-t border-slate-800/80 bg-[#050911] p-3">
+          <SidebarFooter className="border-t border-border bg-card p-3">
             <div className="grid grid-cols-2 gap-2">
               <SidebarMenuButton
                 render={<Link href="/" target="_blank" />}
                 tooltip="Storefront"
-                className="h-9 w-full text-slate-300 hover:text-white hover:bg-slate-800/70 rounded-lg text-xs font-medium border border-slate-800 flex items-center justify-center gap-2 px-2"
+                className="h-9 w-full text-foreground/80 hover:text-foreground hover:bg-muted rounded-lg text-xs font-medium border border-border flex items-center justify-center gap-2 px-2 shadow-2xs"
               >
-                <Store className="w-4 h-4 text-[#00a3ff] shrink-0" />
+                <Store className="w-4 h-4 text-primary shrink-0" />
                 <span className="truncate">Storefront</span>
               </SidebarMenuButton>
 
               <SidebarMenuButton
                 onClick={logout}
-                className="h-9 w-full text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg text-xs font-medium border border-red-500/20 flex items-center justify-center gap-1.5 px-2"
+                className="h-9 w-full text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg text-xs font-medium border border-destructive/20 flex items-center justify-center gap-1.5 px-2"
                 tooltip="Logout"
               >
                 <LogOut className="w-4 h-4 shrink-0" />
@@ -225,12 +225,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </SidebarFooter>
         </Sidebar>
 
-        <SidebarInset className="bg-[#060b13] text-slate-100 flex-1 flex flex-col min-w-0 border-l border-slate-800/60">
-          <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-slate-800/80 px-6 bg-[#060b13]/90 backdrop-blur sticky top-0 z-30">
+        <SidebarInset className="bg-muted/20 text-foreground flex-1 flex flex-col min-w-0 border-l border-border">
+          <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border px-6 bg-background/95 backdrop-blur sticky top-0 z-30">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg" />
-              <div className="h-4 w-px bg-slate-800 hidden sm:block" />
-              <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 font-semibold hidden sm:inline-block">
+              <SidebarTrigger className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg" />
+              <div className="h-4 w-px bg-border hidden sm:block" />
+              <span className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground font-semibold hidden sm:inline-block">
                 Store Console
               </span>
             </div>
@@ -238,14 +238,14 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               <Link
                 href="/"
                 target="_blank"
-                className="text-xs font-bold text-[#00a3ff] hover:underline uppercase tracking-wider flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#00a3ff]/30 hover:bg-[#00a3ff]/10 transition-colors"
+                className="text-xs font-bold text-primary hover:underline uppercase tracking-wider flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/30 hover:bg-primary/10 transition-colors"
               >
                 <Store className="w-3.5 h-3.5" />
                 Live Store
               </Link>
             </div>
           </header>
-          <main className="flex-1 overflow-auto p-4 lg:p-8 bg-[#060b13] text-slate-100">
+          <main className="flex-1 overflow-auto p-4 lg:p-8 bg-muted/20 text-foreground">
             {children}
           </main>
         </SidebarInset>

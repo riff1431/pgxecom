@@ -68,34 +68,34 @@ export function WalletPill({ className = "", compact = false }: WalletPillProps)
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className={`inline-flex items-center gap-1.5 rounded-full border border-slate-700/80 bg-slate-900/90 hover:bg-slate-800/90 hover:border-[#00a3ff]/50 transition-all duration-200 group shadow-sm ${compact ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-xs sm:text-sm"
+        className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-background hover:bg-muted hover:border-primary/50 transition-all duration-200 group shadow-xs ${compact ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-xs sm:text-sm"
           } ${className}`}
         title="Universal Wallet Balance - Click to top up"
       >
-        <Coins size={compact ? 13 : 15} className="text-amber-400 group-hover:rotate-12 transition-transform" />
-        <span className="font-bold text-white tracking-wide">
+        <Coins size={compact ? 13 : 15} className="text-amber-500 group-hover:rotate-12 transition-transform" />
+        <span className="font-bold text-foreground tracking-wide">
           {isLoading ? "..." : `€${balance.toFixed(2)}`}
         </span>
-        <span className="flex items-center justify-center w-4 h-4 rounded-full bg-[#00a3ff]/20 text-[#00a3ff] group-hover:bg-[#00a3ff] group-hover:text-white transition-all ml-0.5">
+        <span className="flex items-center justify-center w-4 h-4 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all ml-0.5">
           <Plus size={10} strokeWidth={3} />
         </span>
       </button>
 
       {/* Top-Up Modal */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="bg-[#0b1322] border-slate-800 text-white max-w-md sm:rounded-2xl p-6 shadow-2xl">
+        <DialogContent className="bg-popover border-border text-popover-foreground max-w-md sm:rounded-2xl p-6 shadow-xl">
           <DialogHeader className="space-y-1">
-            <div className="flex items-center gap-2 text-[#00a3ff] font-mono text-xs font-bold uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Universal Wallet Top-Up</span>
             </div>
-            <DialogTitle className="text-xl font-bold tracking-tight text-white flex items-center justify-between">
+            <DialogTitle className="text-xl font-bold tracking-tight text-foreground flex items-center justify-between">
               <span>Deposit Funds</span>
-              <span className="text-sm font-normal text-slate-400 font-mono">
-                Current: <strong className="text-white">€{balance.toFixed(2)}</strong>
+              <span className="text-sm font-normal text-muted-foreground font-mono">
+                Current: <strong className="text-foreground">€{balance.toFixed(2)}</strong>
               </span>
             </DialogTitle>
-            <DialogDescription className="text-xs text-slate-400">
+            <DialogDescription className="text-xs text-muted-foreground">
               Top up via Stripe to instantly credit your shared balance across all PGX services.
             </DialogDescription>
           </DialogHeader>

@@ -16,7 +16,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-[#060b13] text-slate-300 border-t border-slate-800 text-xs">
+    <footer className="bg-muted/40 text-muted-foreground border-t border-border text-xs">
       {/* Main Links & Info */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
@@ -29,7 +29,7 @@ export function Footer() {
                 className="h-10 sm:h-12 w-auto object-contain"
               />
             </Link>
-            <p className="text-slate-400 font-medium">
+            <p className="text-muted-foreground font-medium">
               A Lifestyle That Moves With You.
             </p>
 
@@ -46,7 +46,7 @@ export function Footer() {
                   href={s.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 hover:border-[#00a3ff] text-slate-400 hover:text-white flex items-center justify-center font-bold text-[11px] transition-colors"
+                  className="w-8 h-8 rounded-lg bg-background border border-border hover:border-primary text-muted-foreground hover:text-primary flex items-center justify-center font-bold text-[11px] transition-colors shadow-2xs"
                 >
                   {s.name}
                 </a>
@@ -56,32 +56,32 @@ export function Footer() {
 
           {/* Shop Column (2 cols) */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="font-bold text-white uppercase tracking-wider text-xs font-mono">
+            <h4 className="font-bold text-foreground uppercase tracking-wider text-xs font-mono">
               Shop
             </h4>
-            <ul className="space-y-2 text-slate-400">
+            <ul className="space-y-2 text-muted-foreground">
               <li>
-                <Link href="/shop?category=cardio-equipment" className="hover:text-white transition-colors">
+                <Link href="/shop?category=cardio-equipment" className="hover:text-foreground transition-colors">
                   Cardio Equipment
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=strength-equipment" className="hover:text-white transition-colors">
+                <Link href="/shop?category=strength-equipment" className="hover:text-foreground transition-colors">
                   Strength Equipment
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=home-gym" className="hover:text-white transition-colors">
+                <Link href="/shop?category=home-gym" className="hover:text-foreground transition-colors">
                   Home Gym
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=apparel" className="hover:text-white transition-colors">
+                <Link href="/shop?category=apparel" className="hover:text-foreground transition-colors">
                   Apparel
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=accessories" className="hover:text-white transition-colors">
+                <Link href="/shop?category=accessories" className="hover:text-foreground transition-colors">
                   Accessories
                 </Link>
               </li>
@@ -90,32 +90,32 @@ export function Footer() {
 
           {/* Support Column (2 cols) */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="font-bold text-white uppercase tracking-wider text-xs font-mono">
+            <h4 className="font-bold text-foreground uppercase tracking-wider text-xs font-mono">
               Support
             </h4>
-            <ul className="space-y-2 text-slate-400">
+            <ul className="space-y-2 text-muted-foreground">
               <li>
-                <Link href="/orders/track?orderNumber=" className="hover:text-white transition-colors">
+                <Link href="/orders/track?orderNumber=" className="hover:text-foreground transition-colors">
                   Track Order
                 </Link>
               </li>
               <li>
-                <Link href="/shipping-policy" className="hover:text-white transition-colors">
+                <Link href="/shipping-policy" className="hover:text-foreground transition-colors">
                   Shipping
                 </Link>
               </li>
               <li>
-                <Link href="/return-refund-policy" className="hover:text-white transition-colors">
+                <Link href="/return-refund-policy" className="hover:text-foreground transition-colors">
                   Returns
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="hover:text-white transition-colors">
+                <Link href="/faq" className="hover:text-foreground transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/contact-us" className="hover:text-white transition-colors">
+                <Link href="/contact-us" className="hover:text-foreground transition-colors">
                   Contact Us
                 </Link>
               </li>
@@ -124,32 +124,32 @@ export function Footer() {
 
           {/* Company Column (2 cols) */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="font-bold text-white uppercase tracking-wider text-xs font-mono">
+            <h4 className="font-bold text-foreground uppercase tracking-wider text-xs font-mono">
               Company
             </h4>
-            <ul className="space-y-2 text-slate-400">
+            <ul className="space-y-2 text-muted-foreground">
               <li>
-                <Link href="/about-us" className="hover:text-white transition-colors">
+                <Link href="/about-us" className="hover:text-foreground transition-colors">
                   About PGX
                 </Link>
               </li>
               <li>
-                <Link href="/sustainability" className="hover:text-white transition-colors">
+                <Link href="/sustainability" className="hover:text-foreground transition-colors">
                   Sustainability
                 </Link>
               </li>
               <li>
-                <Link href="/career" className="hover:text-white transition-colors">
+                <Link href="/career" className="hover:text-foreground transition-colors">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="hover:text-white transition-colors">
+                <Link href="/blog" className="hover:text-foreground transition-colors">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/affiliate" className="hover:text-white transition-colors">
+                <Link href="/affiliate" className="hover:text-foreground transition-colors">
                   Affiliate Program
                 </Link>
               </li>
@@ -158,10 +158,10 @@ export function Footer() {
 
           {/* Newsletter Column (2 cols) */}
           <div className="lg:col-span-2 space-y-3">
-            <h4 className="font-bold text-white uppercase tracking-wider text-xs font-mono">
+            <h4 className="font-bold text-foreground uppercase tracking-wider text-xs font-mono">
               Join Our Newsletter
             </h4>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
               Get exclusive offers, new products and fitness tips.
             </p>
             <form onSubmit={handleSubscribe} className="space-y-2">
@@ -171,11 +171,11 @@ export function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#00a3ff] text-xs"
+                className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 text-xs shadow-2xs"
               />
               <button
                 type="submit"
-                className="w-full py-2 rounded-lg bg-[#00a3ff] hover:bg-[#0091e6] text-slate-950 font-bold text-xs uppercase tracking-wider transition-colors active:scale-95"
+                className="w-full py-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider transition-colors active:scale-95 shadow-2xs"
               >
                 Subscribe
               </button>
@@ -185,24 +185,24 @@ export function Footer() {
       </div>
 
       {/* Bottom Sub-footer */}
-      <div className="border-t border-slate-800/80 bg-[#04070d] py-5">
-        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+      <div className="border-t border-border bg-muted/70 py-5">
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted-foreground">
           <div>© 2026 PGX. All rights reserved.</div>
 
           <div className="flex items-center gap-4 flex-wrap">
-            <Link href="/privacy-policy" className="hover:text-slate-400">
+            <Link href="/privacy-policy" className="hover:text-foreground">
               Privacy Policy
             </Link>
             <span>|</span>
-            <Link href="/terms-of-service" className="hover:text-slate-400">
+            <Link href="/terms-of-service" className="hover:text-foreground">
               Terms of Service
             </Link>
             <span>|</span>
-            <Link href="/shipping-policy" className="hover:text-slate-400">
+            <Link href="/shipping-policy" className="hover:text-foreground">
               Shipping Policy
             </Link>
             <span>|</span>
-            <div className="flex items-center gap-1 cursor-pointer hover:text-slate-400">
+            <div className="flex items-center gap-1 cursor-pointer hover:text-foreground">
               <span>EN</span>
               <ChevronDown className="w-3 h-3" />
             </div>

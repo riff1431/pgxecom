@@ -34,13 +34,13 @@ export function HeaderSearch() {
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full max-w-md">
-      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       <input
         type="text"
         value={localSearch}
         onChange={(e) => setLocalSearch(e.target.value)}
         placeholder="Search products..."
-        className="w-full pl-10 pr-4 py-2 rounded-lg bg-[#0e1726]/80 text-white placeholder-slate-400 border border-slate-700/80 focus:border-[#00a3ff] focus:ring-1 focus:ring-[#00a3ff] outline-none transition-all text-xs sm:text-sm"
+        className="w-full pl-10 pr-4 py-2 rounded-lg bg-muted/50 text-foreground placeholder:text-muted-foreground border border-border focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 outline-none transition-all text-xs sm:text-sm font-medium"
       />
     </form>
   );

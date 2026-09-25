@@ -47,24 +47,24 @@ export function StatsCards({ stats }: StatsCardsProps) {
       {items.map((stat) => (
         <Card
           key={stat.title}
-          className="border-slate-800 bg-[#0b1322] shadow-sm hover:border-slate-700 transition-all text-slate-100"
+          className="border-border bg-card shadow-xs hover:shadow-sm hover:border-primary/40 transition-all text-card-foreground"
         >
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <div
-                className={`w-10 h-10 rounded-xl flex items-center justify-center bg-slate-900 border border-slate-800 text-${stat.color}-400`}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-primary`}
               >
                 <stat.icon className="h-5 w-5" />
               </div>
               <Badge
                 variant="secondary"
-                className="text-xs font-mono font-semibold bg-slate-800/80 text-slate-300 border border-slate-700/60"
+                className="text-xs font-mono font-semibold bg-muted text-muted-foreground border border-border"
               >
                 {stat.change}
               </Badge>
             </div>
-            <p className="text-2xl font-black text-white font-mono">{stat.value}</p>
-            <p className="text-xs text-slate-400 mt-1 uppercase font-mono tracking-wider font-semibold">
+            <p className="text-2xl font-black text-foreground font-mono">{stat.value}</p>
+            <p className="text-xs text-muted-foreground mt-1 uppercase font-mono tracking-wider font-semibold">
               {stat.title}
             </p>
           </CardContent>

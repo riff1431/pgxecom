@@ -26,19 +26,19 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
 
   return (
     <div
-      className={`group bg-white rounded-xl border border-slate-200/90 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-300 flex ${
+      className={`group bg-card rounded-xl border border-border/80 overflow-hidden hover:shadow-md hover:border-primary/40 transition-all duration-300 flex ${
         isList ? "flex-row items-center gap-6 p-4" : "flex-col"
       }`}
     >
       {/* Product Image Container */}
       <div
-        className={`relative bg-[#f8fafc] overflow-hidden flex items-center justify-center ${
+        className={`relative bg-muted/30 overflow-hidden flex items-center justify-center ${
           isList ? "w-44 h-44 shrink-0 rounded-lg" : "w-full aspect-square"
         }`}
       >
         {product.comparePrice &&
           Number(product.comparePrice) > Number(product.price) && (
-            <div className="absolute top-2.5 left-2.5 bg-[#00a3ff] text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded shadow-sm z-10">
+            <div className="absolute top-2.5 left-2.5 bg-primary text-primary-foreground text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs z-10 tracking-wider">
               SALE
             </div>
           )}
@@ -62,39 +62,39 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
       <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between gap-3">
         <div>
           {/* Title */}
-          <h3 className="font-bold text-sm sm:text-[15px] text-slate-900 line-clamp-1 hover:text-[#00a3ff] transition-colors mb-1 font-sans">
+          <h3 className="font-bold text-sm sm:text-[15px] text-foreground line-clamp-1 hover:text-primary transition-colors mb-1 font-sans">
             <Link href={`/product/${product.slug}`}>{product.name}</Link>
           </h3>
 
           {/* Specs / Badges */}
           {specs && (
-            <p className="text-[11px] text-slate-500 line-clamp-1 mb-1.5 font-medium">
+            <p className="text-[11px] text-muted-foreground line-clamp-1 mb-1.5 font-medium">
               {specs}
             </p>
           )}
 
           {/* Stars & Reviews */}
           <div className="flex items-center gap-1 mb-2">
-            <div className="flex items-center text-amber-400">
+            <div className="flex items-center text-amber-500">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
                   className={`w-3 h-3 ${
                     i < Math.floor(rating)
-                      ? "fill-amber-400 text-amber-400"
-                      : "text-slate-300"
+                      ? "fill-amber-500 text-amber-500"
+                      : "text-muted/80"
                   }`}
                 />
               ))}
             </div>
-            <span className="text-[11px] text-slate-400 font-medium ml-1">
+            <span className="text-[11px] text-muted-foreground font-medium ml-1">
               ({reviewCount})
             </span>
           </div>
 
           {/* Price */}
           <div className="flex items-baseline gap-2">
-            <span className="font-black text-slate-900 text-base sm:text-lg">
+            <span className="font-black text-foreground text-base sm:text-lg">
               {CURRENCY}
               {Number(product.price).toLocaleString("en-US", {
                 minimumFractionDigits: 2,
@@ -103,7 +103,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             </span>
             {product.comparePrice &&
               Number(product.comparePrice) > Number(product.price) && (
-                <span className="text-xs text-slate-400 line-through font-medium">
+                <span className="text-xs text-muted-foreground line-through font-medium">
                   {CURRENCY}
                   {Number(product.comparePrice).toLocaleString("en-US", {
                     minimumFractionDigits: 2,
@@ -125,7 +125,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
               image: imageUrl,
             })
           }
-          className="w-full py-2 px-3 rounded-lg bg-[#060b13] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-colors active:scale-[0.98]"
+          className="w-full py-2 px-3 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider transition-colors active:scale-[0.98] shadow-xs"
         >
           Add to Cart
         </button>

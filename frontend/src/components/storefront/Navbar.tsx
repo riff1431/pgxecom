@@ -86,47 +86,47 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#060b13] border-b border-slate-800 text-white select-none">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border text-foreground select-none">
       {/* Top Announcement Bar */}
-      <div className="bg-[#02060d] border-b border-slate-800/80 text-[11px] sm:text-xs text-slate-300 py-1.5 px-4 tracking-wide font-medium">
+      <div className="bg-muted/60 border-b border-border/80 text-[11px] sm:text-xs text-muted-foreground py-1.5 px-4 tracking-wide font-medium">
         <div className="container mx-auto flex flex-wrap justify-between items-center gap-2">
           {/* Left Highlights */}
           <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
-            <span className="flex items-center gap-1.5 text-slate-200">
-              <Globe className="w-3.5 h-3.5 text-[#00a3ff]" />
+            <span className="flex items-center gap-1.5 text-foreground/80 font-medium">
+              <Globe className="w-3.5 h-3.5 text-primary" />
               Worldwide Shipping
             </span>
-            <span className="hidden md:inline-block text-slate-700">|</span>
-            <span className="flex items-center gap-1.5 text-slate-200">
-              <Truck className="w-3.5 h-3.5 text-[#00a3ff]" />
+            <span className="hidden md:inline-block text-border">|</span>
+            <span className="flex items-center gap-1.5 text-foreground/80 font-medium">
+              <Truck className="w-3.5 h-3.5 text-primary" />
               Free Shipping on Orders Over €50
             </span>
-            <span className="hidden lg:inline-block text-slate-700">|</span>
-            <span className="hidden lg:inline-block text-slate-400 italic">
+            <span className="hidden lg:inline-block text-border">|</span>
+            <span className="hidden lg:inline-block text-muted-foreground italic">
               A Healthier, Stronger You
             </span>
           </div>
 
           {/* Right Links */}
-          <div className="flex items-center gap-4 text-slate-400">
+          <div className="flex items-center gap-4 text-muted-foreground">
             <Link
               href="/orders/track?orderNumber="
-              className="hover:text-white transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Track Order
             </Link>
-            <span className="text-slate-700">|</span>
-            <Link href="/contact-us" className="hover:text-white transition-colors">
+            <span className="text-border">|</span>
+            <Link href="/contact-us" className="hover:text-foreground transition-colors">
               Help
             </Link>
-            <span className="text-slate-700">|</span>
-            <Link href="/contact-us" className="hover:text-white transition-colors">
+            <span className="text-border">|</span>
+            <Link href="/contact-us" className="hover:text-foreground transition-colors">
               Contact
             </Link>
-            <span className="text-slate-700">|</span>
-            <div className="flex items-center gap-1 cursor-pointer text-slate-300 hover:text-white">
+            <span className="text-border">|</span>
+            <div className="flex items-center gap-1 cursor-pointer text-foreground/80 hover:text-foreground">
               <span>EN</span>
-              <ChevronDown className="w-3 h-3 text-slate-400" />
+              <ChevronDown className="w-3 h-3 text-muted-foreground" />
             </div>
           </div>
         </div>
@@ -148,16 +148,16 @@ export function Navbar() {
           {navLinks.map((link) =>
             link.children ? (
               <DropdownMenu key={link.title}>
-                <DropdownMenuTrigger className="px-3 py-1.5 rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center gap-1 outline-none">
+                <DropdownMenuTrigger className="px-3 py-1.5 rounded-md text-foreground/80 hover:text-foreground hover:bg-muted transition-colors flex items-center gap-1 outline-none">
                   {link.title}
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                  <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#0b121f] border border-slate-800 text-white min-w-[180px] shadow-2xl py-1.5">
+                <DropdownMenuContent className="bg-popover border border-border text-popover-foreground min-w-[180px] shadow-lg py-1.5">
                   {link.children.map((sub) => (
                     <DropdownMenuItem
                       key={sub.title}
                       onClick={() => router.push(sub.href)}
-                      className="cursor-pointer text-xs text-slate-300 hover:text-white hover:bg-[#152033] py-2 px-3"
+                      className="cursor-pointer text-xs text-foreground/80 hover:text-foreground hover:bg-muted py-2 px-3"
                     >
                       {sub.title}
                     </DropdownMenuItem>
@@ -168,7 +168,7 @@ export function Navbar() {
               <Link
                 key={link.title}
                 href={link.href}
-                className="px-3 py-1.5 rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                className="px-3 py-1.5 rounded-md text-foreground/80 hover:text-foreground hover:bg-muted transition-colors"
               >
                 {link.title}
               </Link>
@@ -189,47 +189,47 @@ export function Navbar() {
           {/* User Account */}
           {isAuthenticated ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors outline-none">
+              <DropdownMenuTrigger className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-muted transition-colors outline-none">
                 <User className="w-5 h-5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-[#0b121f] border border-slate-800 text-white min-w-[200px]"
+                className="bg-popover border border-border text-popover-foreground min-w-[200px] shadow-lg"
               >
-                <div className="px-3 py-2 text-xs border-b border-slate-800">
-                  <p className="font-semibold text-white truncate">{user?.name}</p>
-                  <p className="text-slate-400 truncate">{user?.email}</p>
+                <div className="px-3 py-2 text-xs border-b border-border">
+                  <p className="font-semibold text-foreground truncate">{user?.name}</p>
+                  <p className="text-muted-foreground truncate">{user?.email}</p>
                 </div>
                 <DropdownMenuItem
                   onClick={() => router.push("/my-account")}
-                  className="cursor-pointer text-xs hover:bg-[#152033] py-2"
+                  className="cursor-pointer text-xs hover:bg-muted py-2"
                 >
                   My Account
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => router.push("/my-account/wallet")}
-                  className="cursor-pointer text-xs hover:bg-[#152033] py-2 font-semibold text-[#00a3ff]"
+                  className="cursor-pointer text-xs hover:bg-muted py-2 font-semibold text-primary"
                 >
                   Wallet &amp; Top-Up
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => router.push("/orders")}
-                  className="cursor-pointer text-xs hover:bg-[#152033] py-2"
+                  className="cursor-pointer text-xs hover:bg-muted py-2"
                 >
                   Order History
                 </DropdownMenuItem>
                 {isAdmin && (
                   <DropdownMenuItem
                     onClick={() => router.push("/admin")}
-                    className="cursor-pointer text-xs text-[#00a3ff] font-medium hover:bg-[#152033] py-2"
+                    className="cursor-pointer text-xs text-primary font-medium hover:bg-muted py-2"
                   >
                     Admin Dashboard
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuSeparator className="bg-slate-800" />
+                <DropdownMenuSeparator className="bg-border" />
                 <DropdownMenuItem
                   onClick={logout}
-                  className="cursor-pointer text-xs text-red-400 hover:bg-red-500/10 py-2 flex items-center gap-1.5"
+                  className="cursor-pointer text-xs text-destructive hover:bg-destructive/10 py-2 flex items-center gap-1.5"
                 >
                   <LogOut className="w-3.5 h-3.5" /> Log Out
                 </DropdownMenuItem>
@@ -238,7 +238,7 @@ export function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-muted transition-colors"
               title="Sign In"
             >
               <User className="w-5 h-5" />
@@ -248,12 +248,12 @@ export function Navbar() {
           {/* Cart Icon & Badge */}
           <button
             onClick={openCart}
-            className="relative p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors flex items-center justify-center"
+            className="relative p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center"
             aria-label="Shopping Cart"
           >
             <ShoppingCart className="w-5 h-5" />
             {totalItems > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-[#00a3ff] text-slate-950 text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 bg-primary text-primary-foreground text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center shadow-xs">
                 {totalItems}
               </span>
             )}
@@ -262,7 +262,7 @@ export function Navbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="xl:hidden p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-muted transition-colors"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -272,7 +272,7 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-[#0a101b] border-t border-slate-800 px-4 py-4 space-y-3">
+        <div className="xl:hidden bg-background border-t border-border px-4 py-4 space-y-3">
           <div className="sm:hidden mb-3">
             <HeaderSearch />
           </div>
@@ -282,7 +282,7 @@ export function Navbar() {
                 key={link.title}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+                className="py-2 px-3 rounded-lg hover:bg-muted text-foreground/80 hover:text-foreground transition-colors"
               >
                 {link.title}
               </Link>
