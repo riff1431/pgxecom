@@ -20,32 +20,32 @@ import Link from "next/link";
 export function HeroSection() {
   const floatingCards = [
     {
-      title: "Air Max 270",
-      price: "$129.99",
-      image: "/hero-card-sneaker.jpg",
+      title: "Pro Treadmill X1",
+      price: "$1,899.00",
+      image: "/hero-card-treadmill.jpg",
       className: "top-4 -left-4 sm:top-6 sm:left-4 md:-left-6 lg:left-0",
-      href: "/shop?search=sneaker",
+      href: "/product/pgx-pro-treadmill-x1",
     },
     {
-      title: "Smart Watch",
-      price: "$199.99",
-      image: "/hero-card-watch.jpg",
+      title: "Smart Exercise Bike",
+      price: "$1,299.00",
+      image: "/hero-card-bike.jpg",
       className: "top-2 -right-2 sm:top-4 sm:right-6 lg:right-4",
-      href: "/shop?search=watch",
+      href: "/product/pgx-smart-exercise-bike",
     },
     {
-      title: "Wireless Headphones",
-      price: "$99.99",
-      image: "/hero-card-headphones.jpg",
+      title: "Adjustable Dumbbells",
+      price: "$599.00",
+      image: "/hero-card-dumbbells.jpg",
       className: "bottom-24 -left-4 sm:bottom-28 sm:left-2 md:-left-4 lg:-left-2",
-      href: "/shop?search=headphones",
+      href: "/product/pgx-adjustable-dumbbells",
     },
     {
-      title: "Water Bottle",
-      price: "$24.99",
-      image: "/hero-card-bottle.jpg",
+      title: "Power Rack Package",
+      price: "$1,599.00",
+      image: "/hero-card-powerrack.jpg",
       className: "bottom-12 -right-2 sm:bottom-16 sm:right-8 lg:right-2",
-      href: "/shop?search=bottle",
+      href: "/product/pgx-power-rack-package",
     },
   ];
 
@@ -62,19 +62,19 @@ export function HeroSection() {
             <div className="flex justify-center lg:justify-start">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Trending Now
+                Featured Equipment
               </span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-foreground leading-[1.1] font-mono">
-              Discover Products <br />
-              <span className="text-primary">You&apos;ll Love</span>
+              Build Your Ultimate <br />
+              <span className="text-primary">Home Gym</span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-base sm:text-lg text-muted-foreground font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Shop the latest trending products curated for modern lifestyles. Premium fitness gear, apparel, and everyday performance essentials.
+              Commercial-grade strength systems, smart cardio machines, and precision workout gear engineered for peak athletic performance.
             </p>
 
             {/* CTA Buttons */}
@@ -128,11 +128,11 @@ export function HeroSection() {
             {/* Soft decorative background glow ring */}
             <div className="absolute inset-0 max-w-[500px] max-h-[500px] m-auto rounded-full bg-gradient-to-tr from-primary/20 via-sky-400/10 to-transparent blur-2xl pointer-events-none" />
 
-            {/* Central Lifestyle Model */}
+            {/* Central Fitness Athlete Model */}
             <div className="relative z-10 w-full max-w-[380px] sm:max-w-[440px] md:max-w-[500px] aspect-square rounded-3xl overflow-hidden shadow-2xl border border-border/80 bg-card">
               <Image
-                src="/hero-model.jpg"
-                alt="PGX Lifestyle and Sportswear"
+                src="/hero-gym-model.jpg"
+                alt="PGX Gym and Fitness Training"
                 fill
                 priority
                 className="object-cover object-top filter contrast-[1.02]"
