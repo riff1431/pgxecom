@@ -3,16 +3,10 @@
 import {
   Activity,
   ArrowRight,
-  ChevronRight,
-  Dumbbell,
   DumbbellIcon,
-  GalleryThumbnails,
-  Gift,
   Heart,
-  Layers,
-  Package,
   ShieldCheck,
-  Truck,
+  Truck
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,11 +14,11 @@ import Link from "next/link";
 export function HeroSection() {
   const floatingCards = [
     {
-      title: "Pro Treadmill X1",
+      title: "Commercial Motorized Treadmill",
       price: "$1,899.00",
       image: "/hero-card-treadmill.jpg",
       className: "top-4 -left-4 sm:top-6 sm:left-4 md:-left-6 lg:left-0",
-      href: "/product/pgx-pro-treadmill-x1",
+      href: "/product/healthengine-commercial-motorized-treadmill-motion-x18",
     },
     {
       title: "Smart Exercise Bike",
@@ -58,14 +52,6 @@ export function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Heading, Subtitle, Actions & Social Proof */}
           <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center space-y-6 text-center lg:text-left">
-            {/* Trending Badge */}
-            <div className="flex justify-center lg:justify-start">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Featured Equipment
-              </span>
-            </div>
-
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-foreground leading-[1.1] font-mono">
               Build Your Ultimate <br />
