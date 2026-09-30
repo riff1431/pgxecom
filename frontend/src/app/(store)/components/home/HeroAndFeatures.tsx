@@ -2,14 +2,28 @@
 
 import {
   Activity,
+  Armchair,
   ArrowRight,
+  Bike,
+  Briefcase,
+  Dumbbell,
   DumbbellIcon,
+  Flame,
+  Footprints,
+  Gift,
+  Glasses,
   Heart,
+  Package,
   ShieldCheck,
-  Truck
+  Shirt,
+  Sparkles,
+  Truck,
+  Zap,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useGetCategories } from "@/lib/api/category";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HeroSection() {
   const floatingCards = [
@@ -216,38 +230,64 @@ export function HeroSection() {
   );
 }
 
+function getCategoryIcon(slug: string, iconStr?: string | null) {
+  // If backend provides an emoji or string icon, and it's not a generic fallback, handle custom icon mapping
+  const s = slug.toLowerCase();
+  if (s.includes("treadmill") || s.includes("trademill")) return <Footprints className="w-5 h-5" />;
+  if (s.includes("cardio")) return <Activity className="w-5 h-5" />;
+  if (s.includes("strength") || s.includes("dumbbell")) return <Dumbbell className="w-5 h-5" />;
+  if (s.includes("bike") || s.includes("cycling")) return <Bike className="w-5 h-5" />;
+  if (s.includes("gym")) return <Zap className="w-5 h-5" />;
+  if (s.includes("apparel") || s.includes("clothing") || s.includes("shirt")) return <Shirt className="w-5 h-5" />;
+  if (s.includes("bag")) return <Briefcase className="w-5 h-5" />;
+  if (s.includes("wellness") || s.includes("health")) return <Flame className="w-5 h-5" />;
+  if (s.includes("office") || s.includes("chair") || s.includes("home-office")) return <Armchair className="w-5 h-5" />;
+  if (s.includes("bundle")) return <Gift className="w-5 h-5" />;
+  if (s.includes("accessories")) return <Glasses className="w-5 h-5" />;
+
+  // If backend has emoji icon
+  if (iconStr && iconStr.trim() && iconStr.length <= 4) {
+    return <span className="text-lg leading-none">{iconStr}</span>;
+  }
+
+  return <Package className="w-5 h-5" />;
+}
+
 export function QuickCategoriesBar() {
-  const quickCategories = [
-    { name: "Cardio Equipment", slug: "cardio-equipment" },
-    { name: "Strength Equipment", slug: "strength-equipment" },
-    { name: "Home Gym", slug: "home-gym" },
-    { name: "Accessories", slug: "accessories" },
-    { name: "Apparel", slug: "apparel" },
-    { name: "Bags", slug: "bags" },
-    { name: "Wellness", slug: "wellness" },
-    { name: "Home & Office", slug: "home-office" },
-    { name: "Bundles", slug: "bundles" },
-  ];
+  const { data: categories, isLoading } = useGetCategories();
+
+  const categoriesToRender = (categories || []).filter((cat) => cat.isActive !== false);
 
   return (
     <section className="bg-background border-b border-border py-6">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between gap-3 overflow-x-auto no-scrollbar py-2">
-          {quickCategories.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/shop?category=${cat.slug}`}
-              className="group flex flex-col items-center shrink-0 min-w-[100px] text-center p-2 rounded-lg hover:bg-muted/60 transition-colors"
-            >
-              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                <DumbbellIcon className="w-5 h-5" />
+        {isLoading ? (
+          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-2">
+            {Array.from({ length: 8 }).map((_, idx) => (
+              <div key={idx} className="flex flex-col items-center shrink-0 min-w-[100px] p-2 space-y-2">
+                <Skeleton className="w-10 h-10 rounded-full" />
+                <Skeleton className="w-16 h-3 rounded" />
               </div>
-              <span className="mt-2 text-xs font-semibold text-foreground group-hover:text-primary flex items-center gap-1 transition-colors">
-                {cat.name} <span className="text-[10px] text-muted-foreground group-hover:translate-x-0.5 transition-transform">→</span>
-              </span>
-            </Link>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : categoriesToRender.length > 0 ? (
+          <div className="flex items-center justify-between gap-3 overflow-x-auto no-scrollbar py-2">
+            {categoriesToRender.map((cat) => (
+              <Link
+                key={cat.id || cat.slug}
+                href={`/shop?category=${cat.slug}`}
+                className="group flex flex-col items-center shrink-0 min-w-[100px] text-center p-2 rounded-lg hover:bg-muted/60 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  {getCategoryIcon(cat.slug, cat.icon)}
+                </div>
+                <span className="mt-2 text-xs font-semibold text-foreground group-hover:text-primary flex items-center gap-1 transition-colors">
+                  {cat.name} <span className="text-[10px] text-muted-foreground group-hover:translate-x-0.5 transition-transform">→</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );

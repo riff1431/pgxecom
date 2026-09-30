@@ -1,189 +1,26 @@
 "use client";
 
 import { ProductCard } from "@/components/storefront/product/ProductCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useGetProducts } from "@/lib/api/product";
+import { PackageOpen } from "lucide-react";
 import Link from "next/link";
 import {
   HeroSection,
   QuickCategoriesBar,
 } from "./components/home/HeroAndFeatures";
 import {
-  PremiumBundlesSection,
   ValuePropositionStrip,
 } from "./components/home/PremiumBundles";
-
-// Curated static fallback data matching screenshot if database is still seeding/empty
-const SCREENSHOT_FEATURED_EQUIPMENT = [
-  {
-    id: "pgx-pro-treadmill-x1",
-    name: "PGX Pro Treadmill X1",
-    slug: "pgx-pro-treadmill-x1",
-    shortDesc: "Smart • Foldable • 22km/h",
-    price: 1899.0,
-    rating: 5,
-    reviewCount: 124,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-smart-exercise-bike",
-    name: "PGX Smart Exercise Bike",
-    slug: "pgx-smart-exercise-bike",
-    shortDesc: "Interactive • Quiet • App Ready",
-    price: 1299.0,
-    rating: 5,
-    reviewCount: 98,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-adjustable-dumbbells",
-    name: "PGX Adjustable Dumbbells",
-    slug: "pgx-adjustable-dumbbells",
-    shortDesc: "5-50kg Set • Space Saving",
-    price: 599.0,
-    rating: 5,
-    reviewCount: 87,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-power-rack-package",
-    name: "PGX Power Rack Package",
-    slug: "pgx-power-rack-package",
-    shortDesc: "Rack • Bench • 120kg Plates",
-    price: 1599.0,
-    rating: 5,
-    reviewCount: 72,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-rowing-machine",
-    name: "PGX Rowing Machine",
-    slug: "pgx-rowing-machine",
-    shortDesc: "Air Resistance • Full Body",
-    price: 1099.0,
-    rating: 5,
-    reviewCount: 64,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-home-gym-system",
-    name: "PGX Home Gym System",
-    slug: "pgx-home-gym-system",
-    shortDesc: "All-in-One • 100kg Stack",
-    price: 2499.0,
-    rating: 5,
-    reviewCount: 90,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-];
-
-const SCREENSHOT_POPULAR_ESSENTIALS = [
-  {
-    id: "pgx-performance-tshirt",
-    name: "PGX Performance T-Shirt",
-    slug: "pgx-performance-tshirt",
-    shortDesc: "Men's | Black",
-    price: 34.99,
-    rating: 5,
-    reviewCount: 241,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-leggings",
-    name: "PGX Leggings",
-    slug: "pgx-leggings",
-    shortDesc: "Women's | Black",
-    price: 49.99,
-    rating: 5,
-    reviewCount: 198,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-training-shoes",
-    name: "PGX Training Shoes",
-    slug: "pgx-training-shoes",
-    shortDesc: "Unisex | Breathable",
-    price: 89.99,
-    rating: 5,
-    reviewCount: 167,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-gym-bag",
-    name: "PGX Gym Bag",
-    slug: "pgx-gym-bag",
-    shortDesc: "Spacious | Durable",
-    price: 59.99,
-    rating: 5,
-    reviewCount: 143,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-stainless-bottle",
-    name: "PGX Stainless Bottle",
-    slug: "pgx-stainless-bottle",
-    shortDesc: "750ml | Insulated",
-    price: 59.99,
-    rating: 5,
-    reviewCount: 312,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-yoga-mat",
-    name: "PGX Yoga Mat",
-    slug: "pgx-yoga-mat",
-    shortDesc: "Anti-Slip | 6mm",
-    price: 29.99,
-    rating: 5,
-    reviewCount: 121,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-resistance-bands",
-    name: "PGX Resistance Bands",
-    slug: "pgx-resistance-bands",
-    shortDesc: "Set of 5 | Varied Resistance",
-    price: 24.99,
-    rating: 5,
-    reviewCount: 276,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-  {
-    id: "pgx-wireless-headphones",
-    name: "PGX Wireless Headphones",
-    slug: "pgx-wireless-headphones",
-    shortDesc: "Noise Cancelling",
-    price: 79.99,
-    rating: 5,
-    reviewCount: 184,
-    images: [{ url: "/uploads/placeholder-product.jpg" }],
-  },
-];
 
 export default function HomePage() {
   const { data: apiProducts, isLoading } = useGetProducts({ limit: 50 });
 
-  // Filter or fall back to matching items from screenshot
-  const featuredEquipment =
-    apiProducts?.data?.filter((p) =>
-      ["cardio-equipment", "strength-equipment", "home-gym"].includes(
-        p.category?.slug
-      )
-    ) || [];
+  // Reverse products so the newest items come first
+  const reversedProducts = apiProducts?.data ? [...apiProducts.data] : [];
 
-  const popularEssentials =
-    apiProducts?.data?.filter((p) =>
-      ["apparel", "accessories", "bags", "wellness"].includes(p.category?.slug)
-    ) || [];
-
-  const equipmentToRender =
-    featuredEquipment.length >= 4
-      ? featuredEquipment.slice(0, 6)
-      : SCREENSHOT_FEATURED_EQUIPMENT;
-
-  const essentialsToRender =
-    popularEssentials.length >= 4
-      ? popularEssentials.slice(0, 8)
-      : SCREENSHOT_POPULAR_ESSENTIALS;
+  const equipmentToRender = reversedProducts.slice(0, 6);
+  const essentialsToRender = reversedProducts.slice(0, 8);
 
   return (
     <div className="bg-background min-h-screen">
@@ -213,11 +50,31 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {equipmentToRender.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <div key={idx} className="space-y-3 p-4 border border-border rounded-xl">
+                  <Skeleton className="h-40 w-full rounded-lg" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : equipmentToRender.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {equipmentToRender.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-12 flex flex-col items-center justify-center text-center rounded-xl border border-dashed border-border bg-muted/20">
+              <PackageOpen className="w-10 h-10 text-muted-foreground mb-3" />
+              <p className="text-base font-semibold text-foreground">No products available</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                There are currently no featured fitness equipment items listed.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -227,7 +84,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground font-mono">
-                Popular Categories
+                Popular Products
               </h2>
               <p className="text-muted-foreground text-sm mt-0.5">
                 Everyday essentials for your lifestyle.
@@ -241,11 +98,31 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-            {essentialsToRender.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <div key={idx} className="space-y-3 p-4 border border-border rounded-xl">
+                  <Skeleton className="h-48 w-full rounded-lg" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : essentialsToRender.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+              {essentialsToRender.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-12 flex flex-col items-center justify-center text-center rounded-xl border border-dashed border-border bg-muted/20">
+              <PackageOpen className="w-10 h-10 text-muted-foreground mb-3" />
+              <p className="text-base font-semibold text-foreground">No products available</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                There are currently no popular category items listed.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
