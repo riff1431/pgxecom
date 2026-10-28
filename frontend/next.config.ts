@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "traqtwdfhxduijhqsuwg.supabase.co",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "api.playgroundfitnex.com",
         pathname: "/**",
       },
