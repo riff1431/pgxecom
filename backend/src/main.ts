@@ -31,21 +31,33 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  // CORS — hardcoded allowed origins (local dev + production)
+  // CORS - allowed origins (configured via FRONTEND_URL env + defaults)
+  const frontendUrlEnv = configService.get<string>('FRONTEND_URL') || '';
+  const configuredOrigins = frontendUrlEnv
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
+  const defaultOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'https://pgxsports.shop',
+    'https://www.pgxsports.shop',
+    'https://api.pgxsports.shop',
+    'https://playgroundfitnex.com',
+    'https://www.playgroundfitnex.com',
+    'https://api.playgroundfitnex.com',
+    'https://playgroundx.vip',
+    'https://www.playgroundx.vip'
+  ];
+
+  const allowedOrigins = Array.from(new Set([...defaultOrigins, ...configuredOrigins]));
+
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:3002',
-      'https://playgroundfitnex.com',
-      'https://www.playgroundfitnex.com',
-      'https://api.playgroundfitnex.com',
-      'https://playgroundx.vip',
-      'https://www.playgroundx.vip'
-    ],
+    origin: allowedOrigins,
     credentials: true,
   });
-
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({

@@ -20,6 +20,16 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
       {
+        protocol: "https",
+        hostname: "api.pgxsports.shop",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "pgxsports.shop",
+        pathname: "/**",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         port: "4000",
