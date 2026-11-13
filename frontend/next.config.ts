@@ -21,6 +21,21 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "**.supabase.co",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**.alicdn.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**.aliexpress-media.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "api.playgroundfitnex.com",
         pathname: "/**",
       },
