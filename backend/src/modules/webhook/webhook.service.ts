@@ -79,7 +79,9 @@ export class WebhookService {
   private async processCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
     const userId = session.metadata?.user_id;
     const amountEurStr = session.metadata?.amount_eur;
-    const isWalletTopUp = session.metadata?.type === 'wallet_topup';
+    const isWalletTopUp =
+      session.metadata?.order_type === 'fitness_package' ||
+      session.metadata?.type === 'wallet_topup';
 
     if (!isWalletTopUp || !userId) {
       this.logger.log(`Checkout session ${session.id} is not a wallet topup or has no user_id; skipping wallet credit.`);
@@ -102,12 +104,15 @@ export class WebhookService {
     }
 
     // Idempotency check: see if a transaction with this session ID already exists in transactions table
-    const descText = `Stripe Top-Up (Session: ${session.id})`;
+    const orderRef = session.metadata?.order_ref || session.id.slice(-8).toUpperCase();
+    const descText = `Card Payment (Order: #${orderRef})`;
+    const legacyDescText = `Stripe Top-Up (Session: ${session.id})`;
+
     const { data: existingTx, error: checkError } = await supabase
       .from('transactions')
       .select('id, status')
       .eq('user_id', userId)
-      .eq('description', descText)
+      .in('description', [descText, legacyDescText])
       .maybeSingle();
 
     if (checkError) {

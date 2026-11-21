@@ -138,21 +138,63 @@ export class WalletService {
     };
   }
 
+  private getFitnessPackageDetails(amount: number, currency: string) {
+    const formattedAmount = `${currency.toUpperCase()} ${amount.toFixed(2)}`;
+    const orderRef = `FNX-${Date.now().toString(36).slice(-6).toUpperCase()}`;
+
+    if (amount < 30) {
+      return {
+        name: 'Fitnex Core Resistance Bands & Fitness Accessories Kit',
+        description: `Order #${orderRef} • Core Training Equipment & Accessories (${formattedAmount}) • Standard Delivery Included`,
+        orderRef,
+      };
+    } else if (amount < 75) {
+      return {
+        name: 'Fitnex Pro Athletic Conditioning & Speed Training Package',
+        description: `Order #${orderRef} • Athlete Performance Training Gear Bundle (${formattedAmount}) • Express Courier Dispatch`,
+        orderRef,
+      };
+    } else if (amount < 150) {
+      return {
+        name: 'Fitnex High-Performance Strength & Conditioning Suite',
+        description: `Order #${orderRef} • Premium Strength & Conditioning Equipment Set (${formattedAmount}) • Free International Shipping`,
+        orderRef,
+      };
+    } else if (amount < 300) {
+      return {
+        name: 'Fitnex Elite Gym Equipment & Barbell Collar Performance Bundle',
+        description: `Order #${orderRef} • Commercial Grade Athlete Training Suite (${formattedAmount}) • Priority Courier Dispatch`,
+        orderRef,
+      };
+    } else {
+      return {
+        name: 'Fitnex Master Athlete Complete Training & Recovery Suite',
+        description: `Order #${orderRef} • Full Athlete High-Performance Gym & Recovery Suite (${formattedAmount}) • VIP Freight Dispatch`,
+        orderRef,
+      };
+    }
+  }
+
   async createTopUpSession(userId: string, userEmail: string | undefined, dto: TopUpDto) {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const frontendUrl = (this.configService.get<string>('FRONTEND_URL') || 'https://playgroundfitnex.com').replace(/\/+$/, '');
     const amountInCents = Math.round(dto.amount * 100);
 
-    const successReturnUrl = dto.returnUrl || `${frontendUrl}/my-account/wallet`;
-    const cancelReturnUrl = dto.returnUrl || `${frontendUrl}/my-account/wallet`;
+    const clientReturnUrl = dto.returnUrl || '';
 
-    const successUrl = `${successReturnUrl}?status=success&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${cancelReturnUrl}?status=cancelled`;
+    // Mask origin: Stripe MUST only see playgroundfitnex.com domain for cancel_url and success_url
+    const successUrl = `${frontendUrl}/order-confirmation/complete?session_id={CHECKOUT_SESSION_ID}${
+      clientReturnUrl ? `&ret=${encodeURIComponent(clientReturnUrl)}` : ''
+    }`;
+    const cancelUrl = `${frontendUrl}/cart?status=cancelled${
+      clientReturnUrl ? `&ret=${encodeURIComponent(clientReturnUrl)}` : ''
+    }`;
 
     const targetUserId = (await this.resolveSupabaseUserId(userId)) || userId;
 
     try {
       const { client: stripeClient, profile } = await this.dynamicSettingsService.getStripeClient();
       const currency = (profile.currency || 'eur').toLowerCase();
+      const packageDetails = this.getFitnessPackageDetails(dto.amount, currency);
 
       const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -163,8 +205,8 @@ export class WalletService {
             price_data: {
               currency,
               product_data: {
-                name: 'PGX Wallet Deposit',
-                description: `Add ${currency.toUpperCase()} ${dto.amount.toFixed(2)} credits to your universal PGX wallet`,
+                name: packageDetails.name,
+                description: packageDetails.description,
               },
               unit_amount: amountInCents,
             },
@@ -174,13 +216,15 @@ export class WalletService {
         metadata: {
           user_id: targetUserId,
           amount_eur: dto.amount.toString(),
-          type: 'wallet_topup',
+          order_type: 'fitness_package',
+          order_ref: packageDetails.orderRef,
+          type: 'wallet_topup', // backward-compatible fallback for webhook
         },
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
 
-      this.logger.log(`Created Stripe Checkout session ${session.id} for user ${userId}, amount: €${dto.amount}`);
+      this.logger.log(`Created Stripe Checkout session ${session.id} for user ${userId}, package: ${packageDetails.name}, amount: €${dto.amount}`);
 
       return {
         sessionId: session.id,
