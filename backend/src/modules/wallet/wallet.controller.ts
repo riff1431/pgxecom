@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -15,12 +16,12 @@ import { WalletService } from './wallet.service';
 
 @ApiTags('Wallet')
 @Controller('wallet')
-@UseGuards(SupabaseAuthGuard)
-@ApiBearerAuth('bearer')
 export class WalletController {
   constructor(private readonly walletService: WalletService) { }
 
   @Get('balance')
+  @UseGuards(SupabaseAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get current user wallet balance from Supabase' })
   @ApiResponse({ status: 200, description: 'Wallet balance retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -30,6 +31,8 @@ export class WalletController {
   }
 
   @Post('topup')
+  @UseGuards(SupabaseAuthGuard)
+  @ApiBearerAuth('bearer')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Create Stripe Checkout session for wallet top-up' })
   @ApiResponse({ status: 200, description: 'Stripe Checkout URL generated successfully' })
@@ -39,5 +42,12 @@ export class WalletController {
     const userId = req.user.id;
     const userEmail = req.user.email;
     return this.walletService.createTopUpSession(userId, userEmail, dto);
+  }
+
+  @Get('return-target')
+  @ApiOperation({ summary: 'Resolve post-checkout return URL by Fitnex order reference' })
+  @ApiResponse({ status: 200, description: 'Resolved return target URL if valid and unexpired' })
+  async getReturnTarget(@Query('order') orderRef?: string) {
+    return this.walletService.resolveReturnTarget(orderRef || '');
   }
 }

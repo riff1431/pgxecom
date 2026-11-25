@@ -41,3 +41,18 @@ export async function createTopUpSession(
   );
   return response.data?.data || response.data;
 }
+
+export async function resolveCheckoutReturnTarget(orderRef: string): Promise<string | null> {
+  if (!orderRef) return null;
+  try {
+    const response = await api.get('/wallet/return-target', {
+      params: { order: orderRef },
+    });
+    const payload = response.data?.data ?? response.data;
+    return typeof payload?.returnUrl === 'string' && payload.returnUrl.length > 0
+      ? payload.returnUrl
+      : null;
+  } catch {
+    return null;
+  }
+}

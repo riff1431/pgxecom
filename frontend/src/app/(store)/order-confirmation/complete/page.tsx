@@ -5,26 +5,64 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Package, ArrowRight, Loader2, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
+import { resolveCheckoutReturnTarget } from "@/services/wallet.service";
 
 function CompleteConfirmationContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id") || "";
+  const orderParam = searchParams.get("order") || "";
   const rawRet = searchParams.get("ret") || "";
   const [countdown, setCountdown] = useState<number>(2);
+  const [resolvedReturnBase, setResolvedReturnBase] = useState<string>(() => {
+    if (!orderParam && rawRet) {
+      try {
+        return decodeURIComponent(rawRet);
+      } catch {
+        return rawRet;
+      }
+    }
+    return "";
+  });
+  const [resolvingReturn, setResolvingReturn] = useState<boolean>(Boolean(orderParam));
 
   const cleanSessionRef = sessionId.slice(-8).toUpperCase();
-  const orderNumber = cleanSessionRef ? `PGX-${cleanSessionRef}` : `PGX-${Date.now().toString(36).toUpperCase()}`;
+  const orderNumber =
+    orderParam ||
+    (cleanSessionRef ? `FNX-${cleanSessionRef}` : `FNX-${Date.now().toString(36).toUpperCase()}`);
 
-  // Build target return URL if ret is provided
+  useEffect(() => {
+    if (!orderParam) return;
+    let cancelled = false;
+
+    resolveCheckoutReturnTarget(orderParam)
+      .then((target) => {
+        if (cancelled) return;
+        if (target) {
+          setResolvedReturnBase(target);
+        } else if (rawRet) {
+          try {
+            setResolvedReturnBase(decodeURIComponent(rawRet));
+          } catch {
+            setResolvedReturnBase(rawRet);
+          }
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setResolvingReturn(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [orderParam, rawRet]);
+
+  // Build target return URL if resolved
   let destinationUrl = "";
-  if (rawRet) {
-    try {
-      const decoded = decodeURIComponent(rawRet);
-      const separator = decoded.includes("?") ? "&" : "?";
-      destinationUrl = `${decoded}${separator}status=success&method=stripe_ecom&session_id=${encodeURIComponent(sessionId)}`;
-    } catch {
-      destinationUrl = rawRet;
-    }
+  if (resolvedReturnBase) {
+    const separator = resolvedReturnBase.includes("?") ? "&" : "?";
+    destinationUrl = `${resolvedReturnBase}${separator}status=success&method=stripe_ecom&session_id=${encodeURIComponent(sessionId)}`;
   }
 
   useEffect(() => {
@@ -109,7 +147,12 @@ function CompleteConfirmationContent() {
           </div>
         </motion.div>
 
-        {destinationUrl ? (
+        {resolvingReturn ? (
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground py-3">
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+            <span>Finalizing order confirmation...</span>
+          </div>
+        ) : destinationUrl ? (
           <div className="space-y-4">
             <a
               href={destinationUrl}
