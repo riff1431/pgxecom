@@ -12,7 +12,6 @@ function CompleteConfirmationContent() {
   const sessionId = searchParams.get("session_id") || "";
   const orderParam = searchParams.get("order") || "";
   const rawRet = searchParams.get("ret") || "";
-  const [countdown, setCountdown] = useState<number>(2);
   const [resolvedReturnBase, setResolvedReturnBase] = useState<string>(() => {
     if (!orderParam && rawRet) {
       try {
@@ -67,20 +66,40 @@ function CompleteConfirmationContent() {
 
   useEffect(() => {
     if (!destinationUrl) return;
-
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          window.location.href = destinationUrl;
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
+    window.location.replace(destinationUrl);
   }, [destinationUrl]);
+
+  if (resolvingReturn || destinationUrl) {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center py-16 px-4 bg-background">
+        <div className="max-w-md w-full text-center space-y-5">
+          <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
+            <Loader2 className="w-8 h-8 animate-spin" />
+          </div>
+          <div className="space-y-2">
+            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-emerald-400">
+              Payment Verified
+            </span>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+              Returning to your dashboard...
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Please wait a moment while we redirect you back.
+            </p>
+          </div>
+          {destinationUrl && (
+            <a
+              href={destinationUrl}
+              className="inline-flex h-11 px-6 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider items-center justify-center gap-2 shadow-xs transition-colors"
+            >
+              <span>Return Now</span>
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[75vh] flex items-center justify-center py-16 px-4 bg-background">
@@ -147,43 +166,22 @@ function CompleteConfirmationContent() {
           </div>
         </motion.div>
 
-        {resolvingReturn ? (
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground py-3">
-            <Loader2 className="w-4 h-4 animate-spin text-primary" />
-            <span>Finalizing order confirmation...</span>
-          </div>
-        ) : destinationUrl ? (
-          <div className="space-y-4">
-            <a
-              href={destinationUrl}
-              className="w-full sm:w-auto inline-flex h-12 px-8 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider items-center justify-center gap-2 shadow-xs transition-colors"
-            >
-              <span>Return to Dashboard Now</span>
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-              <span>Auto-redirecting in {countdown}s...</span>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/shop"
-              className="w-full sm:w-auto h-12 px-8 rounded-lg bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold text-xs uppercase tracking-wider flex items-center justify-center transition-colors"
-            >
-              <ShoppingBag className="mr-2 h-4 w-4" />
-              Continue Shopping
-            </Link>
-            <Link
-              href="/my-account/orders"
-              className="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-colors"
-            >
-              View My Orders
-              <ArrowRight className="ml-2 h-4 w-4 text-primary-foreground" />
-            </Link>
-          </div>
-        )}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/shop"
+            className="w-full sm:w-auto h-12 px-8 rounded-lg bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold text-xs uppercase tracking-wider flex items-center justify-center transition-colors"
+          >
+            <ShoppingBag className="mr-2 h-4 w-4" />
+            Continue Shopping
+          </Link>
+          <Link
+            href="/my-account/orders"
+            className="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-colors"
+          >
+            View My Orders
+            <ArrowRight className="ml-2 h-4 w-4 text-primary-foreground" />
+          </Link>
+        </div>
       </div>
     </div>
   );
