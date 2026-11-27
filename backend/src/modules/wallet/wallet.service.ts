@@ -382,9 +382,10 @@ export class WalletService {
       }
 
       // Mask origin: Stripe MUST only see playgroundfitnex.com domain + clean order reference
+      // Point success/cancel to backend /api/wallet/return for an instant 302 redirect (no Fitnex confirmation page flash)
       const encodedOrderRef = encodeURIComponent(orderRef);
-      const successUrl = `${frontendUrl}/order-confirmation/complete?session_id={CHECKOUT_SESSION_ID}&order=${encodedOrderRef}`;
-      const cancelUrl = `${frontendUrl}/cart?status=cancelled&order=${encodedOrderRef}`;
+      const successUrl = `${backendApiUrl}/api/wallet/return?status=success&session_id={CHECKOUT_SESSION_ID}&order=${encodedOrderRef}`;
+      const cancelUrl = `${backendApiUrl}/api/wallet/return?status=cancelled&order=${encodedOrderRef}`;
 
       const cloakedMetadata: Record<string, string> = {
         user_id: targetUserId,

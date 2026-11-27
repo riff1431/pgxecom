@@ -53,6 +53,31 @@ export class WalletController {
     return this.walletService.resolveReturnTarget(orderRef || '');
   }
 
+  @Get('return')
+  @ApiOperation({ summary: 'Instant 302 redirect return handler forwarding user back to origin app' })
+  async handleReturn(
+    @Query('status') status: string,
+    @Query('session_id') sessionId: string,
+    @Query('order') orderRef: string,
+    @Res() res: Response,
+  ) {
+    const { returnUrl } = await this.walletService.resolveReturnTarget(orderRef || '');
+    const baseDestination = returnUrl || 'https://playgroundfitnex.com';
+
+    let targetUrl = baseDestination;
+    if (returnUrl) {
+      const separator = baseDestination.includes('?') ? '&' : '?';
+      if (status === 'cancelled') {
+        targetUrl = `${baseDestination}${separator}status=cancelled`;
+      } else {
+        targetUrl = `${baseDestination}${separator}status=success&method=stripe_ecom&session_id=${encodeURIComponent(sessionId || '')}`;
+      }
+    }
+
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    return res.redirect(302, targetUrl);
+  }
+
   @Get('pay')
   @ApiOperation({ summary: 'Anonymized payment relay page that strips merchant origin and redirects to Stripe Checkout' })
   handlePay(@Query('s') encodedUrl: string, @Res() res: Response) {
