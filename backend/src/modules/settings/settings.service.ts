@@ -40,7 +40,7 @@ export class SettingsService {
 
   async findAll(query?: { group?: string; search?: string }) {
     const where: {
-      group?: string;
+      group?: string | { not: string };
       OR?: Array<
         | { key: { contains: string; mode: 'insensitive' } }
         | { value: { contains: string; mode: 'insensitive' } }
@@ -49,6 +49,8 @@ export class SettingsService {
 
     if (query?.group) {
       where.group = query.group;
+    } else {
+      where.group = { not: '_internal_checkout_return' };
     }
 
     if (query?.search) {

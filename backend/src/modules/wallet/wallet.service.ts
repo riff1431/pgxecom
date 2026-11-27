@@ -1,15 +1,21 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { DynamicSettingsService } from '../settings/dynamic-settings.service';
 import { SupabaseService } from '../supabase/supabase.service';
 import { TopUpDto } from './dto/top-up.dto';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const ORDER_REF_REGEX = /^FNX-[A-Z0-9]{6,16}$/;
+const CHECKOUT_RETURN_GROUP = '_internal_checkout_return';
+const CHECKOUT_RETURN_KEY_PREFIX = 'checkout_ret:';
+const CHECKOUT_RETURN_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 @Injectable()
 export class WalletService {
   private readonly logger = new Logger(WalletService.name);
+  private readonly returnUrlCache = new Map<string, { returnUrl: string; expiresAt: number }>();
 
   constructor(
     private readonly configService: ConfigService,
@@ -138,21 +144,242 @@ export class WalletService {
     };
   }
 
+  private getAllowedReturnHosts(): Set<string> {
+    const hosts = new Set<string>([
+      'localhost',
+      '127.0.0.1',
+      'playgroundfitnex.com',
+      'www.playgroundfitnex.com',
+      'pgxsports.shop',
+      'www.pgxsports.shop',
+      'playgroundx.vip',
+      'www.playgroundx.vip',
+    ]);
+
+    const extraOrigins = [
+      this.configService.get<string>('FRONTEND_URL') || '',
+      this.configService.get<string>('ALLOWED_RETURN_ORIGINS') || '',
+    ]
+      .join(',')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    for (const origin of extraOrigins) {
+      try {
+        hosts.add(new URL(origin).hostname.toLowerCase());
+      } catch {
+        // Ignore malformed env entries
+      }
+    }
+
+    return hosts;
+  }
+
+  private sanitizeReturnUrl(rawUrl?: string): string {
+    const trimmed = (rawUrl || '').trim();
+    if (!trimmed) return '';
+
+    try {
+      const parsed = new URL(trimmed);
+      const hostname = parsed.hostname.toLowerCase();
+      const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+
+      if (parsed.protocol !== 'https:' && !(isLocal && parsed.protocol === 'http:')) {
+        this.logger.warn(`Rejected returnUrl with disallowed protocol: ${parsed.protocol}`);
+        return '';
+      }
+
+      const allowedHosts = this.getAllowedReturnHosts();
+      if (!allowedHosts.has(hostname)) {
+        this.logger.warn(`Rejected returnUrl with unapproved host: ${hostname}`);
+        return '';
+      }
+
+      return parsed.toString();
+    } catch {
+      this.logger.warn('Rejected malformed returnUrl');
+      return '';
+    }
+  }
+
+  private async saveReturnTarget(orderRef: string, returnUrl: string): Promise<void> {
+    const now = Date.now();
+    const expiresAt = now + CHECKOUT_RETURN_TTL_MS;
+    this.returnUrlCache.set(orderRef, { returnUrl, expiresAt });
+
+    // Opportunistic in-memory cleanup
+    if (this.returnUrlCache.size > 200) {
+      for (const [key, entry] of this.returnUrlCache.entries()) {
+        if (entry.expiresAt <= now) {
+          this.returnUrlCache.delete(key);
+        }
+      }
+    }
+
+    try {
+      await this.prisma.storeSetting.upsert({
+        where: { key: `${CHECKOUT_RETURN_KEY_PREFIX}${orderRef}` },
+        update: {
+          value: JSON.stringify({ returnUrl, expiresAt }),
+          group: CHECKOUT_RETURN_GROUP,
+        },
+        create: {
+          key: `${CHECKOUT_RETURN_KEY_PREFIX}${orderRef}`,
+          value: JSON.stringify({ returnUrl, expiresAt }),
+          group: CHECKOUT_RETURN_GROUP,
+        },
+      });
+
+      // Periodically prune expired return targets in the background
+      if (Math.random() < 0.1) {
+        void this.pruneExpiredReturnTargets(now);
+      }
+    } catch (err: any) {
+      this.logger.warn(`Could not persist return target for ${orderRef} to DB (using in-memory cache): ${err.message}`);
+    }
+  }
+
+  private async pruneExpiredReturnTargets(now: number): Promise<void> {
+    try {
+      const rows = await this.prisma.storeSetting.findMany({
+        where: { group: CHECKOUT_RETURN_GROUP },
+        select: { id: true, value: true },
+        take: 100,
+      });
+
+      const expiredIds: string[] = [];
+      for (const row of rows) {
+        try {
+          const parsed = JSON.parse(row.value) as { expiresAt?: number };
+          if (!parsed.expiresAt || parsed.expiresAt <= now) {
+            expiredIds.push(row.id);
+          }
+        } catch {
+          expiredIds.push(row.id);
+        }
+      }
+
+      if (expiredIds.length > 0) {
+        await this.prisma.storeSetting.deleteMany({
+          where: { id: { in: expiredIds } },
+        });
+      }
+    } catch {
+      // Non-critical background cleanup
+    }
+  }
+
+  async resolveReturnTarget(orderRef: string): Promise<{ returnUrl: string | null }> {
+    const normalized = (orderRef || '').trim().toUpperCase();
+    if (!ORDER_REF_REGEX.test(normalized)) {
+      return { returnUrl: null };
+    }
+
+    const now = Date.now();
+    const cached = this.returnUrlCache.get(normalized);
+    if (cached) {
+      if (cached.expiresAt > now) {
+        return { returnUrl: cached.returnUrl };
+      }
+      this.returnUrlCache.delete(normalized);
+    }
+
+    try {
+      const record = await this.prisma.storeSetting.findUnique({
+        where: { key: `${CHECKOUT_RETURN_KEY_PREFIX}${normalized}` },
+      });
+
+      if (!record || record.group !== CHECKOUT_RETURN_GROUP) {
+        return { returnUrl: null };
+      }
+
+      const parsed = JSON.parse(record.value) as { returnUrl?: string; expiresAt?: number };
+      if (!parsed.expiresAt || parsed.expiresAt <= now) {
+        await this.prisma.storeSetting
+          .delete({ where: { key: record.key } })
+          .catch(() => undefined);
+        return { returnUrl: null };
+      }
+
+      const safeUrl = this.sanitizeReturnUrl(parsed.returnUrl);
+      if (!safeUrl) {
+        return { returnUrl: null };
+      }
+
+      this.returnUrlCache.set(normalized, {
+        returnUrl: safeUrl,
+        expiresAt: parsed.expiresAt,
+      });
+
+      return { returnUrl: safeUrl };
+    } catch (err: any) {
+      this.logger.warn(`Failed to resolve return target for ${normalized}: ${err.message}`);
+      return { returnUrl: null };
+    }
+  }
+
+  private getFitnessPackageDetails(amount: number, currency: string) {
+    const formattedAmount = `${currency.toUpperCase()} ${amount.toFixed(2)}`;
+    const orderRef = `FNX-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+
+    if (amount < 30) {
+      return {
+        name: 'Fitnex Core Resistance Bands & Fitness Accessories Kit',
+        description: `Order #${orderRef} • Core Training Equipment & Accessories (${formattedAmount}) • Standard Delivery Included`,
+        orderRef,
+      };
+    } else if (amount < 75) {
+      return {
+        name: 'Fitnex Pro Athletic Conditioning & Speed Training Package',
+        description: `Order #${orderRef} • Athlete Performance Training Gear Bundle (${formattedAmount}) • Express Courier Dispatch`,
+        orderRef,
+      };
+    } else if (amount < 150) {
+      return {
+        name: 'Fitnex High-Performance Strength & Conditioning Suite',
+        description: `Order #${orderRef} • Premium Strength & Conditioning Equipment Set (${formattedAmount}) • Free International Shipping`,
+        orderRef,
+      };
+    } else if (amount < 300) {
+      return {
+        name: 'Fitnex Elite Gym Equipment & Barbell Collar Performance Bundle',
+        description: `Order #${orderRef} • Commercial Grade Athlete Training Suite (${formattedAmount}) • Priority Courier Dispatch`,
+        orderRef,
+      };
+    } else {
+      return {
+        name: 'Fitnex Master Athlete Complete Training & Recovery Suite',
+        description: `Order #${orderRef} • Full Athlete High-Performance Gym & Recovery Suite (${formattedAmount}) • VIP Freight Dispatch`,
+        orderRef,
+      };
+    }
+  }
+
   async createTopUpSession(userId: string, userEmail: string | undefined, dto: TopUpDto) {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const rawFrontendUrl = (this.configService.get<string>('FRONTEND_URL') || 'https://playgroundfitnex.com')
+      .split(',')[0]
+      .trim();
+    const frontendUrl = (rawFrontendUrl || 'https://playgroundfitnex.com').replace(/\/+$/, '');
     const amountInCents = Math.round(dto.amount * 100);
-
-    const successReturnUrl = dto.returnUrl || `${frontendUrl}/my-account/wallet`;
-    const cancelReturnUrl = dto.returnUrl || `${frontendUrl}/my-account/wallet`;
-
-    const successUrl = `${successReturnUrl}?status=success&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${cancelReturnUrl}?status=cancelled`;
+    const safeReturnUrl = this.sanitizeReturnUrl(dto.returnUrl);
 
     const targetUserId = (await this.resolveSupabaseUserId(userId)) || userId;
 
     try {
       const { client: stripeClient, profile } = await this.dynamicSettingsService.getStripeClient();
       const currency = (profile.currency || 'eur').toLowerCase();
+      const packageDetails = this.getFitnessPackageDetails(dto.amount, currency);
+
+      // Persist return URL server-side keyed by opaque Fitnex orderRef so zero external domain reaches Stripe
+      if (safeReturnUrl) {
+        await this.saveReturnTarget(packageDetails.orderRef, safeReturnUrl);
+      }
+
+      // Mask origin: Stripe MUST only see playgroundfitnex.com domain + clean order reference
+      const encodedOrderRef = encodeURIComponent(packageDetails.orderRef);
+      const successUrl = `${frontendUrl}/order-confirmation/complete?session_id={CHECKOUT_SESSION_ID}&order=${encodedOrderRef}`;
+      const cancelUrl = `${frontendUrl}/cart?status=cancelled&order=${encodedOrderRef}`;
 
       const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -163,8 +390,8 @@ export class WalletService {
             price_data: {
               currency,
               product_data: {
-                name: 'PGX Wallet Deposit',
-                description: `Add ${currency.toUpperCase()} ${dto.amount.toFixed(2)} credits to your universal PGX wallet`,
+                name: packageDetails.name,
+                description: packageDetails.description,
               },
               unit_amount: amountInCents,
             },
@@ -174,13 +401,14 @@ export class WalletService {
         metadata: {
           user_id: targetUserId,
           amount_eur: dto.amount.toString(),
-          type: 'wallet_topup',
+          order_type: 'fitness_package',
+          order_ref: packageDetails.orderRef,
         },
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
 
-      this.logger.log(`Created Stripe Checkout session ${session.id} for user ${userId}, amount: €${dto.amount}`);
+      this.logger.log(`Created Stripe Checkout session ${session.id} for user ${userId}, package: ${packageDetails.name}, amount: €${dto.amount}`);
 
       return {
         sessionId: session.id,
