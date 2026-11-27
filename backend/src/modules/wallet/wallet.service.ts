@@ -7,7 +7,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { TopUpDto } from './dto/top-up.dto';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const ORDER_REF_REGEX = /^FNX-[A-Z0-9]{6,16}$/;
+const ORDER_REF_REGEX = /^(?:ORD-\d{4}|FNX-[A-Z0-9]{6,16})$/;
 const CHECKOUT_RETURN_GROUP = '_internal_checkout_return';
 const CHECKOUT_RETURN_KEY_PREFIX = 'checkout_ret:';
 const CHECKOUT_RETURN_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours
@@ -361,6 +361,9 @@ export class WalletService {
       .split(',')[0]
       .trim();
     const frontendUrl = (rawFrontendUrl || 'https://playgroundfitnex.com').replace(/\/+$/, '');
+    const backendApiUrl = (
+      this.configService.get<string>('BACKEND_URL') || 'https://api.playgroundfitnex.com'
+    ).replace(/\/+$/, '');
     const amountInCents = Math.round(dto.amount * 100);
     const safeReturnUrl = this.sanitizeReturnUrl(dto.returnUrl);
 
@@ -369,17 +372,26 @@ export class WalletService {
     try {
       const { client: stripeClient, profile } = await this.dynamicSettingsService.getStripeClient();
       const currency = (profile.currency || 'eur').toLowerCase();
-      const packageDetails = this.getFitnessPackageDetails(dto.amount, currency);
+      const cleanOrderNum = String(crypto.randomInt(1000, 10000));
+      const orderRef = `ORD-${cleanOrderNum}`;
+      const displayOrderName = `Order #${cleanOrderNum}`;
 
-      // Persist return URL server-side keyed by opaque Fitnex orderRef so zero external domain reaches Stripe
+      // Persist return URL server-side keyed by opaque orderRef so zero external domain reaches Stripe
       if (safeReturnUrl) {
-        await this.saveReturnTarget(packageDetails.orderRef, safeReturnUrl);
+        await this.saveReturnTarget(orderRef, safeReturnUrl);
       }
 
       // Mask origin: Stripe MUST only see playgroundfitnex.com domain + clean order reference
-      const encodedOrderRef = encodeURIComponent(packageDetails.orderRef);
+      const encodedOrderRef = encodeURIComponent(orderRef);
       const successUrl = `${frontendUrl}/order-confirmation/complete?session_id={CHECKOUT_SESSION_ID}&order=${encodedOrderRef}`;
       const cancelUrl = `${frontendUrl}/cart?status=cancelled&order=${encodedOrderRef}`;
+
+      const cloakedMetadata: Record<string, string> = {
+        user_id: targetUserId,
+        amount_eur: dto.amount.toString(),
+        order_type: 'fitness_package',
+        oid: orderRef,
+      };
 
       const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -390,29 +402,33 @@ export class WalletService {
             price_data: {
               currency,
               product_data: {
-                name: packageDetails.name,
-                description: packageDetails.description,
+                name: displayOrderName,
+                description: `Payment for ${displayOrderName}`,
               },
               unit_amount: amountInCents,
             },
             quantity: 1,
           },
         ],
-        metadata: {
-          user_id: targetUserId,
-          amount_eur: dto.amount.toString(),
-          order_type: 'fitness_package',
-          order_ref: packageDetails.orderRef,
+        metadata: cloakedMetadata,
+        payment_intent_data: {
+          description: displayOrderName,
+          metadata: cloakedMetadata,
         },
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
 
-      this.logger.log(`Created Stripe Checkout session ${session.id} for user ${userId}, package: ${packageDetails.name}, amount: €${dto.amount}`);
+      const encodedStripeUrl = session.url ? Buffer.from(session.url).toString('base64url') : '';
+      const cloakedCheckoutUrl = encodedStripeUrl
+        ? `${backendApiUrl}/api/wallet/pay?s=${encodedStripeUrl}`
+        : session.url;
+
+      this.logger.log(`Created Stripe Checkout session ${session.id} for user ${userId}, ${displayOrderName}, amount: €${dto.amount}`);
 
       return {
         sessionId: session.id,
-        url: session.url,
+        url: cloakedCheckoutUrl,
       };
     } catch (err: any) {
       this.logger.error(`Failed to create Stripe Checkout session for user ${userId}:`, err);
